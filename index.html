@@ -180,6 +180,8 @@
   box-shadow: none;
  }
  .pagePanel.active { display: block; }
+ .pagePanel[hidden] { display: none !important; }
+ .tabBtn:focus-visible { outline: 2px solid #3b6cff; outline-offset: 2px; }
  .card {
   background: var(--surface);
   border-radius: var(--radius);
@@ -307,7 +309,6 @@
  }
  .meta.alignFix {
   padding: 0;
-  margin: 4px 0 0 0;
   white-space: normal;
   text-indent: 0;
  }
@@ -380,10 +381,9 @@
  /* 滿版對齊列與折疊資訊盒 */
  .tRow-alignLeft {
   display: block;
-  width: 100%;
   padding: 0;
  }
- .tRow-alignLeft .time { display: none; width: 0; }
+ .tRow-alignLeft .time { display: none; }
  .tRow-alignLeft .place { width: 100%; flex: none; }
 
  details.infoBox {
@@ -422,10 +422,9 @@
   line-height: 1.6;
  }
 
- /* 底線風格折疊盒 (Preferred Line Box) */
+ /* 線條式收合盒：只覆蓋 infoBox 的外觀差異，共用其餘基礎樣式 */
  details.infoBox.preferredLineBox {
   margin: 0;
-  width: 100%;
   border: 0;
   border-bottom: 1px solid var(--line);
   border-radius: 0;
@@ -434,7 +433,6 @@
   overflow: visible;
  }
  details.infoBox.preferredLineBox > summary {
-  min-height: 0;
   padding: 12px 8px;
  }
  details.infoBox.preferredLineBox > .infoContent {
@@ -522,6 +520,7 @@
   border-top: 1px solid var(--line);
  }
 
+ /* 手機版覆蓋設定：保留既有航班雙欄與文字不換行配置 */
  /* 響應式調整 (手機版) */
  @media (max-width: 640px) {
   .container { padding: 10px 4px 20px; }
@@ -610,19 +609,19 @@
  </section>
 
  <section class="tabShell">
-  <nav aria-label="行程頁籤" class="topTabs">
-   <button type="button" class="tabBtn active" data-target="memoPanel">Memo</button>
-   <button type="button" class="tabBtn" data-target="day1">Day 1</button>
-   <button type="button" class="tabBtn" data-target="day2">Day 2</button>
-   <button type="button" class="tabBtn" data-target="day3">Day 3</button>
-   <button type="button" class="tabBtn" data-target="day4">Day 4</button>
-   <button type="button" class="tabBtn" data-target="day5">Day 5</button>
-   <button type="button" class="tabBtn" data-target="day6">Day 6</button>
-   <button type="button" class="tabBtn" data-target="day7">Day 7</button>
+  <nav aria-label="行程頁籤" class="topTabs" role="tablist">
+   <button type="button" class="tabBtn active" id="tab-memoPanel" role="tab" aria-controls="memoPanel" aria-selected="true" tabindex="0" data-target="memoPanel">Memo</button>
+   <button type="button" class="tabBtn" id="tab-day1" role="tab" aria-controls="day1" aria-selected="false" tabindex="-1" data-target="day1">Day 1</button>
+   <button type="button" class="tabBtn" id="tab-day2" role="tab" aria-controls="day2" aria-selected="false" tabindex="-1" data-target="day2">Day 2</button>
+   <button type="button" class="tabBtn" id="tab-day3" role="tab" aria-controls="day3" aria-selected="false" tabindex="-1" data-target="day3">Day 3</button>
+   <button type="button" class="tabBtn" id="tab-day4" role="tab" aria-controls="day4" aria-selected="false" tabindex="-1" data-target="day4">Day 4</button>
+   <button type="button" class="tabBtn" id="tab-day5" role="tab" aria-controls="day5" aria-selected="false" tabindex="-1" data-target="day5">Day 5</button>
+   <button type="button" class="tabBtn" id="tab-day6" role="tab" aria-controls="day6" aria-selected="false" tabindex="-1" data-target="day6">Day 6</button>
+   <button type="button" class="tabBtn" id="tab-day7" role="tab" aria-controls="day7" aria-selected="false" tabindex="-1" data-target="day7">Day 7</button>
   </nav>
   <div class="tabsDivider"></div>
 
-  <section class="card daySection pagePanel active" id="memoPanel">
+  <section class="card daySection pagePanel active" id="memoPanel" role="tabpanel" aria-labelledby="tab-memoPanel">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">★</div><h2 class="dayTitle">Memo</h2></div>
     <div class="dayDate"></div>
@@ -637,7 +636,7 @@
    </div>
   </section>
 
-  <section class="card daySection pagePanel" id="day1">
+  <section class="card daySection pagePanel" id="day1" role="tabpanel" aria-labelledby="tab-day1" hidden>
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">1</div><h2 class="dayTitle">Day 1</h2></div>
     <div class="dayDate">12/1(二)</div>
@@ -650,7 +649,7 @@
    </div>
   </section>
 
-  <section class="card daySection pagePanel" id="day2">
+  <section class="card daySection pagePanel" id="day2" role="tabpanel" aria-labelledby="tab-day2" hidden>
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">2</div><h2 class="dayTitle">Day 2</h2></div>
     <div class="dayDate">12/2(三)</div>
@@ -663,7 +662,7 @@
    </div>
   </section>
 
-  <section class="card daySection pagePanel" id="day3">
+  <section class="card daySection pagePanel" id="day3" role="tabpanel" aria-labelledby="tab-day3" hidden>
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">3</div><h2 class="dayTitle">Day 3</h2></div>
     <div class="dayDate">12/3(四)</div>
@@ -676,7 +675,7 @@
    </div>
   </section>
 
-  <section class="card daySection pagePanel" id="day4">
+  <section class="card daySection pagePanel" id="day4" role="tabpanel" aria-labelledby="tab-day4" hidden>
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">4</div><h2 class="dayTitle">Day 4</h2></div>
     <div class="dayDate">12/4(五)</div>
@@ -689,7 +688,7 @@
    </div>
   </section>
 
-  <section class="card daySection pagePanel" id="day5">
+  <section class="card daySection pagePanel" id="day5" role="tabpanel" aria-labelledby="tab-day5" hidden>
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">5</div><h2 class="dayTitle">Day 5</h2></div>
     <div class="dayDate">12/5(六)</div>
@@ -702,7 +701,7 @@
    </div>
   </section>
 
-  <section class="card daySection pagePanel" id="day6">
+  <section class="card daySection pagePanel" id="day6" role="tabpanel" aria-labelledby="tab-day6" hidden>
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">6</div><h2 class="dayTitle">Day 6</h2></div>
     <div class="dayDate">12/6(日)</div>
@@ -715,7 +714,7 @@
    </div>
   </section>
 
-  <section class="card daySection pagePanel" id="day7">
+  <section class="card daySection pagePanel" id="day7" role="tabpanel" aria-labelledby="tab-day7" hidden>
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">7</div><h2 class="dayTitle">Day 7</h2></div>
     <div class="dayDate">12/7(一)</div>
@@ -731,10 +730,52 @@
 </main>
 
 <script>
-document.querySelectorAll('.tabBtn').forEach(tab => tab.addEventListener('click', () => {
- document.querySelectorAll('.tabBtn').forEach(x => x.classList.toggle('active', x === tab));
- document.querySelectorAll('.pagePanel').forEach(x => x.classList.toggle('active', x.id === tab.dataset.target));
-}));
+// 頁籤名稱可自由修改；切換依 data-target 與面板 id 對應。
+(() => {
+ const tablist = document.querySelector('.topTabs');
+ if (!tablist) return;
+ const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+ const panels = Array.from(document.querySelectorAll('.tabShell [role="tabpanel"]'));
+
+ function activateTab(tab, moveFocus = false) {
+  const target = tab.dataset.target;
+  if (!document.getElementById(target)) return;
+  tabs.forEach(item => {
+   const selected = item === tab;
+   item.classList.toggle('active', selected);
+   item.setAttribute('aria-selected', String(selected));
+   item.tabIndex = selected ? 0 : -1;
+  });
+  panels.forEach(panel => {
+   const selected = panel.id === target;
+   panel.classList.toggle('active', selected);
+   panel.hidden = !selected;
+  });
+  if (moveFocus) tab.focus({ preventScroll: true });
+ }
+
+ tablist.addEventListener('click', event => {
+  const tab = event.target.closest('[role="tab"]');
+  if (tab && tablist.contains(tab)) activateTab(tab);
+ });
+
+ tablist.addEventListener('keydown', event => {
+  const current = event.target.closest('[role="tab"]');
+  if (!current || !tablist.contains(current)) return;
+  const index = tabs.indexOf(current);
+  let nextIndex;
+  switch (event.key) {
+   case 'ArrowRight': nextIndex = (index + 1) % tabs.length; break;
+   case 'ArrowLeft': nextIndex = (index - 1 + tabs.length) % tabs.length; break;
+   case 'Home': nextIndex = 0; break;
+   case 'End': nextIndex = tabs.length - 1; break;
+   default: return;
+  }
+  event.preventDefault();
+  activateTab(tabs[nextIndex], true);
+  tabs[nextIndex].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+ });
+})();
 </script>
 </body>
 </html>
