@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Tokyo 8 Days｜空白行程模板</title>
+<style>
+ :root {
+  --bg: #f1f3f7;
+  --surface: #ffffff; 
+  --text: #2d2a26;
+  --muted: #7a736b;
+  --line: #e3e6ee;
+  --accent: #8c6b4f;
+  --chip: #f3ece3;
+  --shadow: 0 10px 30px rgba(0,0,0,.06);
+  --radius: 20px;
+  --gap: 14px;
+ }
+ * { box-sizing: border-box; }
+ html, body { margin: 0; padding: 0; }
+ body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+ }
+ .container {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 16px 8px 20px;
+ }
+ .hero { margin-bottom: 12px; }
+ .tabShell {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  overflow: visible; 
+  margin-bottom: 14px;
+ }
+ .topTabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  padding: 12px 14px;
+  margin: 0;
+  background: var(--surface);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+ }
+ .topTabs::-webkit-scrollbar { height: 6px; }
+ .topTabs::-webkit-scrollbar-thumb { background: #d8cfc3; border-radius: 999px; }
+ .tabBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid #d6d6db;
+  background: #f7f7f9;
+  color: #1f2430;
+  text-decoration: none;
+  font-size: 15px;
+  line-height: 1;
+  white-space: nowrap;
+  transition: all .18s ease;
+  cursor: pointer;
+ }
+ .tabBtn.active {
+  border-color: #3b6cff;
+  background: #f9fbff;
+  box-shadow: inset 0 0 0 1px rgba(59,108,255,.08);
+ }
+ .tabsDivider {
+  width: 100%;
+  height: 1px;
+  background: var(--line);
+ }
+ .daySection { scroll-margin-top: 18px; }
+
+ .heroTitleCard {
+  border: none;
+  border-radius: 0;
+  padding: 8px 4px;
+  margin-bottom: 8px;
+  background: transparent;
+ }
+ 
+ .heroFlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+ }
+ .heroFlightCard {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, .03);
+ }
+ .heroFlightTitle {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--text);
+ }
+ .heroFlightList {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 14px; 
+ }
+ .heroFlightList li + li { margin-top: 3px; }
+ .heroFlightList strong { font-weight: 700; }
+ 
+ .title {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1.25;
+  font-weight: 800;
+ }
+ .pagePanel {
+  display: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+ }
+ .pagePanel.active { display: block; }
+ .card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 0; 
+  margin-bottom: var(--gap);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+ }
+ .tabShell .card {
+  margin-bottom: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+ }
+ .dayCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px 10px;
+  border-bottom: none;
+ }
+ .dayHeaderMain {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+ }
+ .dayIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  min-width: 52px;
+  height: 48px;
+  border-radius: 16px;
+  border: 1px solid #9ec0ff;
+  background: #eaf2ff;
+  color: #173d7a;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+ }
+ .dayHeading {
+  min-width: 0;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: #16253b;
+ }
+ .dayTitle {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.3;
+ }
+ .dayDate {
+  font-size: 17px;
+  font-weight: 800;
+  color: #16253b;
+  letter-spacing: .4px;
+  white-space: nowrap;
+ }
+ .dayBody { padding: 12px 16px; }
+
+ .timeline {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 12px 10px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(0,0,0,.04);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+ }
+ .dayMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+ }
+ .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--chip);
+  border-radius: 9999px;
+  color: #5f5448;
+  font-size: 13px;
+ }
+
+ .tRow {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important; 
+  gap: 10px;
+  padding: 2px 0;
+  width: 100%;
+ }
+ .tRow:first-child {
+  padding-top: 0;
+ }
+ .time {
+  width: 90px;
+  min-width: 90px;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: .2px;
+  line-height: 1.35 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+ }
+ .place { 
+  flex: 1;
+  min-width: 0; 
+ }
+ .place p,
+ .placeTitle {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25 !important; 
+ }
+
+ .placeTitle {
+  margin-bottom: 0 !important;
+ }
+
+ .meta {
+  margin: 4px 0 0 0 !important;
+  color: #4d463f !important; 
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  white-space: pre-line;
+  line-height: 1.6 !important;
+ }
+
+ .meta.alignFix {
+  padding: 0 !important;
+  margin: 4px 0 0 0 !important;
+  white-space: normal !important;
+  text-indent: 0 !important;
+ }
+
+ .meta.alignFix div {
+  padding-left: 1em !important;     
+  text-indent: -1em !important;    
+  margin-bottom: 4px !important;   
+  font-size: 14px !important;
+  line-height: 1.35 !important;    
+  color: #4d463f !important;
+ }
+
+ .meta.alignFix div a.plain-link {
+  color: #4d463f !important;
+  text-decoration: none !important;
+ }
+
+ .mapBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  margin-left: 6px !important;
+  color: #3b6cff !important;
+  text-decoration: none !important;
+  font-size: 13px !important;
+  font-weight: normal !important;
+  cursor: pointer;
+ }
+
+ .mapBtn:link,
+ .mapBtn:visited,
+ .mapBtn:hover,
+ .mapBtn:active {
+  color: #3b6cff !important;
+  text-decoration: none !important;
+ }
+
+ .mapBtn span {
+  font-size: 13px !important;
+  text-decoration: none !important;
+ }
+ 
+ .notes {
+  margin: 6px 0 0;
+  padding-left: 1.2em;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  color: #4d463f !important;
+  font-weight: 400 !important;
+ }
+
+ .infoContent .notes,
+ .infoContent ul,
+ .infoContent li,
+ .infoContent p.meta {
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  color: #4d463f !important;
+ }
+
+ .notes li {
+  margin-bottom: 4px;
+ }
+ .notes li + li { margin-top: 3px; }
+
+ .gallery {
+  margin-top: -2px;
+ }
+ .galleryTitle {
+  padding-left: 0;
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+ }
+ .galleryRow {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-left: 0;
+  scroll-behavior: smooth;
+  cursor: grab;
+ }
+ .galleryRow::-webkit-scrollbar { display: none; }
+ .galleryRow.dragging { cursor: grabbing; }
+
+ .gItem {
+  flex: 0 0 auto;
+  width: 72vw;
+  max-width: 260px;
+  aspect-ratio: 3 / 2;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #faf8f4;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  scroll-snap-align: center;
+  position: relative;
+ } 
+ .gItem img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: box-shadow 0.2s ease;
+ }
+ .gItem img:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,.12);
+ }
+
+ .gItem[data-caption]::after {
+  content: attr(data-caption);
+  position: absolute;
+  left: 8px; right: 8px; bottom: 8px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: rgba(17,24,39,.62);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: .2px;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0,0,0,.25);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+ }
+
+ details.infoBox {
+  margin-top: 10px;
+  margin-left: 0;
+  margin-right: 0;
+  border: 1px solid rgba(227, 230, 238, 0.6);
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  padding: 0 !important;
+  overflow: hidden;
+  width: 100%;
+ }
+ 
+ details.no-border-box {
+  border: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+ }
+ details.no-border-box > summary {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+ }
+
+ details.infoBox > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 14px !important; 
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+ }
+ details.infoBox > summary::-webkit-details-marker { display: none; }
+ .summaryText { min-width: 0; }
+ .transportLine { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+ .transportLine a { font-size: 16px; text-decoration: none; color: inherit; font-weight: inherit; }
+ .transportIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-left: 4px;
+  border-radius: 6px;
+  text-decoration: none !important;
+  font-size: 14px;
+  line-height: 1;
+  color: inherit;
+ }
+ .summaryText a {
+  text-decoration: none !important;
+  color: inherit !important;
+ }
+ .transportIcon:hover { background: #f1f3f7; }
+ .chev {
+  color: var(--muted);
+  transition: transform .2s ease;
+  flex: 0 0 auto;
+  padding-right: 4px;
+ }
+ details[open] .chev { transform: rotate(180deg); }
+ .infoContent {
+  padding: 0 14px 12px 14px !important; 
+  color: #4d463f;
+ }
+ .btnRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+ }
+ .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1;
+ }
+ .infoContent table {
+  width: 100%;
+  max-width: 260px;
+  margin: 12px auto 0; 
+  border-collapse: collapse;
+  font-size: 14px;
+ }
+ .infoContent th, 
+ .infoContent td {
+  width: 50%;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+ }
+ .infoContent th {
+  background: #f4f6fb;
+  font-weight: 600;
+ }
+ .infoContent td:last-child {
+  font-weight: normal;
+ }
+ .infoContent tr:hover td {
+  background: #fafbff;
+ }
+
+ .infoContent details.infoBox {
+  margin-top: 10px;
+  margin-left: -14px !important;
+  margin-right: -14px !important;
+  width: calc(100% + 28px) !important;
+  border-radius: 10px;
+  border: 1px solid rgba(227, 230, 238, 0.6);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  padding: 0 !important;
+ }
+ 
+ .infoContent details.infoBox > summary {
+  padding: 10px 12px !important;
+  font-weight: 700;
+  color: var(--text);
+ }
+ .infoContent details.infoBox > summary a {
+  color: #3b6cff !important;
+  text-decoration: underline !important;
+  font-weight: 700 !important;
+ }
+
+ details.infoBox > summary .transportIcon {
+  text-decoration: none !important;
+ }
+ .infoContent details.infoBox .infoContent {
+  padding: 0 12px 10px 12px !important;
+ }
+
+ .dinner-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
+ }
+ .dinner-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; 
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 14px; 
+ }
+ .dinner-list li:last-child {
+  border-bottom: none;
+ }
+ .dinner-list li > div {
+  flex: 1; 
+  min-width: 0;
+ }
+ .dinner-name {
+  font-weight: 600;
+  color: var(--text) !important;
+  text-decoration: none;
+ }
+ .dinner-type {
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 8px;
+ }
+ .dinner-room {
+  font-weight: 700;
+  color: var(--accent);
+  font-family: monospace;
+  white-space: nowrap; 
+  flex-shrink: 0;
+ }
+
+ .tRow-alignLeft {
+  display: block !important; 
+  width: 100% !important;
+  padding: 0 !important;
+ }
+ .tRow-alignLeft .time {
+  display: none !important;
+  width: 0 !important;
+ }
+ .tRow-alignLeft .place {
+  width: 100% !important;
+  flex: none !important;
+ }
+ .tRow-alignLeft details.infoBox,
+ .tRow-alignLeft .gallery-alignLeft {
+  margin-left: 0 !important;   
+  margin-right: 0 !important;
+  width: 100% !important;
+ }
+ .tRow-alignLeft .gallery-alignLeft .galleryTitle {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+ }
+ .infoContent .galleryRow {
+  margin-top: 12px;
+  padding-top: 6px;
+ }
+ .infoContent .galleryRow .gItem,
+ .gallery-alignLeft .galleryRow .gItem {
+  min-width: 0;
+ }
+
+ .busRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+ }
+ .busRow:last-child { border-bottom: none; }
+ .busRow strong { color: #3b6cff; font-size: 15px; }
+ .busHint { font-size: 12px; color: #888; margin-top: 6px; text-align: center; padding: 10px 0; }
+ .busMetaInfo { font-size: 11px; color: #e67e22; margin-top: 2px; font-weight: normal; }
+ .busNextLabel {
+  font-size: 12px;
+  color: #777;
+  margin-left: 8px;
+  padding: 1px 6px;
+  background: #f0f2f5;
+  border-radius: 4px;
+  display: inline-block;
+ }
+
+ .lbModal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 9999;
+ }
+ .lbModal.open { display: flex; }
+ .lbBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+ }
+ .lbImg { 
+  max-width: 100%; 
+  max-height: 100vh;
+  object-fit: contain; 
+  touch-action: none; 
+  transition: transform 0.1s ease-out;
+  user-select: none;
+  -webkit-user-drag: none;
+ } 
+ .lbInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  touch-action: none;
+ }
+ .lbNav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  border: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.85);
+  font-size: 26px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+ }
+ .lbPrev { left: 14px; }
+ .lbNext { right: 14px; }
+ .lbClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  border: none;
+  border-radius: 999px;
+  width: 42px;
+  height: 42px;
+  font-size: 24px;
+  cursor: pointer;
+  background: rgba(255,255,255,.85);
+  color: #2d2a26;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+ }
+ .lbCaption {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 10;
+  pointer-events: none;
+  max-width: 85%;
+  text-align: center;
+ }
+ 
+ @media (max-width: 640px) {
+  .container { 
+   padding-left: 4px !important;
+   padding-right: 4px !important;
+   padding-top: 10px !important; 
+  }
+  .hero { margin-bottom: 8px; }   
+  .heroFlights {
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 6px;
+  }
+  .heroFlightCard {
+   padding: 8px 6px !important;  
+  }
+  .tabShell { border-radius: 18px; }
+  .topTabs {
+   gap: 6px;
+   padding: 8px 6px;
+   scroll-padding-inline: 8px;
+  }
+  .tabBtn {
+   min-height: 36px;             
+   padding: 0 10px;
+   font-size: 13px;
+   flex: 0 0 auto;
+  }
+
+  .dayCardHeader {
+   flex-direction: row !important;
+   align-items: center !important;
+   justify-content: space-between !important;
+   gap: 10px;
+   padding: 10px 10px 6px !important;
+  }
+
+  .dayHeaderMain {
+   flex: 1;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   min-width: 0;
+  }
+
+  .dayDate {
+   font-size: 14px;
+   padding-left: 0 !important;
+   margin-left: auto;
+   white-space: nowrap;
+   flex-shrink: 0;
+  }
+  .dayBody { padding: 8px 4px !important; }
+  
+  .tRow-alignLeft {
+   display: block !important;
+   width: calc(100% + 20px) !important;
+   margin-left: -10px !important;
+   margin-right: -10px !important;
+   padding: 0 !important;
+  }
+
+  .tRow { 
+   display: flex !important;
+   flex-direction: row !important;
+   align-items: flex-start !important; 
+   gap: 8px !important; 
+   padding: 6px 2px !important;
+   width: 100% !important;
+  }
+  
+  .time { 
+   width: 58px !important;
+   min-width: 58px !important;
+   font-size: 14px !important; 
+   margin: 0 !important;
+   padding: 0 !important;
+   position: relative !important;
+   top: 0px !important;
+  }
+  .place {
+   flex: 1 !important;
+  }
+  .place p,
+  .placeTitle {
+   font-size: 15px !important;
+   line-height: 1.35 !important; 
+   margin: 0 !important;
+   padding: 0 !important;
+  }
+  
+  p.meta {
+   font-size: 13px !important;
+   white-space: pre-line !important;
+  }
+
+  .meta.alignFix div {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 4px !important;
+  }
+
+  #day1 .tRow:nth-child(3) .place p.meta {
+   font-size: 10px !important;
+  }
+
+  .notes,
+  .dinner-list li {
+   font-size: 13px !important;
+   color: var(--text) !important;
+  }
+
+  .heroFlightList {
+   font-size: 14px !important;
+  }
+  
+  details.infoBox > summary .summaryText {
+   font-size: 15px !important;
+  }
+  
+  details.infoBox {
+   width: 100% !important;
+   border-radius: 12px !important;
+   background: #ffffff !important;
+   border: 1px solid rgba(227, 230, 238, 0.6) !important;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+   padding: 0 !important;
+  }
+  details.infoBox > summary {
+   padding: 12px 14px !important;
+  }
+  .infoContent {
+   padding: 0 14px 12px 14px !important;
+  }
+  .infoContent details.infoBox {
+   width: calc(100% + 28px) !important;
+   margin-left: -14px !important;
+   margin-right: -14px !important;
+   border-radius: 10px !important;
+   padding: 0 !important;
+  }
+  .infoContent details.infoBox > summary {
+   padding: 10px 12px !important;
+  }
+  .infoContent details.infoBox .infoContent {
+   padding: 0 12px 10px 12px !important;
+  }
+  
+  .gItem {
+   width: 60vw;
+   max-width: none;
+  }
+ }
+ .no-break {
+  display: inline-block;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-wrap: normal;
+ }
+ 
+ a[href],
+ a[href]:link,
+ a[href]:visited,
+ a[href]:hover,
+ a[href]:active {
+   color: #000 !important;
+   font-weight: 700 !important;
+ }
+
+ .foodCafeList {
+   margin-top: 4px;
+ }
+ .foodCafeSectionTitle {
+   padding: 0 !important;
+   text-indent: 0 !important;
+   margin: 10px 0 6px !important;
+   font-size: 14px !important;
+   line-height: 1.35 !important;
+   font-weight: 700;
+   color: var(--text) !important;
+ }
+ .foodCafeItem {
+   display: grid;
+   grid-template-columns: 2.1em minmax(0, 1fr);
+   column-gap: 4px;
+   padding: 0 !important;
+   text-indent: 0 !important;
+   margin: 0 0 7px !important;
+   font-size: 14px !important;
+   line-height: 1.4 !important;
+   color: #4d463f !important;
+ }
+ .foodCafeNo {
+   text-align: right;
+   white-space: nowrap;
+ }
+ .foodCafeText {
+   min-width: 0;
+ }
+ .foodCafeName {
+   display: block;
+ }
+ .foodCafeDesc {
+   display: block;
+   padding-left: 0 !important;
+   margin-top: 1px;
+   text-indent: 0 !important;
+ }
+ .foodCafeMap {
+   margin-top: 14px;
+ }
+ .foodCafeMap iframe {
+   display: block;
+   width: 100%;
+   height: 72vh;
+   min-height: 520px;
+   border: 1px solid var(--line);
+   border-radius: 12px;
+   background: #fff;
+ }
+
+ @media (max-width: 640px) {
+   .foodCafeItem {
+     grid-template-columns: 2.15em minmax(0, 1fr);
+     column-gap: 3px;
+     font-size: 13px !important;
+     line-height: 1.45 !important;
+     margin-bottom: 8px !important;
+   }
+   .foodCafeSectionTitle {
+     font-size: 13px !important;
+     margin: 10px 0 7px !important;
+   }
+   .foodCafeDesc {
+     padding-left: 0 !important;
+     text-indent: 0 !important;
+   }
+   .foodCafeMap iframe {
+     min-height: 500px;
+   }
+ }
+
+ .tRow:not(.tRow-alignLeft):has(+ .tRow.tRow-alignLeft .gallery-alignLeft) {
+   padding-bottom: 0 !important;
+ }
+ .tRow:not(.tRow-alignLeft) + .tRow.tRow-alignLeft:has(.gallery-alignLeft) {
+   margin-top: -6px !important;
+   padding-top: 0 !important;
+ }
+ @media (max-width: 640px) {
+   .tRow:not(.tRow-alignLeft):has(+ .tRow.tRow-alignLeft .gallery-alignLeft) {
+     padding-bottom: 0 !important;
+   }
+   .tRow:not(.tRow-alignLeft) + .tRow.tRow-alignLeft:has(.gallery-alignLeft) {
+     margin-top: -8px !important;
+     padding-top: 0 !important;
+   }
+ }
+
+ .foodCafePdfOpen {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   margin-top: 8px;
+   padding: 9px 12px;
+   border: 1px solid var(--line);
+   border-radius: 10px;
+   background: #fff;
+   color: #000 !important;
+   font-size: 13px;
+   line-height: 1.35;
+   font-weight: 700 !important;
+   text-decoration: none !important;
+ }
+
+#day1 .tRow.eRow .infoContent > details.infoBox {
+  margin: 0 !important;
+  width: 100% !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+#day1 .tRow.eRow .infoContent > details.infoBox:first-child {
+  border-top: 1px solid var(--line) !important;
+}
+
+#day1 .tRow.eRow .infoContent > details.infoBox > summary {
+  padding: 12px 8px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#day1 .tRow.eRow .infoContent > details.infoBox > .infoContent {
+  padding: 0 8px 10px 8px !important;
+}
+
+#day1 .tRow.eRow .infoContent > details.infoBox > summary .chev {
+  transform: none !important;
+}
+#day1 .tRow.eRow .infoContent > details.infoBox[open] > summary .chev {
+  transform: rotate(180deg) !important;
+}
+
+#day3 .dayTitle .mapBtn,
+#day3 .dayTitle .mapBtn:link,
+#day3 .dayTitle .mapBtn:visited,
+#day3 .dayTitle .mapBtn:hover,
+#day3 .dayTitle .mapBtn:active,
+#day3 .dayTitle .mapBtn span {
+  color: #000 !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+#day3 .dayMapLinks {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 400;
+}
+#day3 .dayMapLinks .mapBtn {
+  display: inline !important;
+  margin-left: 0 !important;
+  padding: 0 !important;
+  color: #000 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: inherit !important;
+  text-decoration: underline !important;
+  text-underline-offset: 1px;
+}
+#day3 .dayMapLinks .mapBtn span {
+  color: #000 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+}
+#day3 .dayMapLinks .mapDivider {
+  margin: 0 4px;
+  color: #000;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+#memoPanel .memoHeader { padding-top:20px; padding-bottom:12px; }
+#memoPanel .memoIndex {
+  width:42px; min-width:42px; height:42px;
+  border-radius:14px; font-size:17px;
+}
+#memoPanel .memoBody { padding:8px 18px 22px; }
+#memoPanel .memoBoxes { display:flex; flex-direction:column; gap:10px; }
+#memoPanel .memoBox {
+  margin:0 !important;
+  width:100% !important;
+  border-radius:16px !important;
+  box-shadow:none !important;
+}
+#memoPanel .memoBox > summary {
+  min-height:52px;
+  padding:13px 16px !important;
+}
+#memoPanel .memoBox > summary .summaryText {
+  font-size:16px;
+  font-weight:700;
+}
+@media (max-width:640px) {
+  #memoPanel .memoHeader { padding:14px 10px 8px !important; }
+  #memoPanel .memoBody { padding:8px 10px 16px !important; }
+}
+
+#memoPanel .memoBox .pdfEmbedWrap {
+  width: 100% !important;
+  height: 620px !important;
+  min-height: 620px !important;
+  overflow: hidden !important;
+}
+#memoPanel .memoBox .pdfEmbed {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 620px !important;
+  border: 0 !important;
+}
+#memoPanel .memoBox .pdfOpenBtn {
+  display: flex !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+@media (max-width: 640px) {
+  #memoPanel .memoBox .pdfEmbedWrap {
+    height: 620px !important;
+    min-height: 620px !important;
+  }
+  #memoPanel .memoBox .pdfEmbed {
+    height: 100% !important;
+    min-height: 620px !important;
+  }
+}
+
+#day4 .meta.alignFix.day4TransferNotes {
+  margin-top: 2px !important;
+}
+#day4 .meta.alignFix.day4TransferNotes div {
+  padding-left: 1em !important;
+  text-indent: -1em !important;
+  margin-left: 0 !important;
+  margin-bottom: 0 !important;
+  line-height: 1.35 !important;
+}
+
+#day4 .day4TransferMain,
+#day4 .meta.alignFix.day4TransferNotes,
+#day4 .meta.alignFix.day4TransferNotes div { font-size:14px !important; font-weight:400 !important; color:#4d463f !important; }
+@media(max-width:640px){ #day4 .day4TransferMain, #day4 .meta.alignFix.day4TransferNotes, #day4 .meta.alignFix.day4TransferNotes div { font-size:13px !important; font-weight:400 !important; } }
+
+#memoPanel .memoBoxes { gap:0 !important; }
+#memoPanel details.infoBox.memoBox {
+  margin:0 !important;
+  width:100% !important;
+  border:0 !important;
+  border-bottom:1px solid var(--line) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  overflow:visible !important;
+}
+#memoPanel details.infoBox.memoBox:first-child {
+  border-top:1px solid var(--line) !important;
+}
+#memoPanel details.infoBox.memoBox > summary {
+  min-height:0 !important;
+  padding:12px 8px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+#memoPanel details.infoBox.memoBox > .infoContent {
+  padding:0 8px 10px 8px !important;
+}
+
+#memoPanel details.infoBox.memoBox:first-child > .infoContent .meta.alignFix {
+  margin-bottom:0 !important;
+}
+#memoPanel details.infoBox.memoBox:first-child > .infoContent .meta.alignFix div:last-child {
+  margin-bottom:0 !important;
+}
+#memoPanel details.infoBox.memoBox:first-child > .infoContent > .galleryRow {
+  margin-top:2px !important;
+  padding-top:0 !important;
+}
+#memoPanel details.infoBox.memoBox > summary .chev {
+  transform:none !important;
+}
+#memoPanel details.infoBox.memoBox[open] > summary .chev {
+  transform:rotate(180deg) !important;
+}
+
+#day1 details.infoBox.day1BottomLineBox {
+  margin: 0 !important;
+  width: 100% !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+#day1 details.infoBox.day1BottomLineBox > summary {
+  min-height: 0 !important;
+  padding: 12px 8px !important;
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#day1 details.infoBox.day1BottomLineBox > .infoContent {
+  padding: 0 8px 10px 8px !important;
+}
+#day1 details.infoBox.day1BottomLineBox > summary .chev {
+  transform: none !important;
+}
+#day1 details.infoBox.day1BottomLineBox[open] > summary .chev {
+  transform: rotate(180deg) !important;
+}
+
+@media (max-width: 640px) {
+  #day1 details.infoBox.day1BottomLineBox {
+    width: calc(100% - 20px) !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+  }
+
+  #day1 details.infoBox.day1BottomLineBox > summary {
+    width: 100% !important;
+    padding: 12px 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  #day1 details.infoBox.day1BottomLineBox > summary .chev {
+    margin-left: auto !important;
+    padding-right: 0 !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    text-align: center !important;
+    line-height: 1 !important;
+  }
+}
+
+details.infoBox.preferredLineBox {
+  margin: 0 !important;
+  width: 100% !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+details.infoBox.preferredLineBox > summary {
+  min-height: 0 !important;
+  padding: 12px 8px !important;
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+details.infoBox.preferredLineBox > .infoContent {
+  padding: 0 8px 10px 8px !important;
+}
+
+details.infoBox.preferredLineBox > summary .chev {
+  transform: none !important;
+}
+
+details.infoBox.preferredLineBox[open] > summary .chev {
+  transform: rotate(180deg) !important;
+}
+
+@media (max-width: 640px) {
+  details.infoBox.preferredLineBox {
+    width: calc(100% - 20px) !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+  }
+
+  details.infoBox.preferredLineBox > summary {
+    width: 100% !important;
+    padding: 12px 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  details.infoBox.preferredLineBox > summary .chev {
+    margin-left: auto !important;
+    padding-right: 0 !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    text-align: center !important;
+    line-height: 1 !important;
+  }
+}
+
+#day1 .tRow.eRow.tRow-alignLeft > .place > details.infoBox {
+  margin: 0 !important;
+  width: 100% !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+#day1 .tRow.eRow.tRow-alignLeft > .place > details.infoBox > summary {
+  min-height: 0 !important;
+  padding: 12px 8px !important;
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#day1 .tRow.eRow.tRow-alignLeft > .place > details.infoBox > summary .chev {
+  transform: none !important;
+}
+
+#day1 .tRow.eRow.tRow-alignLeft > .place > details.infoBox[open] > summary .chev {
+  transform: rotate(180deg) !important;
+}
+
+@media (max-width: 640px) {
+  #day1 .tRow.eRow.tRow-alignLeft > .place > details.infoBox {
+    width: calc(100% - 20px) !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--line) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  #day1 .tRow.eRow.tRow-alignLeft > .place > details.infoBox > summary {
+    width: 100% !important;
+    padding: 12px 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  #day1 .tRow.eRow.tRow-alignLeft > .place > details.infoBox > summary .chev {
+    margin-left: auto !important;
+    padding-right: 0 !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    text-align: center !important;
+    line-height: 1 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .daySection:not(#memoPanel) details.infoBox > summary {
+    padding-left: 0 !important;
+  }
+
+  .daySection:not(#memoPanel) details.infoBox > summary .chev {
+    margin-left: auto !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #day1 .tRow.eRow.tRow-alignLeft > .place > details.infoBox > summary {
+    padding-left: 0 !important;
+  }
+}
+
+#day1 .day1HotelInfo {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  text-indent: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  color: #4d463f !important;
+}
+#day1 .day1HotelInfo > div {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+}
+@media (max-width: 640px) {
+  #day1 details.day1BottomLineBox > .infoContent {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #day1 .day1HotelInfo {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
+}
+
+#day3 .tRow:not(.tRow-alignLeft) .place > .meta {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
+  color: #4d463f !important;
+}
+@media (max-width: 640px) {
+  #day3 .tRow:not(.tRow-alignLeft) .place > .meta {
+    font-size: 13px !important;
+    font-weight: 400 !important;
+  }
+}
+
+#day3 .tRow:not(.tRow-alignLeft):has(+ .tRow.tRow-alignLeft .gallery-alignLeft)
+  .meta.alignFix > div:last-child {
+  margin-bottom: 0 !important;
+}
+
+#day4 .day4AutumnNotes {
+  margin-top: 2px !important;
+}
+#day4 .day4AutumnNotes > div {
+  padding-left: 1em !important;
+  text-indent: -1em !important;
+  margin: 0 0 10px 0 !important;
+  line-height: 1.55 !important;
+}
+#day4 .day4AutumnNotes > div:last-child {
+  margin-bottom: 0 !important;
+}
+#day4 .day4AutumnNotes > div > span {
+  display: inline-block;
+  padding-left: 0 !important;
+  text-indent: 0 !important;
+  margin-top: 2px;
+}
+@media (max-width: 640px) {
+  #day4 .day4AutumnNotes,
+  #day4 .day4AutumnNotes > div {
+    font-size: 13px !important;
+  }
+}
+
+#day4 .day4AutumnGallery {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 2px 0 0 !important;
+  overflow: hidden !important;
+}
+#day4 .day4AutumnGallery .galleryRow {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#day5 .day5BusRow > .place {
+  overflow: visible !important;
+}
+#day5 .day5BusRow details.preferredLineBox {
+  width: calc(100% + 100px) !important;
+  margin-left: -100px !important;
+}
+@media (max-width: 640px) {
+  #day5 .day5BusRow details.preferredLineBox {
+    width: calc(100% + 66px) !important;
+    margin-left: -66px !important;
+    margin-right: 0 !important;
+  }
+}
+
+#day5 .day5BusNotes {
+  list-style: none !important;
+  margin: 4px 0 0 !important;
+  padding: 0 !important;
+}
+#day5 .day5BusNotes > .day5BusItem {
+  display: grid !important;
+  grid-template-columns: 1em minmax(0, 1fr) !important;
+  column-gap: 0 !important;
+  align-items: start !important;
+  margin: 0 0 6px 0 !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+  line-height: 1.6 !important;
+}
+#day5 .day5BusNotes > .day5BusItem:last-child {
+  margin-bottom: 0 !important;
+}
+#day5 .day5BusDot {
+  display: block !important;
+  width: 1em !important;
+  white-space: nowrap !important;
+}
+#day5 .day5BusText {
+  display: block !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+}
+
+#day1 .newomanIntro {
+  margin: 0 0 10px !important;
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+}
+#day1 .newomanSectionTitle {
+  margin: 10px 0 4px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+}
+#day1 .newomanList {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#day1 .newomanItem {
+  display: grid !important;
+  grid-template-columns: 1em minmax(0, 1fr) auto !important;
+  column-gap: 0 !important;
+  align-items: start !important;
+  margin: 0 !important;
+  padding: 7px 0 !important;
+  border-bottom: 1px dashed var(--line);
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+}
+#day1 .newomanItem:last-child {
+  border-bottom: 0 !important;
+}
+#day1 .newomanDot {
+  display: block !important;
+  width: 1em !important;
+}
+#day1 .newomanName {
+  min-width: 0 !important;
+}
+#day1 .newomanFloor {
+  padding-left: 12px !important;
+  white-space: nowrap !important;
+  font-weight: 700 !important;
+  color: var(--accent) !important;
+  text-align: right !important;
+}
+#day1 .newomanItem a,
+#day1 .newomanItem a:link,
+#day1 .newomanItem a:visited,
+#day1 .newomanItem a:hover,
+#day1 .newomanItem a:active {
+  color: inherit !important;
+  font-weight: inherit !important;
+  text-decoration: none !important;
+}
+@media (max-width: 640px) {
+  #day1 .newomanIntro {
+    font-size: 15px !important;
+  }
+  #day1 .newomanSectionTitle,
+  #day1 .newomanItem {
+    font-size: 13px !important;
+  }
+}
+
+#day1 .newomanLuftbaumBlock {
+  margin-top: 10px !important;
+}
+#day1 .newomanLuftbaumHead {
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  color: var(--text) !important;
+}
+#day1 .newomanLuftbaumTitle {
+  font-weight: 700 !important;
+  min-width: 0 !important;
+}
+#day1 .newomanLuftbaumOpen {
+  margin-left: 8px !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #4d463f !important;
+  white-space: nowrap !important;
+}
+#day1 .newomanLuftbaumFloor {
+  margin-left: auto !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  color: var(--accent) !important;
+}
+#day1 .newomanLuftbaumDesc {
+  margin: 2px 0 5px !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+  font-weight: 400 !important;
+  color: #4d463f !important;
+}
+#day1 .newomanLuftbaumBlock .newomanItemNoFloor {
+  grid-template-columns: 1em minmax(0, 1fr) !important;
+}
+#day1 .newomanLuftbaumBlock .newomanLoopsHours {
+  display: block !important;
+  margin-top: 1px !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  font-weight: 400 !important;
+  color: #4d463f !important;
+}
+@media (max-width: 640px) {
+  #day1 .newomanLuftbaumHead,
+  #day1 .newomanLuftbaumDesc {
+    font-size: 13px !important;
+  }
+  #day1 .newomanLuftbaumOpen,
+  #day1 .newomanLuftbaumBlock .newomanLoopsHours {
+    font-size: 11px !important;
+  }
+}
+
+#day1 .newomanLoopsGallery {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 3px 0 0 !important;
+  overflow: hidden !important;
+}
+#day1 .newomanLoopsGallery .galleryRow {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#day4 .preferredLineBox .pdfEmbedWrap {
+  width: 100% !important;
+  height: 620px !important;
+  min-height: 620px !important;
+  overflow: hidden !important;
+}
+#day4 .preferredLineBox .pdfEmbed {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 620px !important;
+  border: 0 !important;
+}
+@media (max-width: 640px) {
+  #day4 .preferredLineBox .pdfEmbedWrap,
+  #day4 .preferredLineBox .pdfEmbed {
+    height: 620px !important;
+    min-height: 620px !important;
+  }
+}
+
+#day1 .day1HotelInfo a[href],
+#day1 .day1HotelInfo a[href]:link,
+#day1 .day1HotelInfo a[href]:visited,
+#day1 .day1HotelInfo a[href]:hover,
+#day1 .day1HotelInfo a[href]:active {
+  font-weight: 400 !important;
+  font-size: inherit !important;
+  color: inherit !important;
+}
+
+#day1 .oimachiFloorGuideLine,
+#day1 .oimachiFloorGuideLine a {
+  margin: 0 0 10px !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+}
+@media (max-width: 640px) {
+  #day1 .oimachiFloorGuideLine,
+  #day1 .oimachiFloorGuideLine a {
+    font-size: 13px !important;
+  }
+}
+
+#day4 .day4AlaCarteBtn {
+  display: inline-flex !important;
+  width: auto !important;
+  min-height: 24px !important;
+  padding: 3px 9px !important;
+  margin-top: 6px !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+}
+
+#day7 .day7MyMap {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
+#day7 .day7MyMap iframe {
+  display: block;
+  width: 100%;
+  height: 620px;
+  border: 0;
+}
+@media (max-width: 640px) {
+  #day7 .day7MyMap iframe {
+    height: 560px;
+  }
+}
+
+#day1 .day1NewomanGallery {
+  margin-top: 4px !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+#day1 .day1NewomanGallery .galleryRow {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* 航班時刻卡片 */
+.flightOption{padding:10px 0 12px;border-top:1px solid var(--line)}
+.flightOption:first-of-type{margin-top:8px}
+.flightDate{font-size:14px;font-weight:800;color:#24579e;margin-bottom:12px}
+.flightRoute{display:flex;align-items:center;gap:10px}
+.flightDuration{flex:0 0 46px;text-align:center;font-size:13px;color:#24579e}
+.flightStops{border-left:3px solid #24579e;padding-left:12px;margin-left:4px;position:relative;flex:1;min-width:0}
+.flightStop{position:relative;display:flex;flex-direction:column;gap:2px;min-height:112px}
+.flightStop:last-child{min-height:0}
+.flightStop:before{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:#24579e;left:-18.5px;top:0}
+.flightStop:last-child:before{top:auto;bottom:0}
+.flightStop strong{color:#24579e;font-size:16px;line-height:1.25}
+.flightStop span{color:#697394;font-size:13px;overflow-wrap:anywhere}
+.flightStop small{color:var(--text);font-size:13px}
+.flightDetails{color:#697394;font-size:12px;line-height:1.55;margin:12px 0 0 56px}
+@media(max-width:640px){.heroFlightCard{padding:9px 7px!important}.flightRoute{gap:4px}.flightDuration{flex-basis:34px;font-size:11px}.flightStops{padding-left:9px}.flightStop:before{left:-15.5px}.flightStop strong{font-size:13px}.flightStop span,.flightStop small{font-size:11px}.flightDetails{margin-left:41px;font-size:10px}.flightDate{font-size:13px}}
+</style>
+<style>
+/* Compact flight summary, matching the original two-column card layout */
+.heroFlights{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:stretch}
+.heroFlightCard{padding:14px 18px;background:transparent;display:flex;flex-direction:column;min-width:0}
+.heroFlightTitle{font-size:16px;font-weight:800;line-height:1.45;margin:0 0 8px;color:#17243a}
+.compactFlight{padding:3px 0 10px}
+.heroFlightCard:first-child{display:flex;flex-direction:column;align-content:start}
+.heroFlightCard:first-child .heroFlightTitle{grid-column:1/-1}
+.compactFlight+.compactFlight{border-top:0;padding-top:3px;border-left:1px solid var(--line);padding-left:12px}
+.compactFlightDate{font-size:14px;font-weight:800;color:#29599d;margin-bottom:3px}
+.heroFlightList{font-size:15px;line-height:1.55;margin:2px 0 0;padding-left:22px}
+.heroFlightList li{padding-left:1px;margin:0 0 3px}
+@media(max-width:640px){.heroFlights{grid-template-columns:1fr 1fr;gap:7px}.heroFlightCard:first-child{column-gap:5px}.compactFlight+.compactFlight{padding-left:5px}.heroFlightCard{padding:10px 8px}.heroFlightTitle{font-size:13px}.compactFlightDate{font-size:12px}.heroFlightList{font-size:12px!important;padding-left:17px;line-height:1.5}.heroFlightList li{overflow-wrap:anywhere}.heroFlightCard:first-child .heroFlightList{font-size:10px!important;padding-left:12px}.heroFlightCard:first-child .compactFlightDate{font-size:12px}}
+</style><style id="flight-typography-unified">
+/* 左右航班資訊一致的字級與行距 */
+.heroFlightCard .heroFlightTitle {font-size:16px!important;line-height:1.45!important;}
+.heroFlightCard .compactFlightDate {font-size:15px!important;font-weight:700!important;line-height:1.5!important;}
+.heroFlightCard .heroFlightList,
+.heroFlightCard:first-child .heroFlightList {font-size:15px!important;line-height:1.55!important;padding-left:22px!important;}
+@media(max-width:640px){
+ .heroFlightCard .heroFlightTitle {font-size:13px!important;}
+ .heroFlightCard .compactFlightDate {font-size:12px!important;}
+ .heroFlightCard .heroFlightList,
+ .heroFlightCard:first-child .heroFlightList {font-size:12px!important;line-height:1.5!important;padding-left:17px!important;}
+}
+</style>
+</head>
+<body>
+<main class="container">
+<section class="hero"><div class="heroTitleCard"><h1 class="title">Tokyo 8 Days</h1></div>
+<div class="heroFlights"><div class="heroFlightCard"><h2 class="heroFlightTitle">✈️ 去程｜華航 CI220</h2><div class="compactFlight"><div class="compactFlightDate">12/1（二） / 12/4（五）</div><ul class="heroFlightList"><li>⏰ 預計 06:30 抵達機場</li><li>🛫 09:00 松山機場 T1</li><li>🛬 12:50 羽田機場 T3</li></ul></div></div><div class="heroFlightCard"><h2 class="heroFlightTitle">✈️ 回程｜華航 CI221</h2><div class="compactFlight"><div class="compactFlightDate">12/7（一）</div><ul class="heroFlightList"><li>⏰ 預計 11:30 抵達機場</li><li>🛫 14:15 羽田機場 T3</li><li>🛬 17:15 松山機場 T1</li></ul></div></div></div></section>
+<section class="tabShell"><nav aria-label="行程頁籤" class="topTabs">
+<a class="tabBtn active" data-target="memoPanel">Memo</a>
+<a class="tabBtn" data-target="day1">Day 1</a>
+<a class="tabBtn" data-target="day2">Day 2</a>
+<a class="tabBtn" data-target="day3">Day 3</a>
+<a class="tabBtn" data-target="day4">Day 4</a>
+<a class="tabBtn" data-target="day5">Day 5</a>
+<a class="tabBtn" data-target="day6">Day 6</a>
+<a class="tabBtn" data-target="day7">Day 7</a>
+<a class="tabBtn" data-target="day8">Day 8</a>
+</nav><div class="tabsDivider"></div>
+<section class="card daySection pagePanel active" id="memoPanel">
+<div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">★</div><h2 class="dayTitle">Memo</h2></div><div class="dayDate"></div></div>
+<div class="dayBody"><div class="memoBoxes"><details class="infoBox preferredLineBox"><summary><span class="summaryText">備忘錄</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div></section>
+<section class="card daySection pagePanel" id="day1">
+<div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">1</div><h2 class="dayTitle">Day 1</h2></div><div class="dayDate"></div></div>
+<div class="dayBody"><div class="timeline"><div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div><div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div></div></div></section>
+<section class="card daySection pagePanel" id="day2">
+<div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">2</div><h2 class="dayTitle">Day 2</h2></div><div class="dayDate"></div></div>
+<div class="dayBody"><div class="timeline"><div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div><div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div></div></div></section>
+<section class="card daySection pagePanel" id="day3">
+<div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">3</div><h2 class="dayTitle">Day 3</h2></div><div class="dayDate"></div></div>
+<div class="dayBody"><div class="timeline"><div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div><div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div></div></div></section>
+<section class="card daySection pagePanel" id="day4">
+<div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">4</div><h2 class="dayTitle">Day 4</h2></div><div class="dayDate"></div></div>
+<div class="dayBody"><div class="timeline"><div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div><div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div></div></div></section>
+<section class="card daySection pagePanel" id="day5">
+<div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">5</div><h2 class="dayTitle">Day 5</h2></div><div class="dayDate"></div></div>
+<div class="dayBody"><div class="timeline"><div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div><div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div></div></div></section>
+<section class="card daySection pagePanel" id="day6">
+<div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">6</div><h2 class="dayTitle">Day 6</h2></div><div class="dayDate"></div></div>
+<div class="dayBody"><div class="timeline"><div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div><div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div></div></div></section>
+<section class="card daySection pagePanel" id="day7">
+<div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">7</div><h2 class="dayTitle">Day 7</h2></div><div class="dayDate"></div></div>
+<div class="dayBody"><div class="timeline"><div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div><div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div></div></div></section>
+<section class="card daySection pagePanel" id="day8">
+<div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">8</div><h2 class="dayTitle">Day 8</h2></div><div class="dayDate"></div></div>
+<div class="dayBody"><div class="timeline"><div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div><div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div></div></div></section>
+</section></main>
+<script>
+document.querySelectorAll('.tabBtn').forEach(tab=>tab.addEventListener('click',()=>{
+ document.querySelectorAll('.tabBtn').forEach(x=>x.classList.toggle('active',x===tab));
+ document.querySelectorAll('.pagePanel').forEach(x=>x.classList.toggle('active',x.id===tab.dataset.target));
+}));
+</script></body></html>
+<!-- 去程日期合併，保留單組航班時間 -->
