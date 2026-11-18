@@ -1811,6 +1811,27 @@ details.infoBox.preferredLineBox[open] > summary .chev {
  .heroFlightCard:first-child .heroFlightList {font-size:12px!important;line-height:1.5!important;padding-left:17px!important;}
 }
 </style>
+
+<style id="flight-september-style-restore">
+/* 航班卡片：依 0923~1001最後版2_ 的原始設定統一覆寫 */
+.heroFlights {display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;align-items:stretch!important;}
+.heroFlightCard {border:1px solid var(--line)!important;border-radius:16px!important;padding:10px 12px!important;background:rgba(255,255,255,.03)!important;min-width:0!important;}
+.heroFlightCard .heroFlightTitle,.heroFlightCard:first-child .heroFlightTitle {margin:0!important;font-size:14px!important;line-height:1.4!important;font-weight:700!important;color:var(--text)!important;}
+.heroFlightCard .compactFlightDate,.heroFlightCard:first-child .compactFlightDate {font-size:14px!important;line-height:1.4!important;font-weight:700!important;color:var(--text)!important;margin:5px 0 0!important;}
+.heroFlightCard .heroFlightList,.heroFlightCard:first-child .heroFlightList {margin:6px 0 0!important;padding-left:18px!important;font-size:14px!important;line-height:1.5!important;color:var(--text)!important;}
+.heroFlightCard .heroFlightList li {margin:0!important;padding-left:0!important;}
+.heroFlightCard .heroFlightList li + li {margin-top:3px!important;}
+.heroFlightCard .heroFlightList strong {font-weight:700!important;color:inherit!important;}
+.heroFlightCard .compactFlight {padding:0!important;}
+.heroFlightCard .compactFlight+.compactFlight {border:0!important;padding:0!important;margin-top:5px!important;}
+@media(max-width:640px){
+ .heroFlights {grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;}
+ .heroFlightCard {padding:8px 6px!important;}
+ .heroFlightCard .heroFlightTitle,.heroFlightCard:first-child .heroFlightTitle {font-size:14px!important;}
+ .heroFlightCard .compactFlightDate,.heroFlightCard:first-child .compactFlightDate {font-size:14px!important;}
+ .heroFlightCard .heroFlightList,.heroFlightCard:first-child .heroFlightList {font-size:14px!important;padding-left:18px!important;}
+}
+</style>
 </head>
 <body>
 <main class="container">
