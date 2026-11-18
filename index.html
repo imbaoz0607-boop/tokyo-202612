@@ -54,13 +54,11 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  align-items: stretch;
+  align-items: start;
  }
  .heroFlightCard {
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, .03);
+  padding: 6px 8px;
+  background: transparent;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -71,15 +69,38 @@
   line-height: 1.4;
   font-weight: 700;
   color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+ }
+ .flightSplitHeader {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+ }
+ .flightSplitLeft {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 4px;
+ }
+ .flightSplitDates {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1.3;
  }
  .heroFlightList {
+  list-style: none;
   margin: 6px 0 0;
-  padding-left: 18px;
+  padding-left: 0;
   font-size: 14px;
   line-height: 1.5;
   color: var(--text);
  }
- .heroFlightList li { margin: 0; padding-left: 0; }
+ .heroFlightList li {
+  margin: 0;
+  padding-left: 0;
+ }
  .heroFlightList li + li { margin-top: 3px; }
  .heroFlightList strong { font-weight: 700; color: inherit; }
 
@@ -498,7 +519,9 @@
    grid-template-columns: repeat(2, minmax(0, 1fr));
    gap: 6px;
   }
-  .heroFlightCard { padding: 8px 6px; }
+  .heroFlightCard { padding: 6px 4px; }
+  .heroFlightTitle,
+  .heroFlightList { font-size: 13px; }
   .tabShell { border-radius: 18px; }
   .topTabs {
    gap: 6px;
@@ -539,7 +562,19 @@
   <div class="heroTitleCard"><h1 class="title">Tokyo 7 Days</h1></div>
   <div class="heroFlights">
    <div class="heroFlightCard">
-    <h2 class="heroFlightTitle">✈️ 去12/1(二)1、2/4(五) CI220</h2>
+    <h2 class="heroFlightTitle">
+     <span>✈️</span>
+     <span class="flightSplitHeader">
+      <span class="flightSplitLeft">
+       <span>去</span>
+       <span class="flightSplitDates">
+        <span>12/1(二)</span>
+        <span>12/4(五)</span>
+       </span>
+      </span>
+      <span>華航CI220</span>
+     </span>
+    </h2>
     <ul class="heroFlightList">
      <li>⏰ 預計 <strong>06:30</strong> 抵達機場</li>
      <li>🛫 <strong>09:00</strong> 松山機場 T1</li>
@@ -547,7 +582,10 @@
     </ul>
    </div>
    <div class="heroFlightCard">
-    <h2 class="heroFlightTitle">✈️ 回12/7(一) 華航CI221</h2>
+    <h2 class="heroFlightTitle">
+     <span>✈️</span>
+     <span>回12/7(一) 華航CI221</span>
+    </h2>
     <ul class="heroFlightList">
      <li>⏰ 預計 <strong>11:30</strong> 抵達機場</li>
      <li>🛫 <strong>14:15</strong> 羽田機場 T3</li>
