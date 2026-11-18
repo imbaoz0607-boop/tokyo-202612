@@ -54,13 +54,16 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  align-items: start;
+  align-items: stretch;
  }
  .heroFlightCard {
-  padding: 6px 8px;
-  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, .03);
   display: flex;
   flex-direction: column;
+  justify-content: center;
   min-width: 0;
  }
  .heroFlightTitle {
@@ -97,9 +100,8 @@
   white-space: nowrap;
  }
  .heroFlightList {
-  list-style: none;
   margin: 6px 0 0;
-  padding-left: 0;
+  padding-left: 18px;
   font-size: 14px;
   line-height: 1.5;
   color: var(--text);
@@ -525,15 +527,18 @@
   .hero { margin-bottom: 8px; }
   .heroFlights {
    grid-template-columns: repeat(2, minmax(0, 1fr));
-   gap: 4px;
+   gap: 6px;
   }
-  .heroFlightCard { padding: 6px 2px; }
+  .heroFlightCard { padding: 8px 6px; }
   .heroFlightTitle {
    font-size: 12px;
    gap: 4px;
   }
   .flightPrefix { gap: 2px; }
-  .heroFlightList { font-size: 12px; }
+  .heroFlightList {
+   font-size: 12px;
+   padding-left: 16px;
+  }
   .tabShell { border-radius: 18px; }
   .topTabs {
    gap: 6px;
