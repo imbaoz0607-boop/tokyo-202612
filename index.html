@@ -516,11 +516,8 @@
   overflow: hidden;
  }
 
- /* Memo 面板 */
- #memoPanel .memoBoxes { display: flex; flex-direction: column; gap: 0; }
- #memoPanel details.infoBox.preferredLineBox:first-child {
-  border-top: 1px solid var(--line);
- }
+ /* 住宿資訊收合層 */
+ #tab1 .memoBoxes { display: flex; flex-direction: column; gap: 0; }
 
  /* 響應式調整 (手機版) */
  @media (max-width: 640px) {
@@ -612,8 +609,7 @@
  <section class="tabShell">
   <!-- 頁籤導覽列：修改按鈕顯示文字即可，只需確保 data-target 與下方分頁區塊的 id 一致 -->
   <nav aria-label="行程頁籤" class="topTabs">
-   <button type="button" class="tabBtn active" data-target="memoPanel">Memo</button>
-   <button type="button" class="tabBtn" data-target="tab1">分頁 1</button>
+   <button type="button" class="tabBtn active" data-target="tab1">住宿資訊</button>
    <button type="button" class="tabBtn" data-target="tab2">分頁 2</button>
    <button type="button" class="tabBtn" data-target="tab3">分頁 3</button>
    <button type="button" class="tabBtn" data-target="tab4">分頁 4</button>
@@ -623,34 +619,13 @@
   </nav>
   <div class="tabsDivider"></div>
 
-  <!-- Memo 分頁 -->
-  <section class="card daySection pagePanel active" id="memoPanel">
-   <div class="dayCardHeader">
-    <div class="dayHeaderMain"><div class="dayIndex">★</div><h2 class="dayTitle">Memo</h2></div>
-    <div class="dayDate"></div>
-   </div>
-   <div class="dayBody">
-    <div class="memoBoxes">
-     <details class="infoBox preferredLineBox">
-      <summary><span class="summaryText">備忘錄</span><span class="chev">⌄</span></summary>
-      <div class="infoContent"></div>
-     </details>
-    </div>
-   </div>
-  </section>
-
-  <!-- 分頁 1 -->
-  <section class="card daySection pagePanel" id="tab1">
-   <div class="dayCardHeader">
-    <div class="dayHeaderMain"><div class="dayIndex">1</div><h2 class="dayTitle">分頁 1</h2></div>
-    <div class="dayDate"></div>
-   </div>
-   <div class="dayBody">
-    <div class="timeline">
-     <div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div>
-     <div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div>
-    </div>
-   </div>
+  <!-- 分頁 1：住宿資訊 -->
+  <section class="card daySection pagePanel active" id="tab1">
+   <div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">1</div><h2 class="dayTitle">住宿資訊</h2></div><div class="dayDate"></div></div>
+   <div class="dayBody"><div class="memoBoxes">
+    <details class="infoBox preferredLineBox"><summary><span class="summaryText">JR東日本大都会大飯店 川崎</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details>
+    <details class="infoBox preferredLineBox"><summary><span class="summaryText">OMO5 東京五反田</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details>
+   </div></div>
   </section>
 
   <!-- 分頁 2 -->
