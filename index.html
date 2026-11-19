@@ -519,6 +519,14 @@
  /* 住宿資訊收合層 */
  #tab1 .memoBoxes { display: flex; flex-direction: column; gap: 0; }
 
+ /* 飯店交通資訊：沿用原本收合層風格 */
+ .hotelTransport .transportIntro { margin: 2px 0 10px; font-weight: 700; color: var(--text); }
+ .hotelTransport .transportOption { padding: 10px 0; border-top: 1px solid var(--line); }
+ .hotelTransport .transportOption div { margin: 3px 0; }
+ .hotelTransport .transportHeading { font-weight: 700; color: var(--text); font-size: 14px; }
+ .hotelTransport .keikyuLink, .hotelTransport .keikyuLink:link, .hotelTransport .keikyuLink:visited, .hotelTransport .keikyuLink:hover, .hotelTransport .keikyuLink:active { color: inherit; font-weight: 700; text-decoration: none !important; }
+ .hotelTransport .transportFootnote { margin: 10px 0 0; font-size: 12px; color: var(--muted); }
+
  /* 響應式調整 (手機版) */
  @media (max-width: 640px) {
   .container { padding: 10px 4px 20px; }
@@ -623,7 +631,30 @@
   <section class="card daySection pagePanel active" id="tab1">
    <div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">1</div><h2 class="dayTitle">住宿資訊</h2></div><div class="dayDate"></div></div>
    <div class="dayBody"><div class="memoBoxes">
-    <details class="infoBox preferredLineBox"><summary><span class="summaryText">JR東日本大都会大飯店 川崎</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details>
+    <details class="infoBox preferredLineBox"><summary><span class="summaryText">JR東日本大都会大飯店 川崎</span><span class="chev">⌄</span></summary>
+     <div class="infoContent hotelTransport">
+      <p class="transportIntro">✈️ 羽田機場第 3 航廈（T3）→ 飯店交通方式</p>
+      <div class="transportOption">
+       <div class="transportHeading"><a class="keikyuLink" href="https://www.haneda-tokyo-access.com/tc/ride/train-line-map.html" target="_blank" rel="noopener noreferrer">京急電鐵</a></div>
+       <div>羽田機場第 3 航廈➞京急川崎站➞步行約9分鐘(700公尺)至飯店</div>
+       <div>・搭乘往京急川崎方向的列車；注意不要搭到需在京急蒲田轉車的班次。</div>
+       <div>・抵達京急川崎站→從中央口改札出站→沿JR川崎站方向步行→進入JR川崎站的中央通道→往中央西口(ラゾーナ川崎プラザ方向)→沿通道左側找到連接飯店的空中行人步道(ペデストリアンデッキ)前進即可抵達。</div>
+       <div>・全程約 25～35 分鐘；車資¥278。</div>
+      </div>
+      <div class="transportOption">
+       <div class="transportHeading">② 京急機場巴士｜空51 川崎站方向</div>
+       <div>羽田機場第 3 航廈 → 川崎站附近 → 步行至飯店</div>
+       <div>・搭乘空51路線；請出發前確認 T3 乘車月台、停靠站及時刻表。</div>
+       <div>・車程約 35 分鐘（另加步行）；車資約 ¥310，依官方最新公告為準。</div>
+      </div>
+      <div class="transportOption">
+       <div class="transportHeading">③ 經品川站轉乘｜京急＋JR東海道線</div>
+       <div>羽田機場第 3 航廈站 → 品川站 → JR川崎站西口 → 步行約 2 分鐘至飯店</div>
+       <div>・先搭京急線往品川方向，在品川站轉乘 JR東海道線往橫濱方向，至川崎站下車。</div>
+       <div>・全程約 30～40 分鐘；車資約 ¥500～¥600（依實際票價為準）。</div>
+      </div>
+      <p class="transportFootnote">※ 時間均為概估，包含轉乘或步行，不含入境、領行李及等車時間；票價、月台及班次請以當日官方資訊為準。</p>
+     </div></details>
     <details class="infoBox preferredLineBox"><summary><span class="summaryText">OMO5 東京五反田</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details>
    </div></div>
   </section>
