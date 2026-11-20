@@ -599,7 +599,7 @@
  .photoLightbox { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.94); display: none; overflow: hidden; }
  .photoLightbox.open { display: block; }
  .photoLightboxStage { position: absolute; inset: 0; overflow: hidden; touch-action: none; overscroll-behavior: contain; user-select: none; -webkit-user-select: none; }
- .photoLightboxImage { position: absolute; left: 50%; top: 50%; max-width: none; max-height: none; transform-origin: center center; will-change: transform; pointer-events: none; -webkit-user-drag: none; }
+ .photoLightboxImage { touch-action: none; position: absolute; left: 50%; top: 50%; max-width: none; max-height: none; transform-origin: center center; will-change: transform; pointer-events: none; -webkit-user-drag: none; }
  .photoLightboxClose, .photoLightboxPrev, .photoLightboxNext { position: absolute; z-index: 2; border: 0; background: rgba(30,30,30,.65); color: white; border-radius: 999px; cursor: pointer; display: grid; place-items: center; }
  .photoLightboxClose { top: max(14px, env(safe-area-inset-top)); right: 14px; width: 42px; height: 42px; font-size: 28px; }
  .photoLightboxPrev, .photoLightboxNext { top: 50%; transform: translateY(-50%); width: 36px; height: 48px; font-size: 25px; }
@@ -863,53 +863,81 @@ document.querySelectorAll('.tabBtn').forEach(tab => tab.addEventListener('click'
    if (points.length === 1) return {mode:1, ...points[0], x, y};
    return null;
  }
+ // iPhone Safari：觸控以 Touch Events 處理，避免 Pointer Capture 導致放大後無法拖曳。
+ function touchPoints(e) {
+   return Array.from(e.touches, t => ({x:t.clientX,y:t.clientY}));
+ }
+ let touchPrev = null, touchMoved = false, touchHadMulti = false;
+ stage.addEventListener('touchstart', e => {
+   e.preventDefault();
+   const pts = touchPoints(e);
+   touchPrev = pts;
+   if (pts.length >= 2) { touchHadMulti = true; touchMoved = true; }
+   else { touchMoved = false; touchHadMulti = false; }
+ }, {passive:false});
+ stage.addEventListener('touchmove', e => {
+   e.preventDefault();
+   const pts = touchPoints(e), old = touchPrev;
+   if (!old || pts.length !== old.length) { touchPrev = pts; return; }
+   if (pts.length === 1) {
+     const dx = pts[0].x-old[0].x, dy = pts[0].y-old[0].y;
+     if (Math.abs(dx)+Math.abs(dy)>2) touchMoved = true;
+     if (scale > 1.001) { x += dx; y += dy; render(); }
+   } else if (pts.length >= 2) {
+     touchHadMulti = true; touchMoved = true;
+     const before = midpoint(old[0],old[1]), after = midpoint(pts[0],pts[1]);
+     const next = Math.max(minScale,Math.min(maxScale,scale*after.d/Math.max(1,before.d)));
+     const factor = next/scale;
+     const p0 = local(before), p1 = local(after);
+     x = p1.x-(p0.x-x)*factor;
+     y = p1.y-(p0.y-y)*factor;
+     scale = next; render();
+   }
+   touchPrev = pts;
+ }, {passive:false});
+ stage.addEventListener('touchend', e => {
+   e.preventDefault();
+   const pts = touchPoints(e);
+   if (pts.length) { touchPrev = pts; touchHadMulti = true; return; }
+   touchPrev = null;
+   if (!touchMoved && !touchHadMulti && e.changedTouches.length === 1) {
+     const t = e.changedTouches[0]; doubleTap({x:t.clientX,y:t.clientY});
+   }
+   touchMoved = false; touchHadMulti = false;
+ }, {passive:false});
+ stage.addEventListener('touchcancel', e => { e.preventDefault(); touchPrev=null; touchMoved=false; touchHadMulti=false; }, {passive:false});
+ function doubleTap(point) {
+   const now=Date.now();
+   if (now-lastTap<330 && tapPoint && Math.hypot(point.x-tapPoint.x,point.y-tapPoint.y)<40) {
+     if (scale>1.01) {scale=1;x=0;y=0;}
+     else {const p=local(point),f=2.5;x=p.x-(p.x-x)*f;y=p.y-(p.y-y)*f;scale=f;}
+     render();lastTap=0;tapPoint=null;
+   } else {lastTap=now;tapPoint=point;}
+ }
+ // 滑鼠與觸控筆維持 Pointer Events，避免同一次觸控被重複處理。
  stage.addEventListener('pointerdown', e => {
-   if (e.pointerType === 'mouse' && e.button !== 0) return;
-   e.preventDefault(); stage.setPointerCapture(e.pointerId);
-   active.set(e.pointerId, {x:e.clientX,y:e.clientY});
-   previous = gestureSnapshot();
-   if (active.size === 1) moved = false;
+   if (e.pointerType === 'touch' || (e.pointerType === 'mouse' && e.button !== 0)) return;
+   e.preventDefault();stage.setPointerCapture(e.pointerId);
+   active.set(e.pointerId,{x:e.clientX,y:e.clientY});previous=gestureSnapshot();moved=false;
  });
  stage.addEventListener('pointermove', e => {
-   if (!active.has(e.pointerId)) return;
-   e.preventDefault();
-   const old = previous;
-   active.set(e.pointerId, {x:e.clientX,y:e.clientY});
-   const now = gestureSnapshot();
-   if (!old || !now || old.mode !== now.mode) { previous = now; return; }
-   if (now.mode === 1) {
-     const dx = now.x-old.x, dy = now.y-old.y;
-     if (Math.abs(dx)+Math.abs(dy)>1) moved = true;
-     if (scale>1) { x += dx; y += dy; }
-   } else {
-     moved = true;
-     const newScale = Math.min(maxScale,Math.max(minScale,scale*(now.d/Math.max(1,old.d))));
-     const oldMid = local(old), newMid = local(now);
-     const factor = newScale/scale;
-     x = newMid.x - (oldMid.x-x)*factor;
-     y = newMid.y - (oldMid.y-y)*factor;
-     scale = newScale;
+   if (e.pointerType === 'touch' || !active.has(e.pointerId)) return;
+   e.preventDefault();const old=previous;
+   active.set(e.pointerId,{x:e.clientX,y:e.clientY});const now=gestureSnapshot();
+   if (old && now && old.mode===1 && now.mode===1) {
+     const dx=now.x-old.x,dy=now.y-old.y;
+     if (Math.abs(dx)+Math.abs(dy)>1) moved=true;
+     if(scale>1.001){x+=dx;y+=dy;render();}
    }
-   render(); previous = gestureSnapshot();
- }, {passive:false});
+   previous=gestureSnapshot();
+ },{passive:false});
  function pointerEnd(e) {
-   if (!active.has(e.pointerId)) return;
-   active.delete(e.pointerId); previous = gestureSnapshot();
-   // 不啟動任何慣性或回彈動畫，座標直接保持當前值
-   if (!active.size && !moved && e.type === 'pointerup') {
-     const now = Date.now(), point = {x:e.clientX,y:e.clientY};
-     if (now-lastTap<330 && tapPoint && Math.hypot(point.x-tapPoint.x,point.y-tapPoint.y)<40) {
-       if (scale>1.01) {scale=1; x=0; y=0;}
-       else {
-         const p=local(point), factor=2.5;
-         x = p.x-(p.x-x)*factor; y = p.y-(p.y-y)*factor; scale=factor;
-       }
-       render(); lastTap=0; tapPoint=null;
-     } else { lastTap=now; tapPoint=point; }
-   }
+   if(e.pointerType==='touch'||!active.has(e.pointerId)) return;
+   active.delete(e.pointerId);previous=gestureSnapshot();
+   if(!active.size&&!moved&&e.type==='pointerup') doubleTap({x:e.clientX,y:e.clientY});
  }
- stage.addEventListener('pointerup', pointerEnd);
- stage.addEventListener('pointercancel', pointerEnd);
+ stage.addEventListener('pointerup',pointerEnd);
+ stage.addEventListener('pointercancel',pointerEnd);
  stage.addEventListener('wheel', e => {
    if (!lightbox.classList.contains('open')) return;
    e.preventDefault();
