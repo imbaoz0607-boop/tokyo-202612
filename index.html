@@ -806,8 +806,10 @@ document.querySelectorAll('.tabBtn').forEach(tab => tab.addEventListener('click'
  let active = new Map(), previous = null, lastTap = 0, tapPoint = null, moved = false;
  const minScale = 1, maxScale = 6;
  function bounds() {
-   const halfX = Math.max(0, (baseW * scale - stage.clientWidth) / 2);
-   const halfY = Math.max(0, (baseH * scale - stage.clientHeight) / 2);
+   // 放大後，即使圖片某一方向小於視窗，仍允許拖曳重新定位；
+   // 小於視窗時限制圖片完整留在畫面內，大於視窗時避免露出空白邊緣。
+   const halfX = scale > 1.01 ? Math.abs(baseW * scale - stage.clientWidth) / 2 : 0;
+   const halfY = scale > 1.01 ? Math.abs(baseH * scale - stage.clientHeight) / 2 : 0;
    x = Math.max(-halfX, Math.min(halfX, x));
    y = Math.max(-halfY, Math.min(halfY, y));
  }
@@ -865,7 +867,8 @@ document.querySelectorAll('.tabBtn').forEach(tab => tab.addEventListener('click'
    if (e.pointerType === 'mouse' && e.button !== 0) return;
    e.preventDefault(); stage.setPointerCapture(e.pointerId);
    active.set(e.pointerId, {x:e.clientX,y:e.clientY});
-   previous = gestureSnapshot(); moved = false;
+   previous = gestureSnapshot();
+   if (active.size === 1) moved = false;
  });
  stage.addEventListener('pointermove', e => {
    if (!active.has(e.pointerId)) return;
