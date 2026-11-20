@@ -594,6 +594,19 @@
   /* 空51相簿沿用既有 galleryRow / gItem 樣式 */
   .busGallery { margin: 8px 0 12px; }
   .busGallery .galleryRow { padding-left: 0; }
+
+ /* Gallery 全螢幕檢視：手指放開即停止，沒有慣性動畫 */
+ .photoLightbox { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.94); display: none; overflow: hidden; }
+ .photoLightbox.open { display: block; }
+ .photoLightboxStage { position: absolute; inset: 0; overflow: hidden; touch-action: none; overscroll-behavior: contain; user-select: none; -webkit-user-select: none; }
+ .photoLightboxImage { position: absolute; left: 50%; top: 50%; max-width: none; max-height: none; transform-origin: center center; will-change: transform; pointer-events: none; -webkit-user-drag: none; }
+ .photoLightboxClose, .photoLightboxPrev, .photoLightboxNext { position: absolute; z-index: 2; border: 0; background: rgba(30,30,30,.65); color: white; border-radius: 999px; cursor: pointer; display: grid; place-items: center; }
+ .photoLightboxClose { top: max(14px, env(safe-area-inset-top)); right: 14px; width: 42px; height: 42px; font-size: 28px; }
+ .photoLightboxPrev, .photoLightboxNext { top: 50%; transform: translateY(-50%); width: 36px; height: 48px; font-size: 25px; }
+ .photoLightboxPrev { left: 8px; } .photoLightboxNext { right: 8px; }
+ .photoLightboxCounter { position: absolute; bottom: max(14px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); color: white; font-size: 13px; pointer-events: none; }
+ body.photoLightboxLocked { overflow: hidden; }
+ .gItem img { cursor: zoom-in; }
 </style>
 </head>
 <body>
@@ -657,7 +670,7 @@
        <div class="transportBullet"><span class="bulletMark">・</span><span class="bulletText">抵達京急川崎站→從中央口改札出站→沿JR川崎站方向步行→進入JR川崎站的中央通道→往中央西口(ラゾーナ川崎プラザ方向)→沿通道左側找到連接飯店的空中行人步道(ペデストリアンデッキ)前進即可抵達。</span></div>
       </div>
       <div class="transportOption">
-       <div class="transportHeading">京急機場巴士🚌 空51⏱️約50分鐘(含步行)💰¥310</div>
+       <div class="transportHeading"><a class="keikyuLink" href="https://transfer-cloud.navitime.biz/keikyubus/courses/timetables?busstop=00020152&amp;course-sequence=0008100481-3" target="_blank" rel="noopener noreferrer">京急機場巴士🚌 空51⏱️約50分鐘(含步行)💰¥310</a></div>
        <div>羽田機場第3航廈➞ 川崎站附近➞步行至飯店</div>
        <div class="busTimetable" id="haneda-kawasaki-bus-times">
         <div class="infoContent">
@@ -669,7 +682,7 @@
           </div>
          </div>
          
-         <a class="busTimetableLink" href="https://transfer-cloud.navitime.biz/keikyubus/courses/timetables?busstop=00020152&amp;course-sequence=0008100481-3" target="_blank" rel="noopener noreferrer">京急巴士官方路線與時刻表</a>
+         
         </div>
        </div>
       </div>
@@ -775,6 +788,134 @@ document.querySelectorAll('.tabBtn').forEach(tab => tab.addEventListener('click'
  document.querySelectorAll('.tabBtn').forEach(x => x.classList.toggle('active', x === tab));
  document.querySelectorAll('.pagePanel').forEach(x => x.classList.toggle('active', x.id === tab.dataset.target));
 }));
+</script>
+
+<script>
+/* Gallery 燈箱：雙擊縮放、雙指縮放、單指拖曳，停止觸控立即固定位置 */
+(() => {
+ const lightbox = document.createElement('div');
+ lightbox.className = 'photoLightbox';
+ lightbox.setAttribute('role', 'dialog');
+ lightbox.setAttribute('aria-label', '圖片放大檢視');
+ lightbox.innerHTML = '<div class="photoLightboxStage"><img class="photoLightboxImage" alt="" draggable="false"></div><button type="button" class="photoLightboxClose" aria-label="關閉">×</button><button type="button" class="photoLightboxPrev" aria-label="上一張">‹</button><button type="button" class="photoLightboxNext" aria-label="下一張">›</button><div class="photoLightboxCounter"></div>';
+ document.body.appendChild(lightbox);
+ const stage = lightbox.querySelector('.photoLightboxStage');
+ const image = lightbox.querySelector('.photoLightboxImage');
+ const counter = lightbox.querySelector('.photoLightboxCounter');
+ let galleryImages = [], index = 0, scale = 1, x = 0, y = 0, baseW = 1, baseH = 1;
+ let active = new Map(), previous = null, lastTap = 0, tapPoint = null, moved = false;
+ const minScale = 1, maxScale = 6;
+ function bounds() {
+   const halfX = Math.max(0, (baseW * scale - stage.clientWidth) / 2);
+   const halfY = Math.max(0, (baseH * scale - stage.clientHeight) / 2);
+   x = Math.max(-halfX, Math.min(halfX, x));
+   y = Math.max(-halfY, Math.min(halfY, y));
+ }
+ function render() { bounds(); image.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`; }
+ function fit() {
+   const w = image.naturalWidth || 1, h = image.naturalHeight || 1;
+   const ratio = Math.min(stage.clientWidth / w, stage.clientHeight / h);
+   baseW = w * ratio; baseH = h * ratio;
+   image.style.width = baseW + 'px'; image.style.height = baseH + 'px';
+   scale = 1; x = 0; y = 0; render();
+ }
+ function show(i) {
+   index = (i + galleryImages.length) % galleryImages.length;
+   const src = galleryImages[index];
+   image.onload = fit;
+   image.src = src.currentSrc || src.src;
+   image.alt = src.alt || '圖片';
+   if (image.complete && image.naturalWidth) fit();
+   counter.textContent = `${index + 1} / ${galleryImages.length}`;
+   const multiple = galleryImages.length > 1;
+   lightbox.querySelector('.photoLightboxPrev').hidden = !multiple;
+   lightbox.querySelector('.photoLightboxNext').hidden = !multiple;
+   active.clear(); previous = null;
+ }
+ function open(img) {
+   const row = img.closest('.galleryRow');
+   galleryImages = row ? [...row.querySelectorAll('.gItem img')] : [img];
+   lightbox.classList.add('open'); document.body.classList.add('photoLightboxLocked');
+   show(galleryImages.indexOf(img));
+ }
+ function close() { lightbox.classList.remove('open'); document.body.classList.remove('photoLightboxLocked'); active.clear(); previous = null; }
+ document.addEventListener('click', e => {
+   const img = e.target.closest('.galleryRow .gItem img');
+   if (img) open(img);
+ });
+ lightbox.querySelector('.photoLightboxClose').addEventListener('click', close);
+ lightbox.querySelector('.photoLightboxPrev').addEventListener('click', () => show(index - 1));
+ lightbox.querySelector('.photoLightboxNext').addEventListener('click', () => show(index + 1));
+ lightbox.addEventListener('click', e => { if (e.target === lightbox) close(); });
+ document.addEventListener('keydown', e => {
+   if (!lightbox.classList.contains('open')) return;
+   if (e.key === 'Escape') close();
+   if (e.key === 'ArrowLeft') show(index - 1);
+   if (e.key === 'ArrowRight') show(index + 1);
+ });
+ function midpoint(a,b) { return {x:(a.x+b.x)/2, y:(a.y+b.y)/2, d:Math.hypot(a.x-b.x,a.y-b.y)}; }
+ function local(point) { const r = stage.getBoundingClientRect(); return {x:point.x-r.left-r.width/2,y:point.y-r.top-r.height/2}; }
+ function gestureSnapshot() {
+   const points = [...active.values()];
+   if (points.length >= 2) return {mode:2, ...midpoint(points[0],points[1]), scale, x, y};
+   if (points.length === 1) return {mode:1, ...points[0], x, y};
+   return null;
+ }
+ stage.addEventListener('pointerdown', e => {
+   if (e.pointerType === 'mouse' && e.button !== 0) return;
+   e.preventDefault(); stage.setPointerCapture(e.pointerId);
+   active.set(e.pointerId, {x:e.clientX,y:e.clientY});
+   previous = gestureSnapshot(); moved = false;
+ });
+ stage.addEventListener('pointermove', e => {
+   if (!active.has(e.pointerId)) return;
+   e.preventDefault();
+   const old = previous;
+   active.set(e.pointerId, {x:e.clientX,y:e.clientY});
+   const now = gestureSnapshot();
+   if (!old || !now || old.mode !== now.mode) { previous = now; return; }
+   if (now.mode === 1) {
+     const dx = now.x-old.x, dy = now.y-old.y;
+     if (Math.abs(dx)+Math.abs(dy)>1) moved = true;
+     if (scale>1) { x += dx; y += dy; }
+   } else {
+     moved = true;
+     const newScale = Math.min(maxScale,Math.max(minScale,scale*(now.d/Math.max(1,old.d))));
+     const oldMid = local(old), newMid = local(now);
+     const factor = newScale/scale;
+     x = newMid.x - (oldMid.x-x)*factor;
+     y = newMid.y - (oldMid.y-y)*factor;
+     scale = newScale;
+   }
+   render(); previous = gestureSnapshot();
+ }, {passive:false});
+ function pointerEnd(e) {
+   if (!active.has(e.pointerId)) return;
+   active.delete(e.pointerId); previous = gestureSnapshot();
+   // 不啟動任何慣性或回彈動畫，座標直接保持當前值
+   if (!active.size && !moved && e.type === 'pointerup') {
+     const now = Date.now(), point = {x:e.clientX,y:e.clientY};
+     if (now-lastTap<330 && tapPoint && Math.hypot(point.x-tapPoint.x,point.y-tapPoint.y)<40) {
+       if (scale>1.01) {scale=1; x=0; y=0;}
+       else {
+         const p=local(point), factor=2.5;
+         x = p.x-(p.x-x)*factor; y = p.y-(p.y-y)*factor; scale=factor;
+       }
+       render(); lastTap=0; tapPoint=null;
+     } else { lastTap=now; tapPoint=point; }
+   }
+ }
+ stage.addEventListener('pointerup', pointerEnd);
+ stage.addEventListener('pointercancel', pointerEnd);
+ stage.addEventListener('wheel', e => {
+   if (!lightbox.classList.contains('open')) return;
+   e.preventDefault();
+   const p=local({x:e.clientX,y:e.clientY});
+   const next=Math.min(maxScale,Math.max(minScale,scale*Math.exp(-e.deltaY*.002)));
+   const f=next/scale; x=p.x-(p.x-x)*f; y=p.y-(p.y-y)*f; scale=next; render();
+ }, {passive:false});
+ window.addEventListener('resize', () => {if (lightbox.classList.contains('open')) fit();});
+})();
 </script>
 </body>
 </html>
