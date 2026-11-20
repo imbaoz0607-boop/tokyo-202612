@@ -586,6 +586,10 @@
   details.infoBox.preferredLineBox > summary { padding-left: 0; }
   .gItem { width: 60vw; max-width: none; }
  }
+
+ /* 空51乘車位置圖：保持原始比例，手機上不超出收合框 */
+ .busStopMap { margin: 8px 0 12px; }
+ .busStopMap img { display: block; width: 100%; height: auto; border-radius: 6px; }
 </style>
 </head>
 <body>
@@ -649,22 +653,23 @@
        <div class="transportBullet"><span class="bulletMark">・</span><span class="bulletText">抵達京急川崎站→從中央口改札出站→沿JR川崎站方向步行→進入JR川崎站的中央通道→往中央西口(ラゾーナ川崎プラザ方向)→沿通道左側找到連接飯店的空中行人步道(ペデストリアンデッキ)前進即可抵達。</span></div>
       </div>
       <div class="transportOption">
-       <div class="transportHeading">京急機場巴士🚌 空51⏱️約50分鐘(含步行)💰¥278</div>
+       <div class="transportHeading">京急機場巴士🚌 空51⏱️約50分鐘(含步行)💰¥310</div>
        <div>羽田機場第3航廈➞ 川崎站附近➞步行至飯店</div>
        <div class="transportBullet"><span class="bulletMark">・</span><span class="bulletText">羽田機場第3航廈 1 樓 11 號站牌搭乘空51。</span></div>
        <details class="infoBox busTimetable" id="haneda-kawasaki-bus-times">
         <summary><span class="summaryText">羽田 T3➞ 往川崎站時刻表(平日)</span><span class="chev">⌄</span></summary>
         <div class="infoContent">
-         <div>乘車處：T3 1 樓 11 號站牌｜成人單程 ¥310</div>
-         <table class="busTimesTable"><thead><tr><th>T3 發車</th><th>川崎站預估抵達</th></tr></thead><tbody>
+         
+         <div class="busStopMap"><div class="busStopMapTitle">巴士乘車位置</div><img src="1.jpg" alt="巴士乘車位置" loading="lazy"/></div>
+          <table class="busTimesTable"><thead><tr><th>發車時間</th><th>預估抵達</th></tr></thead><tbody>
           <tr><td>12:35</td><td>13:15</td></tr>
-          <tr class="busSuggested"><td><span class="busTimeMarked"><span class="busTimeStar">★</span>14:05</span></td><td>14:45</td></tr>
+          <tr class="busSuggested"><td><span class="busTimeMarked"><span class="busTimeStar"></span>14:05</span></td><td>14:45</td></tr>
           <tr><td>16:05</td><td>16:45</td></tr>
           <tr><td>17:05</td><td>17:45</td></tr>
           <tr><td>18:05</td><td>18:45</td></tr>
           <tr><td>18:35</td><td>19:15</td></tr>
          </tbody></table>
-         <p class="busTimetableNote">★ 14:05 為配合 12:50 抵達航班的參考班次。</p>
+         
          <a class="busTimetableLink" href="https://transfer-cloud.navitime.biz/keikyubus/courses/timetables?busstop=00020152&amp;course-sequence=0008100481-3" target="_blank" rel="noopener noreferrer">京急巴士官方路線與時刻表</a>
         </div>
        </details>
