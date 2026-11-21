@@ -599,7 +599,15 @@
   border-radius: 8px;
  }
 
- /* 響應式調整 (手機版) */
+   /* KAIT 基本資訊：與飯店資訊使用相同左側內距、緊湊行高 */
+  .kaitInfo { padding: 0 8px 8px; font-size: 14px; line-height: 1.15; color: #4d463f; }
+  .kaitInfoName a,
+  .kaitInfoName a:link,
+  .kaitInfoName a:visited,
+  .kaitInfoName a:hover,
+  .kaitInfoName a:active { color: inherit; font-weight: 700; text-decoration: none !important; }
+
+/* 響應式調整 (手機版) */
  @media (max-width: 640px) {
   .container { padding: 10px 4px 20px; }
   .hero { margin-bottom: 8px; }
@@ -803,8 +811,11 @@
    </div>
    <div class="dayBody">
     <div class="timeline">
-     <div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"><a href="http://www.kait.jp" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">Kanagawa Institute of Technology</a></p><p class="meta">1030 ShimoOgino Atsugi-shi, Kanagawa
-Tel 046-291-3033 / Fax 046-242-4422</p></div></div>
+     <div class="kaitInfo">
+      <div class="kaitInfoName"><a href="http://www.kait.jp" target="_blank" rel="noopener noreferrer">Kanagawa Institute of Technology</a></div>
+      <div>1030 ShimoOgino Atsugi-shi, Kanagawa</div>
+      <div>Tel 046-291-3033 / Fax 046-242-4422</div>
+     </div>
      <div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div>
     </div>
    </div>
