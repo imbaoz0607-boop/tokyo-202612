@@ -528,9 +528,13 @@
  .hotelTransport .hotelInfoLine { line-height: 1.15; }
  .hotelTransport .transportIntro { margin: 2px 0 10px; font-weight: 700; color: var(--text); }
  /* 只縮短「交通方式」到第一個京急路線標題的垂直間距 */
- .hotelTransport .transportIntro.transportCompactTitle { margin-bottom: 1.5px; }
+ /* 飯店基本資訊與交通方式之間的淡色分隔線 */
+ .hotelTransport .transportIntro.transportCompactTitle { margin-bottom: 1.5px; border-top: 1px solid var(--line); padding-top: 8px; }
  .hotelTransport .transportIntro.transportCompactTitle + .transportOption { padding-top: 0; }
  .hotelTransport .transportIntro.transportCompactTitle + .transportOption > .transportHeading { margin-top: 0; }
+ /* 縮短兩條京急交通方案之間的留白，其餘段落不變 */
+ .hotelTransport .transportIntro.transportCompactTitle + .transportOption { padding-bottom: 1.5px; }
+ .hotelTransport .transportIntro.transportCompactTitle + .transportOption + .transportOption { padding-top: 1.5px; }
  .hotelTransport .transportOption { padding: 10px 0; border-top: 0; }
  .hotelTransport .transportOption div { margin: 3px 0; }
  /* 項目符號獨立一欄：換行時文字與首行對齊，不會跑到「・」下方 */
