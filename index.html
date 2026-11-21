@@ -532,9 +532,6 @@
  .hotelTransport .keikyuLink, .hotelTransport .keikyuLink:link, .hotelTransport .keikyuLink:visited, .hotelTransport .keikyuLink:hover, .hotelTransport .keikyuLink:active { color: inherit; font-weight: 700; text-decoration: none !important; }
  .hotelTransport .transportFootnote { margin: 10px 0 0; font-size: 12px; color: var(--muted); }
 
- /* 星號在左側，數字仍與其他班次置中對齊 */
- .busTimeMarked { display: inline-block; position: relative; }
- .busTimeStar { position: absolute; right: calc(100% + 0.25em); white-space: nowrap; }
 
  /* 響應式調整 (手機版) */
  @media (max-width: 640px) {
@@ -588,12 +585,6 @@
   .gItem { width: 60vw; max-width: none; }
  }
 
- /* 空51乘車位置圖：保持原始比例，手機上不超出收合框 */
- .busStopMap { margin: 8px 0 12px; }
- .busStopMap img { display: block; width: 100%; height: auto; border-radius: 6px; }
-  /* 空51相簿沿用既有 galleryRow / gItem 樣式 */
-  .busGallery { margin: 8px 0 12px; }
-  .busGallery .galleryRow { padding-left: 0; }
 
  /* Gallery 全螢幕檢視：手指放開即停止，沒有慣性動畫 */
  .photoLightbox { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.94); display: none; overflow: hidden; }
@@ -678,23 +669,6 @@
        <div class="transportBullet"><span class="bulletMark">・</span><span class="bulletText">先搭京急線往品川方向，在品川轉乘JR東海道線往橫濱方向至川崎JT04站下車。</span></div>
        <div class="transportBullet"><span class="bulletMark">・</span><span class="bulletText">由JR川崎站中央南改札或中央北改札出站後，往西口(ラゾーナ川崎プラザ/LAZONA川崎廣場)方向前進，接著走左側往MUZA川崎方向的空中行人步道(ペデストリアンデッキ)即抵飯店。</span></div>
        <div class="transportVideo"><iframe src="https://www.youtube-nocookie.com/embed/lzsXsISEBMc?start=29" title="京急川崎站至飯店步行路線影片" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-      </div>
-      <div class="transportOption">
-       <div class="transportHeading"><a class="keikyuLink" href="https://transfer-cloud.navitime.biz/keikyubus/courses/timetables?busstop=00020152&amp;course-sequence=0008100481-3" target="_blank" rel="noopener noreferrer">京急機場巴士🚌 空51⏱️約50分鐘(含步行)💰¥310</a></div>
-       <div>羽田3航➞川崎站附近➞步行至飯店</div>
-       <div class="busTimetable" id="haneda-kawasaki-bus-times">
-        <div class="infoContent">
-         
-         <div class="gallery gallery-alignLeft busGallery" aria-label="空51巴士乘車位置與時刻表">
-          <div class="galleryRow" role="list">
-           <div class="gItem" role="listitem"><img src="1.jpg" alt="羽田機場第3航廈巴士乘車位置圖" loading="lazy"/></div>
-           <div class="gItem" role="listitem"><img src="2.jpg" alt="羽田 T3 發車及預估抵達川崎站時刻表" loading="lazy"/></div>
-          </div>
-         </div>
-         
-         
-        </div>
-       </div>
       </div>
      </div></details>
     <details class="infoBox preferredLineBox"><summary><span class="summaryText">OMO5 東京五反田</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details>
