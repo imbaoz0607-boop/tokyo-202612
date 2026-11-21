@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta name="format-detection" content="telephone=no"/>
 <title>Tokyo 12月｜行程模板</title>
 <style>
  :root {
@@ -601,6 +602,11 @@
 
    /* KAIT 基本資訊：與飯店資訊使用相同左側內距、緊湊行高 */
   .kaitInfo { padding: 0 8px 8px; font-size: 14px; line-height: 1.15; color: #4d463f; }
+  /* KAIT 交通：沿用資訊框字級，換行時項目文字對齊 */
+  .kaitTransport { margin-top: 10px; }
+  .kaitTransportTitle { font-weight: 700; color: var(--text); margin-bottom: 1.5px; }
+  .kaitTransportBullet { display: grid; grid-template-columns: 1em minmax(0, 1fr); align-items: start; margin-top: 3px; }
+  .kaitTransportBullet span:last-child { min-width: 0; overflow-wrap: anywhere; }
   .kaitInfoName a,
   .kaitInfoName a:link,
   .kaitInfoName a:visited,
@@ -815,6 +821,13 @@
       <div class="kaitInfoName"><a href="http://www.kait.jp" target="_blank" rel="noopener noreferrer">Kanagawa Institute of Technology</a></div>
       <div>1030 ShimoOgino Atsugi-shi, Kanagawa</div>
       <div>Tel 046-291-3033 / Fax 046-242-4422</div>
+      <div class="kaitTransport">
+       <div class="kaitTransportTitle">交通方式</div>
+       <div>川崎➞登戶➞本厚木➞神奈川工科大學</div>
+       <div class="kaitTransportBullet"><span>・</span><span>JR川崎站(JN01)搭南武線前往登戶站(JN14)。</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>在登戶站(JN14=OH18)轉乘小田急小田原線，前往本厚木站(OH34)。</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>沿北口(North Exit)指標出站，於北口1番のりば搭乘神奈川中央交通公車厚89(神奈川工科大学経由・鳶尾団地行13:45發車)，至神奈川工科大学前站下車，前往正門旁的警衛室報到。</span></div>
+      </div>
      </div>
      <div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div>
     </div>
