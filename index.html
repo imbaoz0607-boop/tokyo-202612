@@ -29,6 +29,7 @@
   color: var(--text);
   line-height: 1.5;
  }
+ body.photoLightboxLocked { overflow: hidden; }
  .container {
   width: min(100%, 980px);
   margin: 0 auto;
@@ -298,7 +299,7 @@
   line-height: 1.25;
  }
  .meta {
-  margin: 4px 0 0 0;
+  margin: 4px 0 0;
   color: #4d463f;
   font-size: 14px;
   font-weight: 400;
@@ -307,7 +308,7 @@
  }
  .meta.alignFix {
   padding: 0;
-  margin: 4px 0 0 0;
+  margin: 4px 0 0;
   white-space: normal;
   text-indent: 0;
  }
@@ -496,6 +497,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  cursor: zoom-in;
  }
  .gItem[data-caption]::after {
   content: attr(data-caption);
@@ -519,32 +521,83 @@
 
  /* 住宿資訊收合層 */
  #tab1 .memoBoxes { display: flex; flex-direction: column; gap: 0; }
- /* 移除川崎飯店與下一間飯店之間的分隔線 */
-
- /* 飯店交通資訊：沿用原本收合層風格 */
- /* 飯店電話：保留點擊撥號，與一般飯店資訊相同字重且無底線 */
- .hotelTransport .hotelPhone, .hotelTransport .hotelPhone:link, .hotelTransport .hotelPhone:visited, .hotelTransport .hotelPhone:hover, .hotelTransport .hotelPhone:active { color: inherit !important; font: inherit !important; font-weight: 400 !important; text-decoration: none !important; -webkit-text-decoration: none !important; }
+ .hotelTransport .hotelPhone,
+ .hotelTransport .hotelPhone:link,
+ .hotelTransport .hotelPhone:visited,
+ .hotelTransport .hotelPhone:hover,
+ .hotelTransport .hotelPhone:active {
+  color: inherit !important;
+  font: inherit !important;
+  font-weight: 400 !important;
+  text-decoration: none !important;
+  -webkit-text-decoration: none !important;
+ }
+ .hotelTransport .transportIntro {
+  margin: 2px 0 10px;
+  font-weight: 700;
+  color: var(--text);
+ }
  .hotelTransport .transportIntro.hotelInfoTitle { margin: 2px 0 1.5px; }
  .hotelTransport .hotelInfoLine { line-height: 1.15; }
- .hotelTransport .transportIntro { margin: 2px 0 10px; font-weight: 700; color: var(--text); }
- /* 只縮短「交通方式」到第一個京急路線標題的垂直間距 */
- /* 飯店基本資訊與交通方式之間的淡色分隔線 */
- .hotelTransport .transportIntro.transportCompactTitle { margin-bottom: 1.5px; border-top: 1px solid var(--line); padding-top: 8px; }
- .hotelTransport .transportIntro.transportCompactTitle + .transportOption { padding-top: 0; }
+ .hotelTransport .transportIntro.transportCompactTitle {
+  margin: 12px 0 1.5px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+ }
+ .hotelTransport .transportIntro.transportCompactTitle + .transportOption {
+  padding-top: 0;
+  padding-bottom: 1.5px;
+ }
  .hotelTransport .transportIntro.transportCompactTitle + .transportOption > .transportHeading { margin-top: 0; }
- /* 縮短兩條京急交通方案之間的留白，其餘段落不變 */
- .hotelTransport .transportIntro.transportCompactTitle + .transportOption { padding-bottom: 1.5px; }
  .hotelTransport .transportIntro.transportCompactTitle + .transportOption + .transportOption { padding-top: 1.5px; }
  .hotelTransport .transportOption { padding: 10px 0; border-top: 0; }
  .hotelTransport .transportOption div { margin: 3px 0; }
- /* 項目符號獨立一欄：換行時文字與首行對齊，不會跑到「・」下方 */
- .hotelTransport .transportBullet { display: grid; grid-template-columns: 1em minmax(0, 1fr); column-gap: 0; align-items: start; }
+ .hotelTransport .transportBullet {
+  display: grid;
+  grid-template-columns: 1em minmax(0, 1fr);
+  column-gap: 0;
+  align-items: start;
+ }
  .hotelTransport .transportBullet .bulletMark { display: block; }
- .hotelTransport .transportBullet .bulletText { display: block; min-width: 0; overflow-wrap: anywhere; }
- .hotelTransport .transportHeading { font-weight: 700; color: var(--text); font-size: 14px; }
- .hotelTransport .keikyuLink, .hotelTransport .keikyuLink:link, .hotelTransport .keikyuLink:visited, .hotelTransport .keikyuLink:hover, .hotelTransport .keikyuLink:active { color: inherit; font-weight: 700; text-decoration: none !important; }
- .hotelTransport .transportFootnote { margin: 10px 0 0; font-size: 12px; color: var(--muted); }
+ .hotelTransport .transportBullet .bulletText {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+ }
+ .hotelTransport .transportHeading {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 14px;
+ }
+ .hotelTransport .keikyuLink,
+ .hotelTransport .keikyuLink:link,
+ .hotelTransport .keikyuLink:visited,
+ .hotelTransport .keikyuLink:hover,
+ .hotelTransport .keikyuLink:active {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none !important;
+ }
+ .hotelTransport .transportFootnote {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+ }
 
+ /* 京急電鐵步行路線影片：響應式 16:9 */
+ .hotelTransport .transportVideo {
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 16 / 9;
+  margin: 8px 0 4px;
+ }
+ .hotelTransport .transportVideo iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 8px;
+ }
 
  /* 響應式調整 (手機版) */
  @media (max-width: 640px) {
@@ -560,11 +613,7 @@
    gap: 3px;
   }
   .flightPrefix { gap: 2px; }
-  .heroFlightList {
-   font-size: 14px;
-   font-weight: 700;
-   padding-left: 16px;
-  }
+  .heroFlightList { padding-left: 16px; }
   .tabShell { border-radius: 18px; }
   .topTabs {
    gap: 6px;
@@ -598,22 +647,76 @@
   .gItem { width: 60vw; max-width: none; }
  }
 
-
  /* Gallery 全螢幕檢視：手指放開即停止，沒有慣性動畫 */
- .photoLightbox { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.94); display: none; overflow: hidden; }
+ .photoLightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, .94);
+  display: none;
+  overflow: hidden;
+ }
  .photoLightbox.open { display: block; }
- .photoLightboxStage { position: absolute; inset: 0; overflow: hidden; touch-action: none; overscroll-behavior: contain; user-select: none; -webkit-user-select: none; }
- .photoLightboxImage { touch-action: none; position: absolute; left: 50%; top: 50%; max-width: none; max-height: none; transform-origin: center center; will-change: transform; pointer-events: none; -webkit-user-drag: none; }
- .photoLightboxClose, .photoLightboxPrev, .photoLightboxNext { position: absolute; z-index: 2; border: 0; background: rgba(30,30,30,.65); color: white; border-radius: 999px; cursor: pointer; display: grid; place-items: center; }
- .photoLightboxClose { top: max(14px, env(safe-area-inset-top)); right: 14px; width: 42px; height: 42px; font-size: 28px; }
- .photoLightboxPrev, .photoLightboxNext { top: 50%; transform: translateY(-50%); width: 36px; height: 48px; font-size: 25px; }
- .photoLightboxPrev { left: 8px; } .photoLightboxNext { right: 8px; }
- .photoLightboxCounter { position: absolute; bottom: max(14px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); color: white; font-size: 13px; pointer-events: none; }
- body.photoLightboxLocked { overflow: hidden; }
- .gItem img { cursor: zoom-in; }
-  /* 京急電鐵步行路線影片：響應式 16:9 */
-  .hotelTransport .transportVideo { width: 100%; max-width: 560px; aspect-ratio: 16 / 9; margin: 8px 0 4px; }
-  .hotelTransport .transportVideo iframe { display: block; width: 100%; height: 100%; border: 0; border-radius: 8px; }
+ .photoLightboxStage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
+  user-select: none;
+  -webkit-user-select: none;
+ }
+ .photoLightboxImage {
+  touch-action: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: none;
+  max-height: none;
+  transform-origin: center center;
+  will-change: transform;
+  pointer-events: none;
+  -webkit-user-drag: none;
+ }
+ .photoLightboxClose,
+ .photoLightboxPrev,
+ .photoLightboxNext {
+  position: absolute;
+  z-index: 2;
+  border: 0;
+  background: rgba(30, 30, 30, .65);
+  color: white;
+  border-radius: 999px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+ }
+ .photoLightboxClose {
+  top: max(14px, env(safe-area-inset-top));
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  font-size: 28px;
+ }
+ .photoLightboxPrev,
+ .photoLightboxNext {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 48px;
+  font-size: 25px;
+ }
+ .photoLightboxPrev { left: 8px; }
+ .photoLightboxNext { right: 8px; }
+ .photoLightboxCounter {
+  position: absolute;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 13px;
+  pointer-events: none;
+ }
 </style>
 </head>
 <body>
@@ -652,14 +755,14 @@
 
  <section class="tabShell">
   <!-- 頁籤導覽列：修改按鈕顯示文字即可，只需確保 data-target 與下方分頁區塊的 id 一致 -->
-  <nav aria-label="行程頁籤" class="topTabs">
-   <button type="button" class="tabBtn active" data-target="tab1">住宿資訊</button>
-   <button type="button" class="tabBtn" data-target="tab2">分頁 2</button>
-   <button type="button" class="tabBtn" data-target="tab3">分頁 3</button>
-   <button type="button" class="tabBtn" data-target="tab4">分頁 4</button>
-   <button type="button" class="tabBtn" data-target="tab5">分頁 5</button>
-   <button type="button" class="tabBtn" data-target="tab6">分頁 6</button>
-   <button type="button" class="tabBtn" data-target="tab7">分頁 7</button>
+  <nav aria-label="行程頁籤" class="topTabs" role="tablist">
+   <button type="button" role="tab" aria-selected="true" class="tabBtn active" data-target="tab1">住宿資訊</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab2">分頁 2</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab3">分頁 3</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab4">分頁 4</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab5">分頁 5</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab6">分頁 6</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab7">分頁 7</button>
   </nav>
   <div class="tabsDivider"></div>
 
@@ -670,10 +773,10 @@
     <details class="infoBox preferredLineBox"><summary><span class="summaryText">JR東日本大都会大飯店川崎<a href="googlechromes://kawasaki.hotel-metropolitan.com/tw/" aria-label="使用 Google Chrome 開啟川崎大都會飯店官網" title="使用 Google Chrome 開啟川崎大都會飯店官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary>
      <div class="infoContent hotelTransport">
       <p class="transportIntro hotelInfoTitle">飯店資訊</p>
-      <div class="hotelInfoLine">Hotel Metropolitan Kawasaki　ホテルメトロポリタン川崎</div>
+      <div class="hotelInfoLine">Hotel Metropolitan Kawasaki ホテルメトロポリタン川崎</div>
       <div class="hotelInfoLine">1-5 Omiyacho, Saiwai Ward, Kawasaki, Kanagawa</div>
       <div class="hotelInfoLine"><a class="hotelPhone" href="tel:+81445331111">+81445331111</a></div>
-      <p class="transportIntro transportCompactTitle" style="margin-top: 12px;">交通方式</p>
+      <p class="transportIntro transportCompactTitle">交通方式</p>
       <div class="transportOption">
        <div class="transportHeading"><a class="keikyuLink" href="https://www.haneda-tokyo-access.com/tc/ride/train-line-map.html" target="_blank" rel="noopener noreferrer">京急電鐵⏱️約25～35分鐘(含步行)💰¥278</a></div>
        <div>羽田3航➞京急川崎站KK20➞步行約9分鐘(700公尺)至飯店</div>
@@ -779,168 +882,279 @@
 </main>
 
 <script>
-document.querySelectorAll('.tabBtn').forEach(tab => tab.addEventListener('click', () => {
- document.querySelectorAll('.tabBtn').forEach(x => x.classList.toggle('active', x === tab));
- document.querySelectorAll('.pagePanel').forEach(x => x.classList.toggle('active', x.id === tab.dataset.target));
-}));
-</script>
-
-<script>
-/* Gallery 燈箱：雙擊縮放、雙指縮放、單指拖曳，停止觸控立即固定位置 */
 (() => {
+ /* 頁籤切換 */
+ const tabs = document.querySelectorAll('.tabBtn');
+ const panels = document.querySelectorAll('.pagePanel');
+ tabs.forEach(tab => tab.addEventListener('click', () => {
+  const target = tab.dataset.target;
+  if (!target) return;
+  tabs.forEach(btn => {
+   const isActive = btn === tab;
+   btn.classList.toggle('active', isActive);
+   btn.setAttribute('aria-selected', String(isActive));
+  });
+  panels.forEach(panel => panel.classList.toggle('active', panel.id === target));
+ }));
+
+ /* Gallery 燈箱：雙擊縮放、雙指縮放、單指拖曳，停止觸控立即固定位置 */
  const lightbox = document.createElement('div');
  lightbox.className = 'photoLightbox';
  lightbox.setAttribute('role', 'dialog');
  lightbox.setAttribute('aria-label', '圖片放大檢視');
  lightbox.innerHTML = '<div class="photoLightboxStage"><img class="photoLightboxImage" alt="" draggable="false"></div><button type="button" class="photoLightboxClose" aria-label="關閉">×</button><button type="button" class="photoLightboxPrev" aria-label="上一張">‹</button><button type="button" class="photoLightboxNext" aria-label="下一張">›</button><div class="photoLightboxCounter"></div>';
  document.body.appendChild(lightbox);
+
  const stage = lightbox.querySelector('.photoLightboxStage');
  const image = lightbox.querySelector('.photoLightboxImage');
  const counter = lightbox.querySelector('.photoLightboxCounter');
+ const prevBtn = lightbox.querySelector('.photoLightboxPrev');
+ const nextBtn = lightbox.querySelector('.photoLightboxNext');
+
  let galleryImages = [], index = 0, scale = 1, x = 0, y = 0, baseW = 1, baseH = 1;
- let active = new Map(), previous = null, lastTap = 0, tapPoint = null, moved = false;
+ const active = new Map();
+ let previous = null, lastTap = 0, tapPoint = null, moved = false;
  const minScale = 1, maxScale = 6;
+
  function bounds() {
-   // 放大後，即使圖片某一方向小於視窗，仍允許拖曳重新定位；
-   // 小於視窗時限制圖片完整留在畫面內，大於視窗時避免露出空白邊緣。
-   const halfX = scale > 1.01 ? Math.abs(baseW * scale - stage.clientWidth) / 2 : 0;
-   const halfY = scale > 1.01 ? Math.abs(baseH * scale - stage.clientHeight) / 2 : 0;
-   x = Math.max(-halfX, Math.min(halfX, x));
-   y = Math.max(-halfY, Math.min(halfY, y));
+  const halfX = scale > 1.01 ? Math.abs(baseW * scale - stage.clientWidth) / 2 : 0;
+  const halfY = scale > 1.01 ? Math.abs(baseH * scale - stage.clientHeight) / 2 : 0;
+  x = Math.max(-halfX, Math.min(halfX, x));
+  y = Math.max(-halfY, Math.min(halfY, y));
  }
- function render() { bounds(); image.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`; }
+
+ function render() {
+  bounds();
+  image.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
+ }
+
  function fit() {
-   const w = image.naturalWidth || 1, h = image.naturalHeight || 1;
-   const ratio = Math.min(stage.clientWidth / w, stage.clientHeight / h);
-   baseW = w * ratio; baseH = h * ratio;
-   image.style.width = baseW + 'px'; image.style.height = baseH + 'px';
-   scale = 1; x = 0; y = 0; render();
+  const w = image.naturalWidth || 1, h = image.naturalHeight || 1;
+  const ratio = Math.min(stage.clientWidth / w, stage.clientHeight / h);
+  baseW = w * ratio;
+  baseH = h * ratio;
+  image.style.width = baseW + 'px';
+  image.style.height = baseH + 'px';
+  scale = 1;
+  x = 0;
+  y = 0;
+  render();
  }
+
  function show(i) {
-   index = (i + galleryImages.length) % galleryImages.length;
-   const src = galleryImages[index];
-   image.onload = fit;
-   image.src = src.currentSrc || src.src;
-   image.alt = src.alt || '圖片';
-   if (image.complete && image.naturalWidth) fit();
-   counter.textContent = `${index + 1} / ${galleryImages.length}`;
-   const multiple = galleryImages.length > 1;
-   lightbox.querySelector('.photoLightboxPrev').hidden = !multiple;
-   lightbox.querySelector('.photoLightboxNext').hidden = !multiple;
-   active.clear(); previous = null;
+  index = (i + galleryImages.length) % galleryImages.length;
+  const src = galleryImages[index];
+  image.onload = fit;
+  image.src = src.currentSrc || src.src;
+  image.alt = src.alt || '圖片';
+  if (image.complete && image.naturalWidth) fit();
+  counter.textContent = `${index + 1} / ${galleryImages.length}`;
+  const multiple = galleryImages.length > 1;
+  prevBtn.hidden = !multiple;
+  nextBtn.hidden = !multiple;
+  active.clear();
+  previous = null;
  }
+
  function open(img) {
-   const row = img.closest('.galleryRow');
-   galleryImages = row ? [...row.querySelectorAll('.gItem img')] : [img];
-   lightbox.classList.add('open'); document.body.classList.add('photoLightboxLocked');
-   show(galleryImages.indexOf(img));
+  const row = img.closest('.galleryRow');
+  galleryImages = row ? [...row.querySelectorAll('.gItem img')] : [img];
+  lightbox.classList.add('open');
+  document.body.classList.add('photoLightboxLocked');
+  show(galleryImages.indexOf(img));
  }
- function close() { lightbox.classList.remove('open'); document.body.classList.remove('photoLightboxLocked'); active.clear(); previous = null; }
+
+ function close() {
+  lightbox.classList.remove('open');
+  document.body.classList.remove('photoLightboxLocked');
+  active.clear();
+  previous = null;
+ }
+
  document.addEventListener('click', e => {
-   const img = e.target.closest('.galleryRow .gItem img');
-   if (img) open(img);
+  const img = e.target.closest('.galleryRow .gItem img');
+  if (img) open(img);
  });
+
  lightbox.querySelector('.photoLightboxClose').addEventListener('click', close);
- lightbox.querySelector('.photoLightboxPrev').addEventListener('click', () => show(index - 1));
- lightbox.querySelector('.photoLightboxNext').addEventListener('click', () => show(index + 1));
+ prevBtn.addEventListener('click', () => show(index - 1));
+ nextBtn.addEventListener('click', () => show(index + 1));
  lightbox.addEventListener('click', e => { if (e.target === lightbox) close(); });
+
  document.addEventListener('keydown', e => {
-   if (!lightbox.classList.contains('open')) return;
-   if (e.key === 'Escape') close();
-   if (e.key === 'ArrowLeft') show(index - 1);
-   if (e.key === 'ArrowRight') show(index + 1);
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape') close();
+  if (e.key === 'ArrowLeft') show(index - 1);
+  if (e.key === 'ArrowRight') show(index + 1);
  });
- function midpoint(a,b) { return {x:(a.x+b.x)/2, y:(a.y+b.y)/2, d:Math.hypot(a.x-b.x,a.y-b.y)}; }
- function local(point) { const r = stage.getBoundingClientRect(); return {x:point.x-r.left-r.width/2,y:point.y-r.top-r.height/2}; }
+
+ function midpoint(a, b) {
+  return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.hypot(a.x - b.x, a.y - b.y) };
+ }
+
+ function local(point) {
+  const r = stage.getBoundingClientRect();
+  return { x: point.x - r.left - r.width / 2, y: point.y - r.top - r.height / 2 };
+ }
+
  function gestureSnapshot() {
-   const points = [...active.values()];
-   if (points.length >= 2) return {mode:2, ...midpoint(points[0],points[1]), scale, x, y};
-   if (points.length === 1) return {mode:1, ...points[0], x, y};
-   return null;
+  const points = [...active.values()];
+  if (points.length >= 2) return { mode: 2, ...midpoint(points[0], points[1]), scale, x, y };
+  if (points.length === 1) return { mode: 1, ...points[0], x, y };
+  return null;
  }
- // iPhone Safari：觸控以 Touch Events 處理，避免 Pointer Capture 導致放大後無法拖曳。
- function touchPoints(e) {
-   return Array.from(e.touches, t => ({x:t.clientX,y:t.clientY}));
- }
- let touchPrev = null, touchMoved = false, touchHadMulti = false;
- stage.addEventListener('touchstart', e => {
-   e.preventDefault();
-   const pts = touchPoints(e);
-   touchPrev = pts;
-   if (pts.length >= 2) { touchHadMulti = true; touchMoved = true; }
-   else { touchMoved = false; touchHadMulti = false; }
- }, {passive:false});
- stage.addEventListener('touchmove', e => {
-   e.preventDefault();
-   const pts = touchPoints(e), old = touchPrev;
-   if (!old || pts.length !== old.length) { touchPrev = pts; return; }
-   if (pts.length === 1) {
-     const dx = pts[0].x-old[0].x, dy = pts[0].y-old[0].y;
-     if (Math.abs(dx)+Math.abs(dy)>2) touchMoved = true;
-     if (scale > 1.001) { x += dx; y += dy; render(); }
-   } else if (pts.length >= 2) {
-     touchHadMulti = true; touchMoved = true;
-     const before = midpoint(old[0],old[1]), after = midpoint(pts[0],pts[1]);
-     const next = Math.max(minScale,Math.min(maxScale,scale*after.d/Math.max(1,before.d)));
-     const factor = next/scale;
-     const p0 = local(before), p1 = local(after);
-     x = p1.x-(p0.x-x)*factor;
-     y = p1.y-(p0.y-y)*factor;
-     scale = next; render();
-   }
-   touchPrev = pts;
- }, {passive:false});
- stage.addEventListener('touchend', e => {
-   e.preventDefault();
-   const pts = touchPoints(e);
-   if (pts.length) { touchPrev = pts; touchHadMulti = true; return; }
-   touchPrev = null;
-   if (!touchMoved && !touchHadMulti && e.changedTouches.length === 1) {
-     const t = e.changedTouches[0]; doubleTap({x:t.clientX,y:t.clientY});
-   }
-   touchMoved = false; touchHadMulti = false;
- }, {passive:false});
- stage.addEventListener('touchcancel', e => { e.preventDefault(); touchPrev=null; touchMoved=false; touchHadMulti=false; }, {passive:false});
+
  function doubleTap(point) {
-   const now=Date.now();
-   if (now-lastTap<330 && tapPoint && Math.hypot(point.x-tapPoint.x,point.y-tapPoint.y)<40) {
-     if (scale>1.01) {scale=1;x=0;y=0;}
-     else {const p=local(point),f=2.5;x=p.x-(p.x-x)*f;y=p.y-(p.y-y)*f;scale=f;}
-     render();lastTap=0;tapPoint=null;
-   } else {lastTap=now;tapPoint=point;}
- }
- // 滑鼠與觸控筆維持 Pointer Events，避免同一次觸控被重複處理。
- stage.addEventListener('pointerdown', e => {
-   if (e.pointerType === 'touch' || (e.pointerType === 'mouse' && e.button !== 0)) return;
-   e.preventDefault();stage.setPointerCapture(e.pointerId);
-   active.set(e.pointerId,{x:e.clientX,y:e.clientY});previous=gestureSnapshot();moved=false;
- });
- stage.addEventListener('pointermove', e => {
-   if (e.pointerType === 'touch' || !active.has(e.pointerId)) return;
-   e.preventDefault();const old=previous;
-   active.set(e.pointerId,{x:e.clientX,y:e.clientY});const now=gestureSnapshot();
-   if (old && now && old.mode===1 && now.mode===1) {
-     const dx=now.x-old.x,dy=now.y-old.y;
-     if (Math.abs(dx)+Math.abs(dy)>1) moved=true;
-     if(scale>1.001){x+=dx;y+=dy;render();}
+  const now = Date.now();
+  if (now - lastTap < 330 && tapPoint && Math.hypot(point.x - tapPoint.x, point.y - tapPoint.y) < 40) {
+   if (scale > 1.01) {
+    scale = 1;
+    x = 0;
+    y = 0;
+   } else {
+    const p = local(point), f = 2.5;
+    x = p.x - (p.x - x) * f;
+    y = p.y - (p.y - y) * f;
+    scale = f;
    }
-   previous=gestureSnapshot();
- },{passive:false});
- function pointerEnd(e) {
-   if(e.pointerType==='touch'||!active.has(e.pointerId)) return;
-   active.delete(e.pointerId);previous=gestureSnapshot();
-   if(!active.size&&!moved&&e.type==='pointerup') doubleTap({x:e.clientX,y:e.clientY});
+   render();
+   lastTap = 0;
+   tapPoint = null;
+  } else {
+   lastTap = now;
+   tapPoint = point;
+  }
  }
- stage.addEventListener('pointerup',pointerEnd);
- stage.addEventListener('pointercancel',pointerEnd);
+
+ /* iPhone Safari：觸控以 Touch Events 處理，避免 Pointer Capture 導致放大後無法拖曳 */
+ function touchPoints(e) {
+  return Array.from(e.touches, t => ({ x: t.clientX, y: t.clientY }));
+ }
+
+ let touchPrev = null, touchMoved = false, touchHadMulti = false;
+
+ stage.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const pts = touchPoints(e);
+  touchPrev = pts;
+  if (pts.length >= 2) {
+   touchHadMulti = true;
+   touchMoved = true;
+  } else {
+   touchMoved = false;
+   touchHadMulti = false;
+  }
+ }, { passive: false });
+
+ stage.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const pts = touchPoints(e), old = touchPrev;
+  if (!old || pts.length !== old.length) {
+   touchPrev = pts;
+   return;
+  }
+  if (pts.length === 1) {
+   const dx = pts[0].x - old[0].x, dy = pts[0].y - old[0].y;
+   if (Math.abs(dx) + Math.abs(dy) > 2) touchMoved = true;
+   if (scale > 1.001) {
+    x += dx;
+    y += dy;
+    render();
+   }
+  } else if (pts.length >= 2) {
+   touchHadMulti = true;
+   touchMoved = true;
+   const before = midpoint(old[0], old[1]), after = midpoint(pts[0], pts[1]);
+   const next = Math.max(minScale, Math.min(maxScale, scale * after.d / Math.max(1, before.d)));
+   const factor = next / scale;
+   const p0 = local(before), p1 = local(after);
+   x = p1.x - (p0.x - x) * factor;
+   y = p1.y - (p0.y - y) * factor;
+   scale = next;
+   render();
+  }
+  touchPrev = pts;
+ }, { passive: false });
+
+ stage.addEventListener('touchend', e => {
+  e.preventDefault();
+  const pts = touchPoints(e);
+  if (pts.length) {
+   touchPrev = pts;
+   touchHadMulti = true;
+   return;
+  }
+  touchPrev = null;
+  if (!touchMoved && !touchHadMulti && e.changedTouches.length === 1) {
+   const t = e.changedTouches[0];
+   doubleTap({ x: t.clientX, y: t.clientY });
+  }
+  touchMoved = false;
+  touchHadMulti = false;
+ }, { passive: false });
+
+ stage.addEventListener('touchcancel', e => {
+  e.preventDefault();
+  touchPrev = null;
+  touchMoved = false;
+  touchHadMulti = false;
+ }, { passive: false });
+
+ /* 滑鼠與觸控筆維持 Pointer Events，避免同一次觸控被重複處理 */
+ stage.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'touch' || (e.pointerType === 'mouse' && e.button !== 0)) return;
+  e.preventDefault();
+  stage.setPointerCapture(e.pointerId);
+  active.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  previous = gestureSnapshot();
+  moved = false;
+ });
+
+ stage.addEventListener('pointermove', e => {
+  if (e.pointerType === 'touch' || !active.has(e.pointerId)) return;
+  e.preventDefault();
+  const old = previous;
+  active.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  const now = gestureSnapshot();
+  if (old && now && old.mode === 1 && now.mode === 1) {
+   const dx = now.x - old.x, dy = now.y - old.y;
+   if (Math.abs(dx) + Math.abs(dy) > 1) moved = true;
+   if (scale > 1.001) {
+    x += dx;
+    y += dy;
+    render();
+   }
+  }
+  previous = gestureSnapshot();
+ }, { passive: false });
+
+ function pointerEnd(e) {
+  if (e.pointerType === 'touch' || !active.has(e.pointerId)) return;
+  active.delete(e.pointerId);
+  previous = gestureSnapshot();
+  if (!active.size && !moved && e.type === 'pointerup') {
+   doubleTap({ x: e.clientX, y: e.clientY });
+  }
+ }
+
+ stage.addEventListener('pointerup', pointerEnd);
+ stage.addEventListener('pointercancel', pointerEnd);
+
  stage.addEventListener('wheel', e => {
-   if (!lightbox.classList.contains('open')) return;
-   e.preventDefault();
-   const p=local({x:e.clientX,y:e.clientY});
-   const next=Math.min(maxScale,Math.max(minScale,scale*Math.exp(-e.deltaY*.002)));
-   const f=next/scale; x=p.x-(p.x-x)*f; y=p.y-(p.y-y)*f; scale=next; render();
- }, {passive:false});
- window.addEventListener('resize', () => {if (lightbox.classList.contains('open')) fit();});
+  if (!lightbox.classList.contains('open')) return;
+  e.preventDefault();
+  const p = local({ x: e.clientX, y: e.clientY });
+  const next = Math.min(maxScale, Math.max(minScale, scale * Math.exp(-e.deltaY * .002)));
+  const f = next / scale;
+  x = p.x - (p.x - x) * f;
+  y = p.y - (p.y - y) * f;
+  scale = next;
+  render();
+ }, { passive: false });
+
+ window.addEventListener('resize', () => {
+  if (lightbox.classList.contains('open')) fit();
+ });
 })();
 </script>
 </body>
