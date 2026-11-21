@@ -524,7 +524,13 @@
  /* 飯店交通資訊：沿用原本收合層風格 */
  /* 飯店電話：保留點擊撥號，與一般飯店資訊相同字重且無底線 */
  .hotelTransport .hotelPhone, .hotelTransport .hotelPhone:link, .hotelTransport .hotelPhone:visited, .hotelTransport .hotelPhone:hover, .hotelTransport .hotelPhone:active { color: inherit !important; font: inherit !important; font-weight: 400 !important; text-decoration: none !important; -webkit-text-decoration: none !important; }
+ .hotelTransport .transportIntro.hotelInfoTitle { margin: 2px 0 1.5px; }
+ .hotelTransport .hotelInfoLine { line-height: 1.15; }
  .hotelTransport .transportIntro { margin: 2px 0 10px; font-weight: 700; color: var(--text); }
+ /* 只縮短「交通方式」到第一個京急路線標題的垂直間距 */
+ .hotelTransport .transportIntro.transportCompactTitle { margin-bottom: 1.5px; }
+ .hotelTransport .transportIntro.transportCompactTitle + .transportOption { padding-top: 0; }
+ .hotelTransport .transportIntro.transportCompactTitle + .transportOption > .transportHeading { margin-top: 0; }
  .hotelTransport .transportOption { padding: 10px 0; border-top: 0; }
  .hotelTransport .transportOption div { margin: 3px 0; }
  /* 項目符號獨立一欄：換行時文字與首行對齊，不會跑到「・」下方 */
@@ -659,11 +665,11 @@
    <div class="dayBody"><div class="memoBoxes">
     <details class="infoBox preferredLineBox"><summary><span class="summaryText">JR東日本大都会大飯店川崎<a href="googlechromes://kawasaki.hotel-metropolitan.com/tw/" aria-label="使用 Google Chrome 開啟川崎大都會飯店官網" title="使用 Google Chrome 開啟川崎大都會飯店官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary>
      <div class="infoContent hotelTransport">
-      <p class="transportIntro">飯店資訊</p>
-      <div>Hotel Metropolitan Kawasaki　ホテルメトロポリタン川崎</div>
-      <div>1-5 Omiyacho, Saiwai Ward, Kawasaki, Kanagawa</div>
-      <div><a class="hotelPhone" href="tel:+81445331111">+81445331111</a></div>
-      <p class="transportIntro" style="margin-top: 12px;">交通方式</p>
+      <p class="transportIntro hotelInfoTitle">飯店資訊</p>
+      <div class="hotelInfoLine">Hotel Metropolitan Kawasaki　ホテルメトロポリタン川崎</div>
+      <div class="hotelInfoLine">1-5 Omiyacho, Saiwai Ward, Kawasaki, Kanagawa</div>
+      <div class="hotelInfoLine"><a class="hotelPhone" href="tel:+81445331111">+81445331111</a></div>
+      <p class="transportIntro transportCompactTitle" style="margin-top: 12px;">交通方式</p>
       <div class="transportOption">
        <div class="transportHeading"><a class="keikyuLink" href="https://www.haneda-tokyo-access.com/tc/ride/train-line-map.html" target="_blank" rel="noopener noreferrer">京急電鐵⏱️約25～35分鐘(含步行)💰¥278</a></div>
        <div>羽田3航➞京急川崎站KK20➞步行約9分鐘(700公尺)至飯店</div>
