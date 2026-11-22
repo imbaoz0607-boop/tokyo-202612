@@ -751,7 +751,7 @@
  #tab2 .kaitJourneySteps li:last-child { padding-bottom:0; }
  #tab2 .kaitJourneyNum { font-size:16px; line-height:1.5; text-align:center; }
  #tab2 .kaitJourneyStepBody { border-left:2px solid var(--line); padding-left:13px; margin-left:-13px; padding-bottom:1px; }
- #tab2 .kaitJourneySteps li:last-child .kaitJourneyStepBody { border-left-color:var(--line); }
+ #tab2 .kaitJourneySteps li:last-child .kaitJourneyStepBody { border-left-color:transparent; }
  #tab2 .kaitJourneyStepTitle { font-size:15px; font-weight:600; line-height:1.45; }
  #tab2 .kaitJourneyStepDesc { font-size:14px; line-height:1.5; margin-top:3px; color:#514b45; }
  @media(max-width:420px) { #tab2 .kaitJourney {padding:13px 11px;} #tab2 .kaitJourneyTime {font-size:24px;} #tab2 .kaitJourneyStepTitle {font-size:14px;} }
@@ -790,6 +790,29 @@
  }
  #tab2 .kaitPhotoFrame .kaitJourney { margin: 0; }
  #tab2 .kaitPhotoFrame .kaitPhotoGallery { margin: 6px 0 0; padding: 0 1px 2px; }
+
+ /* 新增交通分頁：PDF 嵌入檢視與原尺寸開啟 */
+ #tab0 .railMapBoxes { display: flex; flex-direction: column; gap: 0; }
+ #tab0 details.infoBox.memoBox {
+   margin: 0; border: 0; border-bottom: 1px solid var(--line);
+   border-radius: 0; box-shadow: none; overflow: visible;
+ }
+ #tab0 details.infoBox.memoBox > summary { padding: 12px 8px; }
+ #tab0 details.infoBox.memoBox > .infoContent { padding: 0 8px 12px; }
+ #tab0 .foodCafeMap, #tab0 .pdfEmbedWrap { width: 100%; min-width: 0; }
+ #tab0 .foodCafeMap iframe, #tab0 .pdfEmbed {
+   display: block; width: 100%; height: 540px; border: 1px solid var(--line);
+   border-radius: 8px; background: #f7f7f7;
+ }
+ #tab0 .foodCafePdfOpen, #tab0 .pdfOpenBtn {
+   display: inline-block; margin-top: 8px; padding: 5px 10px;
+   border: 1px solid var(--line); border-radius: 8px;
+   color: #3b6cff !important; text-decoration: none !important;
+   font-size: 13px; font-weight: 400 !important;
+ }
+ @media(max-width:640px) {
+   #tab0 .foodCafeMap iframe, #tab0 .pdfEmbed { height: 420px; }
+ }
 </style>
 </head>
 <body>
@@ -829,7 +852,8 @@
  <section class="tabShell">
   <!-- 頁籤導覽列：修改按鈕顯示文字即可，只需確保 data-target 與下方分頁區塊的 id 一致 -->
   <nav aria-label="行程頁籤" class="topTabs" role="tablist">
-   <button type="button" role="tab" aria-selected="true" class="tabBtn active" data-target="tab1">住宿資訊</button>
+   <button type="button" role="tab" aria-selected="true" class="tabBtn active" data-target="tab0">交通</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab1">住宿資訊</button>
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab2">KAIT參觀</button>
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab3">分頁 3</button>
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab4">分頁 4</button>
@@ -839,8 +863,38 @@
   </nav>
   <div class="tabsDivider"></div>
 
+  <!-- 分頁 0：鐵道路線圖（新增於住宿資訊前） -->
+  <section class="card daySection pagePanel active" id="tab0">
+   <div class="dayCardHeader">
+    <div class="dayHeaderMain"><div class="dayIndex">★</div><h2 class="dayTitle">交通</h2></div>
+    <div class="dayDate"></div>
+   </div>
+   <div class="dayBody">
+    <div class="railMapBoxes">
+     <details class="infoBox memoBox">
+      <summary><span class="summaryText">東京地鐵圖</span><span class="chev">⌄</span></summary>
+      <div class="infoContent">
+       <div class="foodCafeMap">
+        <iframe src="交通/東京地鐵圖.pdf" title="東京地鐵圖 PDF" loading="lazy"></iframe>
+        <a class="foodCafePdfOpen" href="交通/東京地鐵圖.pdf" target="_blank" rel="noopener">點擊開啟完整圖</a>
+       </div>
+      </div>
+     </details>
+     <details class="infoBox memoBox">
+      <summary><span class="summaryText">JR東日本主要鐵道路線圖</span><span class="chev">⌄</span></summary>
+      <div class="infoContent">
+       <div class="pdfEmbedWrap">
+        <iframe class="pdfEmbed" src="交通/JR東日本主要鐵道路線圖.pdf" title="JR東日本主要鐵道路線圖 PDF" loading="lazy"></iframe>
+       </div>
+       <a class="pdfOpenBtn" href="交通/JR東日本主要鐵道路線圖.pdf" target="_blank" rel="noopener">點擊開啟完整圖</a>
+      </div>
+     </details>
+    </div>
+   </div>
+  </section>
+
   <!-- 分頁 1：住宿資訊 -->
-  <section class="card daySection pagePanel active" id="tab1">
+  <section class="card daySection pagePanel" id="tab1">
    <div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">1</div><h2 class="dayTitle">住宿資訊</h2></div><div class="dayDate"></div></div>
    <div class="dayBody"><div class="memoBoxes">
     <details class="infoBox preferredLineBox"><summary><span class="summaryText">JR東日本大都会大飯店川崎<a href="googlechromes://kawasaki.hotel-metropolitan.com/tw/" aria-label="使用 Google Chrome 開啟川崎大都會飯店官網" title="使用 Google Chrome 開啟川崎大都會飯店官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary>
