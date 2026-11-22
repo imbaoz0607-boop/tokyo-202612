@@ -760,7 +760,7 @@
  #tab2 .kaitJourneySteps li:last-child { padding-bottom:0; }
  #tab2 .kaitJourneyNum { font-size:16px; line-height:1.5; text-align:center; }
  #tab2 .kaitJourneyStepBody { border-left:2px solid var(--line); padding-left:13px; margin-left:-13px; padding-bottom:1px; }
- #tab2 .kaitJourneySteps li:last-child .kaitJourneyStepBody { border-left-color:transparent; }
+ #tab2 .kaitJourneySteps li:last-child .kaitJourneyStepBody { border-left-color:var(--line); }
  #tab2 .kaitJourneyStepTitle { font-size:15px; font-weight:600; line-height:1.45; }
  #tab2 .kaitJourneyStepDesc { font-size:14px; line-height:1.5; margin-top:3px; color:#514b45; }
  @media(max-width:420px) { #tab2 .kaitJourney {padding:13px 11px;} #tab2 .kaitJourneyTime {font-size:24px;} #tab2 .kaitJourneyStepTitle {font-size:14px;} }
@@ -827,6 +827,17 @@
  #tab2 .kaitMemo { margin-top: 8px; }
  #tab2 .kaitMemoList { margin: 0; padding: 0; font-size: 14px; line-height: 1.15; }
  #tab2 .kaitMemoList .kaitTransportBullet { margin-top: 3px; }
+
+ /* 12/3 江之浦：比照 KAIT 的直線行程時間軸 */
+ #tab3 .enouraJourney { border: 1px solid var(--line); border-radius: 14px; padding: 16px; background: #fff; color: var(--text); }
+ #tab3 .enouraSteps { list-style: none; margin: 0; padding: 0; }
+ #tab3 .enouraSteps li { display: grid; grid-template-columns: 24px minmax(0,1fr); column-gap: 9px; padding-bottom: 17px; }
+ #tab3 .enouraSteps li:last-child { padding-bottom: 0; }
+ #tab3 .enouraNum { font-size: 16px; line-height: 1.5; text-align: center; }
+ #tab3 .enouraStepBody { border-left: 2px solid var(--line); padding-left: 13px; margin-left: -13px; padding-bottom: 1px; }
+ #tab3 .enouraStepTitle { font-size: 15px; font-weight: 600; line-height: 1.45; }
+ #tab3 .enouraStepDesc { font-size: 14px; line-height: 1.5; margin-top: 3px; color: #514b45; }
+ @media (max-width: 420px) { #tab3 .enouraJourney { padding: 13px 11px; } #tab3 .enouraStepTitle { font-size: 14px; } }
 </style>
 </head>
 <body>
@@ -868,12 +879,12 @@
   <nav aria-label="行程頁籤" class="topTabs" role="tablist">
    <button type="button" role="tab" aria-selected="true" class="tabBtn active" data-target="tab0">交通</button>
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab1">住宿資訊</button>
-   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab2">KAIT參觀</button>
-   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab3">12/3</button>
-   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab4">12/4</button>
-   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab5">12/5</button>
-   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab6">12/6</button>
-   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab7">12/7</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab2">12/2(三)</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab3">12/3(四)</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab4">12/4(五)</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab5">12/5(六)</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab6">12/6(日)</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab7">12/7(一)</button>
   </nav>
   <div class="tabsDivider"></div>
 
@@ -1003,7 +1014,7 @@
    </div><!-- /dayBody -->
   </section>
 
-  <!-- 分頁 3 -->
+  <!-- 分頁 3：12/3 江之浦測候所交通行程 -->
   <section class="card daySection pagePanel" id="tab3">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">3</div><h2 class="dayTitle">12/3</h2></div>
@@ -1011,8 +1022,14 @@
    </div>
    <div class="dayBody">
     <div class="timeline">
-     <div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div>
-     <div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div>
+     <div class="enouraJourney">
+      <ol class="enouraSteps">
+       <li><div class="enouraNum">1</div><div class="enouraStepBody"><div class="enouraStepTitle">08:20｜JR 川崎站（JT04）出發</div><div class="enouraStepDesc">JR 東海道線普通車「熱海行」，1 號月台。</div></div></li>
+       <li><div class="enouraNum">2</div><div class="enouraStepBody"><div class="enouraStepTitle">09:34｜JR 根府川站抵達</div><div class="enouraStepDesc">下車後出站，前往免費接駁車乘車處。</div></div></li>
+       <li><div class="enouraNum">3</div><div class="enouraStepBody"><div class="enouraStepTitle">10:05｜根府川站接駁車出發</div><div class="enouraStepDesc">約有 31 分鐘的候車緩衝。</div></div></li>
+       <li><div class="enouraNum">4</div><div class="enouraStepBody"><div class="enouraStepTitle">約 10:20｜江之浦測候所抵達</div><div class="enouraStepDesc">參觀結束接駁車時間：<strong>11:30</strong>、<strong>12:00</strong>、<strong>12:30</strong>、<strong>13:00</strong></div></div></li>
+      </ol>
+     </div>
     </div>
    </div>
   </section>
