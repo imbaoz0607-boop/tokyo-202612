@@ -736,6 +736,25 @@
   font-size: 13px;
   pointer-events: none;
  }
+
+ /* KAIT：詳細資訊內的電車銜接時間軸 */
+ #tab2 .kaitJourney { border: 1px solid var(--line); border-radius: 14px; padding: 16px; color: var(--text); background: #fff; }
+ #tab2 .kaitJourneyHead { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+ #tab2 .kaitJourneyStation { min-width:0; }
+ #tab2 .kaitJourneyStation:last-child { text-align:right; }
+ #tab2 .kaitJourneyCaption { color:var(--muted); font-size:12px; line-height:1.35; }
+ #tab2 .kaitJourneyTime { font-size:26px; font-weight:600; line-height:1.35; font-variant-numeric:tabular-nums; }
+ #tab2 .kaitJourneyArrow { color:var(--muted); font-size:22px; flex:none; }
+ #tab2 .kaitJourneyDivider { border:0; border-top:1px solid var(--line); margin:15px 0 18px; }
+ #tab2 .kaitJourneySteps { list-style:none; margin:0; padding:0; counter-reset:kaitStep; }
+ #tab2 .kaitJourneySteps li { counter-increment:kaitStep; display:grid; grid-template-columns:24px minmax(0,1fr); column-gap:9px; padding-bottom:17px; }
+ #tab2 .kaitJourneySteps li:last-child { padding-bottom:0; }
+ #tab2 .kaitJourneyNum { font-size:16px; line-height:1.5; text-align:center; }
+ #tab2 .kaitJourneyStepBody { border-left:2px solid var(--line); padding-left:13px; margin-left:-13px; padding-bottom:1px; }
+ #tab2 .kaitJourneySteps li:last-child .kaitJourneyStepBody { border-left-color:transparent; }
+ #tab2 .kaitJourneyStepTitle { font-size:15px; font-weight:600; line-height:1.45; }
+ #tab2 .kaitJourneyStepDesc { font-size:14px; line-height:1.5; margin-top:3px; color:#514b45; }
+ @media(max-width:420px) { #tab2 .kaitJourney {padding:13px 11px;} #tab2 .kaitJourneyTime {font-size:24px;} #tab2 .kaitJourneyStepTitle {font-size:14px;} }
 </style>
 </head>
 <body>
@@ -793,7 +812,7 @@
      <div class="infoContent hotelTransport">
       <p class="transportIntro hotelInfoTitle">飯店資訊</p>
       <div class="hotelInfoLine">Hotel Metropolitan Kawasaki ホテルメトロポリタン川崎</div>
-      <div class="hotelInfoLine">〒212-0014 神奈川県川崎市幸区大宮町 1-5</div>
+      <div class="hotelInfoLine">1-5 Omiyacho, Saiwai Ward, Kawasaki, Kanagawa</div>
       <div class="hotelInfoLine"><a class="hotelPhone" href="tel:+81445331111">+81445331111</a></div>
       <p class="transportIntro transportCompactTitle">交通方式</p>
       <div class="transportOption">
@@ -810,11 +829,7 @@
        <div class="transportVideo"><iframe src="https://www.youtube-nocookie.com/embed/lzsXsISEBMc?start=29" title="京急川崎站至飯店步行路線影片" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
       </div>
      </div></details>
-    <details class="infoBox preferredLineBox"><summary><span class="summaryText">OMO5 東京五反田<a href="googlechromes://hoshinoresorts.com/zh_tw/hotels/omo5tokyogotanda/" aria-label="使用 Google Chrome 開啟 OMO5 東京五反田官網" title="使用 Google Chrome 開啟 OMO5 東京五反田官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary><div class="infoContent hotelTransport">
-      <p class="transportIntro hotelInfoTitle">飯店資訊</p>
-      <div class="hotelInfoLine">OMO5 Tokyo Gotanda by Hoshino Resorts</div>
-      <div class="hotelInfoLine">141-0031 東京都品川区西五反田8丁目4-13</div>
-     </div></details>
+    <details class="infoBox preferredLineBox"><summary><span class="summaryText">OMO5 東京五反田<a href="googlechromes://hoshinoresorts.com/zh_tw/hotels/omo5tokyogotanda/" aria-label="使用 Google Chrome 開啟 OMO5 東京五反田官網" title="使用 Google Chrome 開啟 OMO5 東京五反田官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary><div class="infoContent"></div></details>
    </div></div>
   </section>
 
@@ -839,7 +854,23 @@
        <div class="kaitTransportBullet"><span>・</span><span>沿北口(North Exit)指標出站，於北口1番のりば搭乘神奈川中央交通公車厚89(神奈川工科大学経由・鳶尾団地行13:45發車)，至神奈川工科大学前站下車，前往正門旁的警衛室報到。</span></div>
       </div>
      </div>
-     <div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div>
+     <div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary>
+      <div class="infoContent">
+       <div class="kaitJourney">
+        <div class="kaitJourneyHead">
+         <div class="kaitJourneyStation"><div class="kaitJourneyCaption">JR 川崎站出發</div><div class="kaitJourneyTime">10:00</div></div>
+         <div class="kaitJourneyArrow" aria-hidden="true">→</div>
+         <div class="kaitJourneyStation"><div class="kaitJourneyCaption">本厚木站抵達</div><div class="kaitJourneyTime">11:28</div></div>
+        </div>
+        <hr class="kaitJourneyDivider"/>
+        <ol class="kaitJourneySteps">
+         <li><div class="kaitJourneyNum">1</div><div class="kaitJourneyStepBody"><div class="kaitJourneyStepTitle">10:00 川崎站（JN01）出發</div><div class="kaitJourneyStepDesc">JR 南武線普通車，往立川方向。</div></div></li>
+         <li><div class="kaitJourneyNum">2</div><div class="kaitJourneyStepBody"><div class="kaitJourneyStepTitle">10:31 登戶站（JN14）抵達</div><div class="kaitJourneyStepDesc">轉乘小田急小田原線，預留 27 分鐘換車。</div></div></li>
+         <li><div class="kaitJourneyNum">3</div><div class="kaitJourneyStepBody"><div class="kaitJourneyStepTitle">10:58 登戶站（OH18）出發</div><div class="kaitJourneyStepDesc">搭乘小田急快速急行「小田原行」，不需要在相模大野轉車。</div></div></li>
+         <li><div class="kaitJourneyNum">4</div><div class="kaitJourneyStepBody"><div class="kaitJourneyStepTitle">11:28 本厚木站（OH34）抵達</div><div class="kaitJourneyStepDesc">從北口出站，就可以開始找餐廳吃午餐。</div></div></li>
+        </ol>
+       </div>
+      </div></details></div></div>
     </div>
    </div>
   </section>
