@@ -825,9 +825,8 @@
 
  /* KAIT Gallery 下方備忘錄 */
  #tab2 .kaitMemo { margin-top: 8px; }
- #tab2 .kaitMemoList { margin: 0; padding-left: 1.2em; line-height: 1.55; }
- #tab2 .kaitMemoList li { margin: 0 0 6px; }
- #tab2 .kaitMemoList li:last-child { margin-bottom: 0; }
+ #tab2 .kaitMemoList { margin: 0; padding: 0; font-size: 14px; line-height: 1.15; }
+ #tab2 .kaitMemoList .kaitTransportBullet { margin-top: 3px; }
 </style>
 </head>
 <body>
@@ -881,7 +880,7 @@
   <!-- 分頁 0：鐵道路線圖（新增於住宿資訊前） -->
   <section class="card daySection pagePanel active" id="tab0">
    <div class="dayCardHeader">
-    <div class="dayHeaderMain"><div class="dayIndex">交</div><h2 class="dayTitle">交通</h2></div>
+    <div class="dayHeaderMain"><div class="dayIndex">★</div><h2 class="dayTitle">交通</h2></div>
     <div class="dayDate"></div>
    </div>
    <div class="dayBody">
@@ -988,13 +987,13 @@
     <details class="infoBox preferredLineBox kaitMemo">
      <summary><span class="summaryText">Memo🗒️</span><span class="chev">⌄</span></summary>
      <div class="infoContent">
-      <ul class="kaitMemoList">
-       <li>參觀時間15:00~16:00</li>
-       <li>中生代建築師中的鬼才石上純也，於2020年12月落成的半戶外多功能廣場。</li>
-       <li>面積約4,100平方公尺，跨度達90公尺，內部沒有任何立柱，由重約580噸的12mm厚鐵板屋頂與四周結構支撐。</li>
-       <li>屋頂分布 59 個無玻璃覆蓋的方形開口(約1.8m–3m)，讓陽光、微風與雨水自然進入空間。</li>
-       <li>隨氣候變化的動態感：鐵板屋頂會隨氣溫熱脹冷縮產生微幅升降。</li>
-      </ul>
+      <div class="kaitMemoList">
+       <div class="kaitTransportBullet"><span>・</span><span>參觀時間15:00~16:00</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>中生代建築師中的鬼才石上純也，於 2020年12月落成的半戶外多功能廣場。</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>面積約 4,100 平方公尺，跨度達 90 公尺，內部沒有任何立柱，由重約 580 噸的 12mm 厚鐵板屋頂與四周結構支撐。</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>屋頂分布 59 個無玻璃覆蓋的方形開口（約 1.8m–3m），讓陽光、微風與雨水自然進入空間。</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>隨氣候變化的動態感：鐵板屋頂會隨氣溫熱脹冷縮產生微幅升降。</span></div>
+      </div>
      </div>
     </details>
       </div><!-- /kaitPhotoFrame -->
