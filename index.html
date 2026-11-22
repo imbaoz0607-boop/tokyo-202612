@@ -755,6 +755,41 @@
  #tab2 .kaitJourneyStepTitle { font-size:15px; font-weight:600; line-height:1.45; }
  #tab2 .kaitJourneyStepDesc { font-size:14px; line-height:1.5; margin-top:3px; color:#514b45; }
  @media(max-width:420px) { #tab2 .kaitJourney {padding:13px 11px;} #tab2 .kaitJourneyTime {font-size:24px;} #tab2 .kaitJourneyStepTitle {font-size:14px;} }
+
+ /* KAIT 相簿是 .timeline 外層框的子項，位於 .kaitJourney 時間軸內框之外。 */
+ #tab2 .dayBody { min-width: 0; overflow: hidden; }
+ #tab2 .kaitPhotoGallery {
+   box-sizing: border-box;
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   margin: 2px 0 0;
+   padding: 0 2px 4px;
+   overflow: hidden;
+ }
+ #tab2 .kaitPhotoGallery .galleryRow {
+   display: flex;
+   box-sizing: border-box;
+   width: 100%;
+   min-width: 0;
+   max-width: 100%;
+   overflow-x: auto;
+   overflow-y: hidden;
+   scroll-padding-inline: 0;
+ }
+ #tab2 .kaitPhotoGallery .gItem { flex-shrink: 0; }
+
+ /* KAIT：交通時間軸與相簿共用同一個外框；相簿保持在時間軸內框外 */
+ #tab2 .kaitPhotoFrame {
+   border: 0;
+   border-radius: 0;
+   padding: 0;
+   margin-top: 8px;
+   min-width: 0;
+   overflow: hidden;
+ }
+ #tab2 .kaitPhotoFrame .kaitJourney { margin: 0; }
+ #tab2 .kaitPhotoFrame .kaitPhotoGallery { margin: 6px 0 0; padding: 0 1px 2px; }
 </style>
 </head>
 <body>
@@ -852,6 +887,7 @@
        <div class="kaitTransportBullet"><span>・</span><span>JR川崎站(JN01)搭南武線前往登戶站(JN14)。</span></div>
        <div class="kaitTransportBullet"><span>・</span><span>在登戶站(JN14=OH18)轉乘小田急小田原線，前往本厚木站(OH34)。</span></div>
        <div class="kaitTransportBullet"><span>・</span><span>沿北口(North Exit)指標出站，於北口1番のりば搭乘神奈川中央交通公車厚89(神奈川工科大学経由・鳶尾団地行13:45發車)，至神奈川工科大学前站下車，前往正門旁的警衛室報到。</span></div>
+      <div class="kaitPhotoFrame">
        <div class="kaitJourney">
         <div class="kaitJourneyHead">
          <div class="kaitJourneyStation"><div class="kaitJourneyCaption">JR 川崎站出發</div><div class="kaitJourneyTime">10:00</div></div>
@@ -868,10 +904,22 @@
          <li><div class="kaitJourneyNum">6</div><div class="kaitJourneyStepBody"><div class="kaitJourneyStepTitle">約 14:10 神奈川工科大学前站抵達</div><div class="kaitJourneyStepDesc">下車後至學校正門旁警衛室出示確認信領取GUEST CARD；14:30才會設置等待區。</div></div></li>
         </ol>
        </div>
-      </div>
+    <!-- KAIT 圖片相簿：與時間軸一起置於外框內，但不在時間軸內框中 -->
+    <div class="gallery kaitPhotoGallery" aria-label="KAIT 廣場圖片相簿">
+     <div class="galleryRow">
+      <div class="gItem"><img src="./KAIT/images/1.jpg" alt="KAIT 參觀照片 1" loading="lazy"/></div>
+      <div class="gItem"><img src="./KAIT/images/2.jpg" alt="KAIT 參觀照片 2" loading="lazy"/></div>
+      <div class="gItem"><img src="./KAIT/images/3.jpg" alt="KAIT 參觀照片 3" loading="lazy"/></div>
+      <div class="gItem"><img src="./KAIT/images/4.jpg" alt="KAIT 參觀照片 4" loading="lazy"/></div>
+      <div class="gItem"><img src="./KAIT/images/5.jpg" alt="KAIT 參觀照片 5" loading="lazy"/></div>
+      <div class="gItem"><img src="./KAIT/images/6.jpg" alt="KAIT 參觀照片 6" loading="lazy"/></div>
      </div>
     </div>
-   </div>
+      </div><!-- /kaitPhotoFrame -->
+      </div><!-- /kaitTransport -->
+     </div><!-- /kaitInfo -->
+    </div><!-- /timeline -->
+   </div><!-- /dayBody -->
   </section>
 
   <!-- 分頁 3 -->
