@@ -169,6 +169,8 @@
   transition: all .18s ease;
   cursor: pointer;
  }
+ /* 交通頁籤文字較短，固定最小寬度以對齊其他日期頁籤 */
+ .tabBtn[data-target="tab0"] { min-width: 96px; }
  .tabBtn.active {
   border-color: #3b6cff;
   background: #f9fbff;
@@ -652,6 +654,7 @@
    font-size: 13px;
    flex: 0 0 auto;
   }
+  .tabBtn[data-target="tab0"] { min-width: 72px; }
   .dayCardHeader {
    gap: 10px;
    padding: 10px 10px 6px;
@@ -1071,7 +1074,7 @@
      </div>
     </details>
     <!-- KAIT 平日時刻表：預設收合，位於回程下方且仍在同一外框內 -->
-    <details class="infoBox preferredLineBox kaitTimetableLinks" aria-label="KAIT 交通時刻表（平日）">
+    <details class="infoBox preferredLineBox kaitTimetableLinks" aria-label="KAIT 交通時刻表(平日)">
      <summary><span class="summaryText">交通時刻表（平日）</span><span class="chev">⌄</span></summary>
      <div class="infoContent kaitTimetableLinksContent">
       <ul class="kaitTimetableList">
