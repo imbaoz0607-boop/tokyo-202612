@@ -859,12 +859,16 @@
  #tab2 .kaitTimetableList a, #tab2 .kaitTimetableList a:link, #tab2 .kaitTimetableList a:visited, #tab2 .kaitTimetableList a:hover, #tab2 .kaitTimetableList a:active {
   display:flex; align-items:center; box-sizing:border-box; width:100%; max-width:100%; min-width:0;
   min-height:36px; padding:8px 10px; border:1px solid #d8e2f5; border-radius:9px;
-  background:#f8fbff; color:#315fba !important; font-size:14px; font-weight:500 !important;
+  background:#f8fbff; color:#000 !important; font-size:14px; font-weight:500 !important;
   line-height:1.4; text-decoration:none !important; overflow-wrap:anywhere; word-break:normal;
  }
  #tab2 .kaitTimetableList a:hover { background:#eef5ff; border-color:#aac4f3; }
  #tab2 .kaitTimetableList a:focus-visible { outline:2px solid #3b6cff; outline-offset:2px; }
- @media(max-width:420px) { #tab2 .kaitTimetableLinks {padding-left:4px; padding-right:4px;} #tab2 .kaitTimetableList a {font-size:13px; padding:8px;} }
+ /* 手機版：三個同層收合標題使用相同的左側內距，避免時刻表向右偏移 */
+ @media(max-width:640px) {
+  #tab2 details.kaitTimetableLinks > summary { padding-left:0; padding-right:8px; }
+ }
+ @media(max-width:420px) { #tab2 .kaitTimetableList a {font-size:13px; padding:8px;} }
 
  /* 12/3 江之浦：與 12/2 KAIT 時間軸完全一致的字級、行高、間距和灰色連接線 */
  #tab3 .enouraJourney { border: 1px solid var(--line); border-radius: 14px; padding: 16px; color: var(--text); background: #fff; }
@@ -1071,6 +1075,7 @@
      <summary><span class="summaryText">交通時刻表（平日）</span><span class="chev">⌄</span></summary>
      <div class="infoContent kaitTimetableLinksContent">
       <ul class="kaitTimetableList">
+       <li><a href="https://op.kait.jp/access/?utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">KAIT交通相關</a></li>
        <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt0526/0526030.html" target="_blank" rel="noopener noreferrer">🚅JR川崎站➞南武線往登戶・立川</a></li>
        <li><a href="https://www.odakyu.jp/station/noborito/timetable/down/" target="_blank" rel="noopener noreferrer">🚅小田急登戶站➞往本厚木・小田原</a></li>
        <li><a href="https://transfer-cloud.navitime.biz/kanachu/courses?external-busstop=19051" target="_blank" rel="noopener noreferrer">🚌神奈川工科大学前➞本厚木駅(厚07・厚89)</a></li>
