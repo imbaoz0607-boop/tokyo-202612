@@ -5,6 +5,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta name="format-detection" content="telephone=no"/>
 <title>Tokyo 12月｜行程模板</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxBC1YVfQ0y+iZ+LV4kE5dS0=" crossorigin="anonymous"/>
 <style>
  :root {
   --bg: #f1f3f7;
@@ -907,6 +908,43 @@
   font-weight: inherit !important;
   text-decoration: none !important;
  }
+ /* 小行程：沿用 KAIT / 江之浦的數字、灰線時間軸與手機版比例 */
+ #tab8 .miniJourney { border:1px solid var(--line); border-radius:14px; padding:16px; color:var(--text); background:#fff; min-width:0; }
+ #tab8 .miniSteps { list-style:none; margin:0; padding:0; }
+ #tab8 .miniSteps li { display:grid; grid-template-columns:24px minmax(0,1fr); column-gap:9px; padding-bottom:17px; min-width:0; }
+ #tab8 .miniSteps li:last-child { padding-bottom:0; }
+ #tab8 .miniNum { font-size:16px; line-height:1.5; text-align:center; }
+ #tab8 .miniStepBody { border-left:2px solid var(--line); padding-left:13px; margin-left:-13px; padding-bottom:1px; min-width:0; }
+ #tab8 .miniStepTitle { font-size:15px; font-weight:600; line-height:1.45; overflow-wrap:anywhere; }
+ #tab8 .miniStepDesc { font-size:14px; line-height:1.5; margin-top:3px; color:#514b45; overflow-wrap:anywhere; }
+ #tab8 .miniStepDesc a { font-weight:500; text-decoration:underline; text-underline-offset:2px; }
+ /* 小行程：聖誕市集照片跟隨第 6 項時間軸，在手機畫面內完整顯示 */
+ #tab8 .miniMarketPhoto { margin:10px 0 2px; max-width:100%; min-width:0; }
+ #tab8 .miniMarketPhoto img { display:block; width:100%; max-width:520px; height:auto; aspect-ratio:1/1; object-fit:cover; border-radius:10px; border:1px solid var(--line); }
+ #tab8 .miniMarketPhoto figcaption { margin-top:5px; color:#7a736b; font-size:12px; line-height:1.45; }
+ #tab8 .miniMarketPhoto figcaption a { font-size:inherit; font-weight:400; }
+ /* 小行程：標題改為預設收合，時間軸只在展開後顯示，維持原有外框寬度。 */
+ #tab8 .miniTripDetails { min-width:0; max-width:100%; width:100%; margin:0; }
+ #tab8 .miniTripDetails > summary { padding:12px 8px; }
+ #tab8 .miniTripDetails > .miniTripContent { padding:0 0 10px; min-width:0; }
+ #tab8 .miniTripDetails .summaryText { overflow-wrap:anywhere; }
+ @media(max-width:640px) { #tab8 .miniTripDetails > summary { padding-left:0; } }
+
+ @media(max-width:420px) { #tab8 .miniJourney {padding:13px 11px;} #tab8 .miniStepTitle {font-size:14px;} }
+
+  /* 小行程：橫濱三站互動地圖（收合層內、手機不溢出） */
+  #tab8 .miniRouteMapBox { box-sizing:border-box; width:100%; max-width:100%; min-width:0; margin:16px 0 4px; }
+  #tab8 .miniRouteMapTitle { font-size:15px; font-weight:700; margin:0 0 8px; color:var(--text); }
+  #tab8 .miniRouteLegend { display:flex; flex-wrap:wrap; gap:6px 12px; margin:0 0 9px; font-size:12px; line-height:1.5; }
+  #tab8 .miniRouteLegend span { display:inline-flex; align-items:center; gap:4px; }
+  #tab8 .miniRouteMap { box-sizing:border-box; width:100%; max-width:100%; height:310px; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#eef1f5; z-index:0; }
+  #tab8 .miniRouteNote { color:#625e59; font-size:12px; line-height:1.5; margin:8px 0 0; }
+  #tab8 .miniRouteLinks { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+  #tab8 .miniRouteLinks a { display:inline-flex; align-items:center; padding:7px 9px; border:1px solid #d8e2f5; border-radius:8px; background:#f8fbff; font-size:12px; text-decoration:none !important; font-weight:500; color:#000 !important; }
+  #tab8 .miniRouteMarker { display:grid; place-items:center; width:29px; height:29px; border-radius:50%; background:#fff; color:#242424; border:2px solid #6487be; box-shadow:0 2px 6px #0003; font:bold 14px/1 sans-serif; }
+  #tab8 .miniRouteMarker.market { border-color:#c87d43; }
+  #tab8 .miniRouteMap .leaflet-popup-content { font:13px/1.5 -apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif; }
+  @media(max-width:640px) { #tab8 .miniRouteMap {height:275px;} #tab8 .miniRouteMapBox {margin-top:13px;} }
 </style>
 </head>
 <body>
@@ -953,6 +991,7 @@
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab5">12/5(六)</button>
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab6">12/6(日)</button>
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab7">12/7(一)</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab8">小行程</button>
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab0">交通</button>
   </nav>
   <div class="tabsDivider"></div>
@@ -1185,7 +1224,45 @@
    </div>
   </section>
 
-  <!-- 交通分頁：移至 12/7(一) 後方 -->
+  <!-- 小行程分頁：12/1 橫濱半日購物與聖誕市集，兩間 Bshop 都保留為彈性選項 -->
+  <section class="card daySection pagePanel" id="tab8">
+   <div class="dayCardHeader">
+    <div class="dayHeaderMain"><div class="dayIndex">＋</div><h2 class="dayTitle">小行程</h2></div>
+    <div class="dayDate"></div>
+   </div>
+   <div class="dayBody">
+    <div class="timeline">
+     <details class="infoBox preferredLineBox miniTripDetails">
+      <summary><span class="summaryText">橫濱｜Bshop 購物＋港未來散步＋聖誕市集。</span><span class="chev">⌄</span></summary>
+      <div class="infoContent miniTripContent">
+       <div class="miniJourney"><ol class="miniSteps">
+       <li><div class="miniNum">1</div><div class="miniStepBody"><div class="miniStepTitle">15:30～15:45　JR 川崎站 → 橫濱站</div><div class="miniStepDesc">從川崎大都會飯店出發，搭 JR 東海道線往橫濱方向，車程約 8～10 分鐘；到橫濱站後往東口的 LUMINE 前進。實際出發時間可依機場入境與飯店 check-in 情況調整。</div></div></li>
+       <li><div class="miniNum">2</div><div class="miniStepBody"><div class="miniStepTitle">15:45～16:30　Bshop 横浜ルミネ店｜LUMINE 5F</div><div class="miniStepDesc">第一間 Bshop，先逛服飾、鞋子和包包。<a href="https://www.lumine.ne.jp/yokohama/floorguide/detail/?scd=001357" target="_blank" rel="noopener noreferrer">LUMINE 店舖資訊</a>。</div></div></li>
+       <li><div class="miniNum">3</div><div class="miniStepBody"><div class="miniStepTitle">16:30～16:45　橫濱站 → 港未來站</div><div class="miniStepDesc">搭乘港未來線往元町・中華街方向，到「みなとみらい站」下車；MARK IS 與車站相連。含步行和候車預留約 15 分鐘。</div></div></li>
+       <li><div class="miniNum">4</div><div class="miniStepBody"><div class="miniStepTitle">16:45～17:30　Bshop みなとみらい店｜MARK IS 1F</div><div class="miniStepDesc">第二間 Bshop，可比較款式與尺寸；如果第一間已買到想要的，可改成咖啡休息，或直接前往紅磚倉庫。<a href="https://www.mec-markis.jp/mm/shop/detail/?act=7935" target="_blank" rel="noopener noreferrer">MARK IS 店舖資訊</a>。</div></div></li>
+       <li><div class="miniNum">5</div><div class="miniStepBody"><div class="miniStepTitle">17:30～18:00　港未來夜景散步</div><div class="miniStepDesc">沿途欣賞地標塔、摩天輪與港灣夜景，步行前往紅磚倉庫，約預留 20～30 分鐘；如不想走太多，可搭港未來線到馬車道站再步行。</div></div></li>
+       <li><div class="miniNum">6</div><div class="miniStepBody"><div class="miniStepTitle">18:00～19:30　橫濱紅磚倉庫聖誕市集</div><div class="miniStepDesc">逛聖誕木屋、拍聖誕樹、欣賞冬季燈飾，並在現場享用熱食。2026 年市集預定 11/20～12/25 舉辦，當日開放時間與票價以<a href="https://www.yokohama-akarenga.jp/christmas/" target="_blank" rel="noopener noreferrer">官方公告</a>為準。</div><figure class="miniMarketPhoto"><img src="https://resources.matcha-jp.com/original/2025/11/04-248810.webp" alt="橫濱紅磚倉庫聖誕市集夜景、聖誕樹及木屋攤位（2025年參考照片）" loading="lazy" referrerpolicy="no-referrer"/><figcaption>橫濱紅磚倉庫聖誕市集（2025 年參考照片）｜<a href="https://matcha-jp.com/tw/22331" target="_blank" rel="noopener noreferrer">圖片來源：MATCHA</a></figcaption></figure></div></li>
+       <li><div class="miniNum">7</div><div class="miniStepBody"><div class="miniStepTitle">19:30～20:30　紅磚倉庫 → JR 櫻木町站 → 川崎</div><div class="miniStepDesc">步行約 15 分鐘前往櫻木町站，搭 JR 京濱東北・根岸線往川崎方向，回飯店休息。實際抵達時間依散步、候車及用餐時間調整。</div></div></li>
+       </ol></div>
+       <!-- 橫濱路線地圖：順序 1→2→3，互動地圖及實際導航連結 -->
+       <div class="miniRouteMapBox">
+        <div class="miniRouteMapTitle">🗺️ 路線地圖</div>
+        <div class="miniRouteLegend"><span>🛍️ 1. Bshop 横浜ルミネ店</span><span>🛍️ 2. Bshop みなとみらい店</span><span>🎄 3. 橫濱紅磚倉庫</span></div>
+        <div id="miniYokohamaMap" class="miniRouteMap" aria-label="橫濱兩間 Bshop 與紅磚倉庫互動地圖"></div>
+        <div class="miniRouteNote">地圖可放大、拖曳；虛線僅標示景點順序，不代表實際道路或電車路線。地圖需連線載入。</div>
+        <div class="miniRouteLinks">
+         <a href="https://www.google.com/maps/dir/?api=1&amp;origin=%E6%A8%AA%E6%B5%9C%E9%A7%85&amp;destination=%E3%81%BF%E3%81%AA%E3%81%A8%E3%81%BF%E3%82%89%E3%81%84%E9%A7%85&amp;travelmode=transit" target="_blank" rel="noopener noreferrer">🚃 橫濱站 → 港未來站</a>
+         <a href="https://www.google.com/maps/dir/?api=1&amp;origin=MARK%20IS%20Minatomirai%20Yokohama&amp;destination=Yokohama%20Red%20Brick%20Warehouse&amp;travelmode=walking" target="_blank" rel="noopener noreferrer">🚶 MARK IS → 紅磚倉庫</a>
+         <a href="https://www.google.com/maps/dir/?api=1&amp;origin=Bshop%20Lumine%20Yokohama&amp;destination=Yokohama%20Red%20Brick%20Warehouse&amp;waypoints=MARK%20IS%20Minatomirai%20Yokohama" target="_blank" rel="noopener noreferrer">📍 在 Google Maps 查看三站</a>
+        </div>
+       </div>
+      </div>
+     </details>
+    </div>
+   </div>
+  </section>
+
+  <!-- 交通分頁：位於小行程之後 -->
   <section class="card daySection pagePanel" id="tab0">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">★</div><h2 class="dayTitle">交通</h2></div>
@@ -1491,6 +1568,43 @@
  window.addEventListener('resize', () => {
   if (lightbox.classList.contains('open')) fit();
  });
+})();
+</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+<script>
+/* 僅當小行程收合層展開時初始化地圖，避免隱藏頁籤造成地圖空白 */
+(() => {
+ const panel = document.getElementById('tab8');
+ const details = panel && panel.querySelector('.miniTripDetails');
+ const node = document.getElementById('miniYokohamaMap');
+ if (!panel || !details || !node) return;
+ let map = null;
+ function prepareMap() {
+  if (!details.open || !panel.classList.contains('active')) return;
+  if (!window.L) { node.textContent = '互動地圖目前無法載入，請使用下方 Google Maps 連結查看位置。'; return; }
+  if (!map) {
+   const spots = [
+    {point:[35.465245,139.622864],icon:'1',name:'🛍️ Bshop 横浜ルミネ店',desc:'ルミネ横浜 5F'},
+    {point:[35.457528,139.631750],icon:'2',name:'🛍️ Bshop みなとみらい店',desc:'MARK IS みなとみらい 1F'},
+    {point:[35.4534,139.6440],icon:'3',name:'🎄 橫濱紅磚倉庫',desc:'橫濱赤レンガ倉庫／聖誕市集'}
+   ];
+   map = L.map(node, {scrollWheelZoom:false, tap:false}).setView([35.459,139.631],14);
+   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',maxZoom:19
+   }).addTo(map);
+   spots.forEach((s,i) => {
+    const markerIcon = L.divIcon({className:'',html:'<span class="miniRouteMarker'+(i===2?' market':'')+'">'+s.icon+'</span>',iconSize:[30,30],iconAnchor:[15,15]});
+    L.marker(s.point,{icon:markerIcon}).addTo(map).bindPopup('<b>'+s.name+'</b><div>'+s.desc+'</div>');
+   });
+   L.polyline(spots.map(s=>s.point),{color:'#8293a9',weight:2,dashArray:'5 8',opacity:0.75}).addTo(map);
+   map.fitBounds(L.latLngBounds(spots.map(s=>s.point)),{padding:[28,28]});
+  }
+  requestAnimationFrame(() => map.invalidateSize());
+ }
+ details.addEventListener('toggle', prepareMap);
+ const tab = document.querySelector('.tabBtn[data-target="tab8"]');
+ if (tab) tab.addEventListener('click', () => requestAnimationFrame(prepareMap));
 })();
 </script>
 </body>
