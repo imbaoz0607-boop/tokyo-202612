@@ -850,8 +850,9 @@
  }
 
  /* KAIT 回程下方：官方時刻表連結，與 Memo/回程同寬、不超出邊框 */
- #tab2 .kaitTimetableLinks { box-sizing:border-box; width:100%; max-width:100%; min-width:0; padding:10px 8px 8px; border-bottom:1px solid var(--line); }
- #tab2 .kaitTimetableLinksTitle { margin:0 0 6px; font-size:14px; font-weight:700; line-height:1.35; color:var(--text); }
+ #tab2 details.kaitTimetableLinks { box-sizing:border-box; width:100%; max-width:100%; min-width:0; margin:0; border-bottom:1px solid var(--line); }
+ #tab2 details.kaitTimetableLinks > summary { box-sizing:border-box; padding:12px 8px; }
+ #tab2 details.kaitTimetableLinks > .kaitTimetableLinksContent { box-sizing:border-box; width:100%; max-width:100%; min-width:0; padding:0 8px 10px; }
  #tab2 .kaitTimetableList { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
  /* KAIT 官方時刻表：完整可點擊的控制鈕，所有寬度均限制在原外框內 */
  #tab2 .kaitTimetableList li { box-sizing:border-box; width:100%; min-width:0; margin:0; }
@@ -1065,17 +1066,19 @@
       </details>
      </div>
     </details>
-    <!-- KAIT 平日時刻表：位於回程收合層外、仍在相同 kaitPhotoFrame 外框內 -->
-    <div class="kaitTimetableLinks" aria-label="KAIT 交通官方時刻表">
-     <div class="kaitTimetableLinksTitle">交通時刻表（平日）</div>
-     <ul class="kaitTimetableList">
-      <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt0526/0526030.html" target="_blank" rel="noopener noreferrer">🚅JR川崎站➞南武線往登戶・立川</a></li>
-      <li><a href="https://www.odakyu.jp/station/noborito/timetable/down/" target="_blank" rel="noopener noreferrer">🚅小田急登戶站➞往本厚木・小田原</a></li>
-      <li><a href="https://transfer-cloud.navitime.biz/kanachu/courses?external-busstop=19051" target="_blank" rel="noopener noreferrer">🚌神奈川工科大学前➞本厚木駅(厚07・厚89)</a></li>
-      <li><a href="https://www.odakyu.jp/station/hon_atsugi/timetable/up/" target="_blank" rel="noopener noreferrer">🚅小田急本厚木站➞往登戶・新宿</a></li>
-      <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt1212/1212020.html" target="_blank" rel="noopener noreferrer">🚅JR 登戶站➞南武線往川崎</a></li>
-     </ul>
-    </div>
+    <!-- KAIT 平日時刻表：預設收合，位於回程下方且仍在同一外框內 -->
+    <details class="infoBox preferredLineBox kaitTimetableLinks" aria-label="KAIT 交通時刻表（平日）">
+     <summary><span class="summaryText">交通時刻表（平日）</span><span class="chev">⌄</span></summary>
+     <div class="infoContent kaitTimetableLinksContent">
+      <ul class="kaitTimetableList">
+       <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt0526/0526030.html" target="_blank" rel="noopener noreferrer">🚅JR川崎站➞南武線往登戶・立川</a></li>
+       <li><a href="https://www.odakyu.jp/station/noborito/timetable/down/" target="_blank" rel="noopener noreferrer">🚅小田急登戶站➞往本厚木・小田原</a></li>
+       <li><a href="https://transfer-cloud.navitime.biz/kanachu/courses?external-busstop=19051" target="_blank" rel="noopener noreferrer">🚌神奈川工科大学前➞本厚木駅(厚07・厚89)</a></li>
+       <li><a href="https://www.odakyu.jp/station/hon_atsugi/timetable/up/" target="_blank" rel="noopener noreferrer">🚅小田急本厚木站➞往登戶・新宿</a></li>
+       <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt1212/1212020.html" target="_blank" rel="noopener noreferrer">🚅JR 登戶站➞南武線往川崎</a></li>
+      </ul>
+     </div>
+    </details>
       </div><!-- /kaitPhotoFrame -->
       </div><!-- /kaitTransport -->
      </div><!-- /kaitInfo -->
