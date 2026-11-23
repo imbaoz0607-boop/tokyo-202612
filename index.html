@@ -866,6 +866,17 @@
  #tab3 .enouraOfficialLink:visited,
  #tab3 .enouraOfficialLink:hover,
  #tab3 .enouraOfficialLink:active { color: inherit; font: inherit; text-decoration: none !important; }
+ /* KAIT 標題官網連結：保留標題字體顏色、粗細，無下底線 */
+ #tab2 .kaitTitleOfficialLink,
+ #tab2 .kaitTitleOfficialLink:link,
+ #tab2 .kaitTitleOfficialLink:visited,
+ #tab2 .kaitTitleOfficialLink:hover,
+ #tab2 .kaitTitleOfficialLink:active {
+  color: inherit !important;
+  font: inherit;
+  font-weight: inherit !important;
+  text-decoration: none !important;
+ }
 </style>
 </head>
 <body>
@@ -948,15 +959,15 @@
   <!-- 分頁 2：神奈川工科大學 KAIT廣場參觀 -->
   <section class="card daySection pagePanel" id="tab2">
    <div class="dayCardHeader">
-    <div class="dayHeaderMain"><div class="dayIndex">2</div><h2 class="dayTitle">神奈川工科大學 KAIT廣場參觀</h2></div>
+    <div class="dayHeaderMain"><div class="dayIndex">2</div><h2 class="dayTitle"><a class="kaitTitleOfficialLink" href="https://www.kait.jp/" target="_blank" rel="noopener noreferrer">神奈川工科大學 KAIT廣場參觀</a></h2></div>
     <div class="dayDate"></div>
    </div>
    <div class="dayBody">
     <div class="timeline">
      <div class="kaitInfo">
       <div class="kaitTransportTitle">學校資訊</div>
-      <div class="kaitInfoName"><a href="http://www.kait.jp" target="_blank" rel="noopener noreferrer">Kanagawa Institute of Technology</a></div>
-      <div>1030 ShimoOgino Atsugi-shi, Kanagawa</div>
+      <div class="kaitInfoName">神奈川工科大学Kanagawa Institute of Technology</div>
+      <div>〒243-0292　神奈川県厚木市下荻野1030</div>
       <div>Tel 046-291-3033 / Fax 046-242-4422</div>
       <div class="kaitTransport">
        <div class="kaitTransportTitle">交通方式</div>
