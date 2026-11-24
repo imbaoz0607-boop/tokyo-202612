@@ -910,6 +910,16 @@
     color: var(--muted);
     margin-bottom: 12px;
   }
+  /* 12/3 JR 交通標題連結：與原文字同色、同粗細且沒有下底線 */
+  #tab3 .enouraTimetableLink,
+  #tab3 .enouraTimetableLink:link,
+  #tab3 .enouraTimetableLink:visited,
+  #tab3 .enouraTimetableLink:hover,
+  #tab3 .enouraTimetableLink:active {
+    color: inherit !important;
+    font: inherit !important;
+    text-decoration: none !important;
+  }
 </style>
 </head>
 <body>
@@ -1139,8 +1149,8 @@
      <div class="journeyCard">
       <div class="enouraSessionTitle">下午｜葉山・逗子</div>
       <ol class="stepTimeline">
-       <li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">12:45～13:31　JR根府川站(JT18)➞大船站(JT07)</div><div class="stepDesc">搭乘JR東海道線，往東京方向，從月台1→月台8只有7分鐘轉車時間，須留意車次有沒有誤點，下班車13:48(每10分鐘)。</div></div></li>
-       <li><div class="stepNum">8</div><div class="stepBody"><div class="stepTitle">13:38～13:50　大船站(JT07=JO09)➞逗子站(JO06)</div><div class="stepDesc">搭乘JR橫須賀線往逗子・久里濱方向。</div></div></li>
+       <li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">12:45～13:31　<a class="enouraTimetableLink" href="https://timetables.jreast.co.jp/2612/timetable/tt1198/1198020.html" target="_blank" rel="noopener noreferrer" title="JR東日本｜根府川站東海道線平日時刻表">JR根府川站(JT18)➞大船站(JT07)</a></div><div class="stepDesc">搭乘JR東海道線，往東京方向，從月台1→月台8只有7分鐘轉車時間，須留意車次有沒有誤點，下班車13:48(每10分鐘)。</div></div></li>
+       <li><div class="stepNum">8</div><div class="stepBody"><div class="stepTitle">13:38～13:50　<a class="enouraTimetableLink" href="https://timetables.jreast.co.jp/2612/timetable/tt0342/0342040.html" target="_blank" rel="noopener noreferrer" title="JR東日本｜大船站橫須賀線平日時刻表">大船站(JT07=JO09)➞逗子站(JO06)</a></div><div class="stepDesc">搭乘JR橫須賀線往逗子・久里濱方向。</div></div></li>
        <li><div class="stepNum">9</div><div class="stepBody"><div class="stepTitle">約13:50～14:15　逗子站 ➞ 真名瀨海岸</div><div class="stepDesc">JR逗子站東口前往京急巴士乘車處，搭乘經海岸往葉山方向的巴士，在真名瀬下車後步行至海岸。</div></div></li>
        <li><div class="stepNum">10</div><div class="stepBody"><div class="stepTitle">約14:15～14:35　真名瀨海岸 <a class="northMapLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E7%9C%9F%E5%90%8D%E7%80%AC%E6%B5%B7%E5%B2%B8%20%E8%91%89%E5%B1%B1" target="_blank" rel="noopener noreferrer" aria-label="真名瀨海岸地圖" title="開啟真名瀨海岸地圖">🗺️</a></div><div class="stepDesc">沿海岸散步、拍攝海景與海上鳥居，天氣晴朗時可遠眺富士山。</div></div></li>
        <li><div class="stepNum">11</div><div class="stepBody"><div class="stepTitle">約14:35～15:15　真名瀨海岸 ➞ 森戶神社 <a class="northMapLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%A3%AE%E6%88%B8%E7%A5%9E%E7%A4%BE%20%E8%91%89%E5%B1%B1" target="_blank" rel="noopener noreferrer" aria-label="森戶神社地圖" title="開啟森戶神社地圖">🗺️</a></div><div class="stepDesc">沿一般道路步行約5～10分鐘前往森戶神社。</div></div></li>
