@@ -947,6 +947,25 @@
   #tab8 .miniRouteMarker.market { border-color:#c87d43; }
   #tab8 .miniRouteMap .leaflet-popup-content { font:13px/1.5 -apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif; }
   @media(max-width:640px) { #tab8 .miniRouteMap {height:275px;} #tab8 .miniRouteMapBox {margin-top:13px;} }
+
+  /* 12/4 北鎌倉賞楓：沿用 KAIT / 江之浦的數字時間軸，不影響其餘分頁 */
+  #tab4 .northJourney {border:1px solid var(--line);border-radius:14px;padding:16px;color:var(--text);background:#fff;min-width:0;}
+  #tab4 .northSteps {list-style:none;margin:0;padding:0;}
+  #tab4 .northSteps > li {display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:9px;padding-bottom:17px;min-width:0;}
+  #tab4 .northSteps > li:last-child {padding-bottom:0;}
+  #tab4 .northNum {font-size:16px;line-height:1.5;text-align:center;}
+  #tab4 .northStepBody {border-left:2px solid var(--line);padding-left:13px;margin-left:-13px;padding-bottom:1px;min-width:0;}
+  #tab4 .northStepTitle {font-size:15px;font-weight:600;line-height:1.45;overflow-wrap:anywhere;}
+  #tab4 .northStepDesc {font-size:14px;line-height:1.5;margin-top:3px;color:#514b45;overflow-wrap:anywhere;}
+  #tab4 .northOfficial {font-size:13px;margin:4px 0 6px;}
+  #tab4 .northOfficial a {font-size:13px;font-weight:500;}
+  #tab4 .northKamakuraGallery {margin:9px 0 5px;max-width:100%;min-width:0;overflow:hidden;}
+  #tab4 .northKamakuraGallery .gItem {width: min(60vw,240px);}
+  #tab4 .northImageSource {position:absolute;top:5px;right:5px;padding:2px 5px;border-radius:6px;background:rgba(255,255,255,.86);font-size:10px!important;font-weight:400!important;text-decoration:none!important;z-index:2;}
+  #tab4 .northKamakuraGallery .gItem.photoUnavailable {background:#f5f5f5;}
+  #tab4 .northKamakuraGallery .gItem.photoUnavailable::before {content:'圖片暫無法載入';display:flex;align-items:center;justify-content:center;height:100%;color:#6b7280;font-size:12px;}
+  #tab4 .northNotes {margin-top:4px;}
+  @media(max-width:420px) {#tab4 .northJourney {padding:13px 11px;}#tab4 .northStepTitle {font-size:14px;}}
 </style>
 </head>
 <body>
@@ -1170,19 +1189,19 @@
    </div>
   </section>
 
-  <!-- 分頁 4 -->
-  <section class="card daySection pagePanel" id="tab4">
-   <div class="dayCardHeader">
-    <div class="dayHeaderMain"><div class="dayIndex">4</div><h2 class="dayTitle">12/4</h2></div>
-    <div class="dayDate"></div>
-   </div>
-   <div class="dayBody">
-    <div class="timeline">
-     <div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div>
-     <div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div>
+   <!-- 分頁 4：12/4 北鎌倉賞楓 -->
+   <section class="card daySection pagePanel" id="tab4">
+    <div class="dayCardHeader">
+     <div class="dayHeaderMain"><div class="dayIndex">4</div><h2 class="dayTitle">北鎌倉賞楓</h2></div>
+     <div class="dayDate"></div>
     </div>
-   </div>
-  </section>
+    <div class="dayBody">
+     <div class="timeline">
+      <div class="northJourney"><ol class="northSteps"><li><div class="northNum">1</div><div class="northStepBody"><div class="northStepTitle">08:30～09:50　川崎站 → JR 北鎌倉站</div><div class="northStepDesc">從 JR 川崎站搭東海道線前往橫濱站，轉乘 JR 橫須賀線往逗子・久里濱方向，在「北鎌倉站」下車。此時間含轉乘緩衝；班次請以當日查詢為準。</div></div></li><li><div class="northNum">2</div><div class="northStepBody"><div class="northStepTitle">09:50～11:00　圓覺寺（円覚寺）</div><div class="northStepDesc">從北鎌倉站步行約 2～3 分鐘。由總門、山門一路欣賞寺院與楓葉，依當日紅葉狀況彈性停留。</div><div class="northOfficial"><a href="https://www.engakuji.or.jp/" target="_blank" rel="noopener noreferrer">圓覺寺官網</a> ・ <a href="https://www.google.com/maps/search/?api=1&amp;query=%E5%86%86%E8%A6%9A%E5%AF%BA%20%E9%8E%8C%E5%80%89" target="_blank" rel="noopener noreferrer">地圖</a></div><div class="gallery northKamakuraGallery"><div class="galleryRow"><div class="gItem" data-caption="圓覺寺・山門"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Engaku-ji%20Gate%20Kamakura.jpg?width=900" alt="圓覺寺・山門" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.gItem').classList.add('photoUnavailable');this.style.display='none'"/><a class="northImageSource" href="https://commons.wikimedia.org/wiki/File:Engaku-ji_Gate_Kamakura.jpg" target="_blank" rel="noopener noreferrer" title="查看原始照片及授權">照片來源</a></div><div class="gItem" data-caption="圓覺寺・寺院風景"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Engakuji%2C%20Kamakura.jpg?width=900" alt="圓覺寺・寺院風景" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.gItem').classList.add('photoUnavailable');this.style.display='none'"/><a class="northImageSource" href="https://commons.wikimedia.org/wiki/File:Engakuji,_Kamakura.jpg" target="_blank" rel="noopener noreferrer" title="查看原始照片及授權">照片來源</a></div><div class="gItem" data-caption="圓覺寺・庭園"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Engaku-ji%20Garden.jpg?width=900" alt="圓覺寺・庭園" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.gItem').classList.add('photoUnavailable');this.style.display='none'"/><a class="northImageSource" href="https://commons.wikimedia.org/wiki/File:Engaku-ji_Garden.jpg" target="_blank" rel="noopener noreferrer" title="查看原始照片及授權">照片來源</a></div></div></div></div></li><li><div class="northNum">3</div><div class="northStepBody"><div class="northStepTitle">11:00～11:15　圓覺寺 → 明月院</div><div class="northStepDesc">沿北鎌倉街道步行前往明月院，途中可慢慢拍攝街景。</div></div></li><li><div class="northNum">4</div><div class="northStepBody"><div class="northStepTitle">11:15～12:10　明月院（明月院）</div><div class="northStepDesc">欣賞寺院庭園與著名的「悟之窗」圓窗。秋季參觀區域與開放時間可能調整，以現場公告為準。</div><div class="northOfficial"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E6%98%8E%E6%9C%88%E9%99%A2%20%E9%8E%8C%E5%80%89" target="_blank" rel="noopener noreferrer">明月院地圖</a></div><div class="gallery northKamakuraGallery"><div class="galleryRow"><div class="gItem" data-caption="明月院・12月庭園"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Meigetsu-in%20December.jpg?width=900" alt="明月院・12月庭園" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.gItem').classList.add('photoUnavailable');this.style.display='none'"/><a class="northImageSource" href="https://commons.wikimedia.org/wiki/File:Meigetsu-in_December.jpg" target="_blank" rel="noopener noreferrer" title="查看原始照片及授權">照片來源</a></div><div class="gItem" data-caption="明月院・11月風景"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Meigetsuin%20November.jpg?width=900" alt="明月院・11月風景" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.gItem').classList.add('photoUnavailable');this.style.display='none'"/><a class="northImageSource" href="https://commons.wikimedia.org/wiki/File:Meigetsuin_November.jpg" target="_blank" rel="noopener noreferrer" title="查看原始照片及授權">照片來源</a></div><div class="gItem" data-caption="明月院・悟之窗"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Round%20Window%2C%20Meigetsu-in%2C%20Kamakura%20-%20November%202016.jpg?width=900" alt="明月院・悟之窗" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.gItem').classList.add('photoUnavailable');this.style.display='none'"/><a class="northImageSource" href="https://commons.wikimedia.org/wiki/File:Round_Window,_Meigetsu-in,_Kamakura_-_November_2016.jpg" target="_blank" rel="noopener noreferrer" title="查看原始照片及授權">照片來源</a></div></div></div></div></li><li><div class="northNum">5</div><div class="northStepBody"><div class="northStepTitle">12:10～13:15　北鎌倉午餐／咖啡</div><div class="northStepDesc">在北鎌倉站周邊找餐廳或咖啡廳休息，留點時間散步，不把行程排得太趕。</div></div></li><li><div class="northNum">6</div><div class="northStepBody"><div class="northStepTitle">13:15～14:00　返回北鎌倉站／彈性移動</div><div class="northStepDesc">依當天接續行程搭 JR 橫須賀線返回東京方向。12/4 為換飯店日，行李寄放及與旅伴會合的時間需另行安排。</div></div></li></ol></div>
+      <details class="infoBox preferredLineBox northNotes"><summary><span class="summaryText">交通與照片備註</span><span class="chev">⌄</span></summary><div class="infoContent"><div>・本日行程時間為預排，非已確認的列車班次。</div><div>・新增的北鎌倉相簿透過 Wikimedia Commons 線上載入；點選「照片來源」可查看每張原圖與授權。離線時可能無法顯示。</div><div>・原本 12/2 KAIT 與「小行程」內的全部圖片路徑維持不變，若圖片為相對路徑，開啟 HTML 時須保留原本 images 資料夾。</div></div></details>
+     </div>
+    </div>
+   </section>
 
   <!-- 分頁 5 -->
   <section class="card daySection pagePanel" id="tab5">
