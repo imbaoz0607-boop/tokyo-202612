@@ -6,6 +6,8 @@
 <meta name="format-detection" content="telephone=no"/>
 <title>Tokyo 12月｜行程模板</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxBC1YVfQ0y+iZ+LV4kE5dS0=" crossorigin="anonymous"/>
+<!-- 地圖樣式備援：避免某個 CDN 的 CSS 無法載入，造成圖磚散開及控制鈕消失 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
  :root {
   --bg: #f1f3f7;
@@ -1573,38 +1575,63 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
 <script>
-/* 僅當小行程收合層展開時初始化地圖，避免隱藏頁籤造成地圖空白 */
+/* 小行程地圖：收合層和分頁都可見時才初始化；展開及旋轉螢幕後重算圖磚尺寸。 */
 (() => {
  const panel = document.getElementById('tab8');
  const details = panel && panel.querySelector('.miniTripDetails');
  const node = document.getElementById('miniYokohamaMap');
  if (!panel || !details || !node) return;
  let map = null;
+ let fitToSpots = null;
+ let refreshId = 0;
+ const spots = [
+  {point:[35.465245,139.622864],icon:'1',name:'🛍️ Bshop 横浜ルミネ店',desc:'ルミネ横浜 5F'},
+  {point:[35.457528,139.631750],icon:'2',name:'🛍️ Bshop みなとみらい店',desc:'MARK IS みなとみらい 1F'},
+  {point:[35.4534,139.6440],icon:'3',name:'🎄 橫濱紅磚倉庫',desc:'橫濱赤レンガ倉庫／聖誕市集'}
+ ];
+ function isVisible() {
+  return details.open && panel.classList.contains('active') && node.getBoundingClientRect().width > 0;
+ }
+ function refreshMap() {
+  if (!map || !isVisible()) return;
+  map.invalidateSize({animate:false,pan:false});
+  if (fitToSpots) map.fitBounds(fitToSpots,{padding:[28,28],animate:false});
+ }
  function prepareMap() {
-  if (!details.open || !panel.classList.contains('active')) return;
-  if (!window.L) { node.textContent = '互動地圖目前無法載入，請使用下方 Google Maps 連結查看位置。'; return; }
+  if (!isVisible()) return;
+  if (!window.L) {
+   node.textContent = '互動地圖暫時無法載入，請使用下方 Google Maps 連結查看位置。';
+   return;
+  }
   if (!map) {
-   const spots = [
-    {point:[35.465245,139.622864],icon:'1',name:'🛍️ Bshop 横浜ルミネ店',desc:'ルミネ横浜 5F'},
-    {point:[35.457528,139.631750],icon:'2',name:'🛍️ Bshop みなとみらい店',desc:'MARK IS みなとみらい 1F'},
-    {point:[35.4534,139.6440],icon:'3',name:'🎄 橫濱紅磚倉庫',desc:'橫濱赤レンガ倉庫／聖誕市集'}
-   ];
-   map = L.map(node, {scrollWheelZoom:false, tap:false}).setView([35.459,139.631],14);
+   map = L.map(node,{scrollWheelZoom:false,tap:false,zoomControl:true,attributionControl:true});
    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
     attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',maxZoom:19
    }).addTo(map);
    spots.forEach((s,i) => {
-    const markerIcon = L.divIcon({className:'',html:'<span class="miniRouteMarker'+(i===2?' market':'')+'">'+s.icon+'</span>',iconSize:[30,30],iconAnchor:[15,15]});
+    const markerIcon=L.divIcon({className:'',html:'<span class="miniRouteMarker'+(i===2?' market':'')+'">'+s.icon+'</span>',iconSize:[30,30],iconAnchor:[15,15]});
     L.marker(s.point,{icon:markerIcon}).addTo(map).bindPopup('<b>'+s.name+'</b><div>'+s.desc+'</div>');
    });
    L.polyline(spots.map(s=>s.point),{color:'#8293a9',weight:2,dashArray:'5 8',opacity:0.75}).addTo(map);
-   map.fitBounds(L.latLngBounds(spots.map(s=>s.point)),{padding:[28,28]});
+   fitToSpots = L.latLngBounds(spots.map(s=>s.point));
   }
-  requestAnimationFrame(() => map.invalidateSize());
+  // 收合動畫與手機分頁重排後，實際寬度可能晚一點才穩定。
+  cancelAnimationFrame(refreshId);
+  refreshId=requestAnimationFrame(() => requestAnimationFrame(refreshMap));
+  setTimeout(refreshMap,180);
+  setTimeout(refreshMap,500);
  }
- details.addEventListener('toggle', prepareMap);
- const tab = document.querySelector('.tabBtn[data-target="tab8"]');
- if (tab) tab.addEventListener('click', () => requestAnimationFrame(prepareMap));
+ details.addEventListener('toggle',prepareMap);
+ const tab=document.querySelector('.tabBtn[data-target="tab8"]');
+ if (tab) tab.addEventListener('click',prepareMap);
+ if ('ResizeObserver' in window) {
+  const observer=new ResizeObserver(() => {
+   if (map && isVisible()) requestAnimationFrame(refreshMap);
+  });
+  observer.observe(node);
+ }
+ window.addEventListener('orientationchange',() => setTimeout(refreshMap,250));
+ window.addEventListener('resize',() => requestAnimationFrame(refreshMap));
 })();
 </script>
 </body>
