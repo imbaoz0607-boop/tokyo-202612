@@ -6,6 +6,8 @@
 <meta name="format-detection" content="telephone=no"/>
 <title>Tokyo 12月｜行程模板</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxBC1YVfQ0y+iZ+LV4kE5dS0=" crossorigin="anonymous"/>
+<!-- 地圖樣式備援：避免某個 CDN 的 CSS 無法載入，造成圖磚散開及控制鈕消失 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
  :root {
   --bg: #f1f3f7;
@@ -46,25 +48,16 @@
   padding: 8px 4px;
   margin-bottom: 8px;
   background: transparent;
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  column-gap: 14px;
-  row-gap: 5px;
  }
- .heroWeatherLinks { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+ /* 標題旁的天氣連結 */
+ .heroTitleCard { display:flex; align-items:baseline; flex-wrap:wrap; column-gap:14px; row-gap:5px; }
+ .heroWeatherLinks { display:inline-flex; align-items:center; gap:12px; flex-wrap:wrap; }
  .heroWeatherLinks a,
  .heroWeatherLinks a:link,
  .heroWeatherLinks a:visited,
  .heroWeatherLinks a:hover,
- .heroWeatherLinks a:active {
-  color: #4d463f;
-  font-size: 13px;
-  font-weight: 400;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  white-space: nowrap;
- }
+ .heroWeatherLinks a:active { color:#4d463f; font-size:13px; font-weight:400; text-decoration:underline; text-underline-offset:2px; white-space:nowrap; }
+ .heroWeatherLinks a:hover { text-decoration:underline; }
  .title {
   margin: 0;
   font-size: clamp(24px, 4vw, 34px);
@@ -500,6 +493,7 @@
   cursor: grab;
  }
  .galleryRow::-webkit-scrollbar { display: none; }
+ .galleryRow.dragging { cursor: grabbing; }
  .gItem {
   flex: 0 0 auto;
   width: 72vw;
@@ -607,11 +601,11 @@
   color: var(--muted);
  }
 
- /* 川崎飯店：影片收合層預設關閉，保持在交通資訊框內 */
- .hotelTransport .hotelVideoDetails { width: 100%; min-width: 0; margin: 8px 0 4px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
- .hotelTransport .hotelVideoDetails > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 10px; cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; color: var(--text); }
- .hotelTransport .hotelVideoDetails > summary::-webkit-details-marker { display: none; }
- .hotelTransport .hotelVideoDetails > .transportVideo { margin: 0 0 8px; padding: 0 8px; max-width: none; box-sizing: border-box; }
+  /* 川崎飯店：影片收合層預設關閉，保持在交通資訊框內 */
+  .hotelTransport .hotelVideoDetails { width:100%; min-width:0; margin:8px 0 4px; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .hotelTransport .hotelVideoDetails > summary { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 10px; cursor:pointer; list-style:none; font-size:14px; font-weight:600; color:var(--text); }
+  .hotelTransport .hotelVideoDetails > summary::-webkit-details-marker { display:none; }
+  .hotelTransport .hotelVideoDetails > .transportVideo { margin:0 0 8px; padding:0 8px; max-width:none; box-sizing:border-box; }
 
  /* 京急電鐵步行路線影片：響應式 16:9 */
  .hotelTransport .transportVideo {
@@ -628,18 +622,70 @@
   border-radius: 8px;
  }
 
- /* KAIT 基本資訊：與飯店資訊使用相同左側內距、緊湊行高 */
- .kaitInfo { padding: 0 8px 8px; font-size: 14px; line-height: 1.15; color: #4d463f; }
- /* KAIT 交通：沿用資訊框字級，換行時項目文字對齊 */
- .kaitTransport { margin-top: 10px; }
- .kaitTransportTitle { font-weight: 700; color: var(--text); margin-bottom: 1.5px; }
- .kaitTransportBullet { display: grid; grid-template-columns: 1em minmax(0, 1fr); align-items: start; margin-top: 3px; }
- .kaitTransportBullet span:last-child { min-width: 0; overflow-wrap: anywhere; }
- .kaitInfoName a,
- .kaitInfoName a:link,
- .kaitInfoName a:visited,
- .kaitInfoName a:hover,
- .kaitInfoName a:active { color: inherit; font-weight: 400; text-decoration: none !important; }
+   /* KAIT 基本資訊：與飯店資訊使用相同左側內距、緊湊行高 */
+  .kaitInfo { padding: 0 8px 8px; font-size: 14px; line-height: 1.15; color: #4d463f; }
+  /* KAIT 交通：沿用資訊框字級，換行時項目文字對齊 */
+  .kaitTransport { margin-top: 10px; }
+  .kaitTransportTitle { font-weight: 700; color: var(--text); margin-bottom: 1.5px; }
+  .kaitTransportBullet { display: grid; grid-template-columns: 1em minmax(0, 1fr); align-items: start; margin-top: 3px; }
+  .kaitTransportBullet span:last-child { min-width: 0; overflow-wrap: anywhere; }
+  .kaitInfoName a,
+  .kaitInfoName a:link,
+  .kaitInfoName a:visited,
+  .kaitInfoName a:hover,
+  .kaitInfoName a:active { color: inherit; font-weight: 400; text-decoration: none !important; }
+
+/* 響應式調整 (手機版) */
+ @media (max-width: 640px) {
+  .container { padding: 10px 4px 20px; }
+  .hero { margin-bottom: 8px; }
+  .heroFlights {
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 4px;
+  }
+  .heroFlightCard { padding: 8px 4px; }
+  .heroFlightTitle {
+   font-size: 14px;
+   gap: 3px;
+  }
+  .flightPrefix { gap: 2px; }
+  .heroFlightList { padding-left: 16px; }
+  .tabShell { border-radius: 18px; }
+  .topTabs {
+   gap: 6px;
+   padding: 8px 6px;
+   border-radius: 18px 18px 0 0;
+   scroll-padding-inline: 8px;
+  }
+  .tabBtn {
+   min-height: 36px;
+   padding: 0 10px;
+   font-size: 13px;
+   flex: 0 0 auto;
+  }
+  .tabBtn[data-target="tab0"] { min-width: 72px; }
+  .dayCardHeader {
+   gap: 10px;
+   padding: 10px 10px 6px;
+  }
+  .dayHeaderMain { gap: 10px; flex: 1; }
+  .dayDate { font-size: 14px; margin-left: auto; flex-shrink: 0; }
+  .dayBody { padding: 8px 4px; }
+  .tRow { gap: 8px; padding: 6px 2px; }
+  .time { width: 58px; min-width: 58px; font-size: 14px; }
+  .place p,
+  .placeTitle { font-size: 15px; line-height: 1.35; }
+  p.meta,
+  .meta.alignFix div,
+  .notes,
+  .infoContent { font-size: 13px; }
+  details.infoBox > summary .summaryText { font-size: 15px; }
+  details.infoBox.preferredLineBox > summary { padding-left: 0; }
+  .gItem { width: 60vw; max-width: none; }
+  /* 手機版：KAIT 文字與住宿資訊採同一左側基準（4 + 1 + 7 = 12px） */
+  #tab2 .timeline { padding-left: 7px; padding-right: 7px; }
+  #tab2 .kaitInfo { padding-left: 0; padding-right: 0; }
+ }
 
  /* Gallery 全螢幕檢視：手指放開即停止，沒有慣性動畫 */
  .photoLightbox {
@@ -714,51 +760,54 @@
 
  /* KAIT：詳細資訊內的電車銜接時間軸 */
  #tab2 .kaitJourney { border: 1px solid var(--line); border-radius: 14px; padding: 16px; color: var(--text); background: #fff; }
- #tab2 .kaitJourneyHead { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
- #tab2 .kaitJourneyStation { min-width: 0; }
- #tab2 .kaitJourneyStation:last-child { text-align: right; }
- #tab2 .kaitJourneyCaption { color: var(--muted); font-size: 12px; line-height: 1.35; }
- #tab2 .kaitJourneyTime { font-size: 26px; font-weight: 600; line-height: 1.35; font-variant-numeric: tabular-nums; }
- #tab2 .kaitJourneyArrow { color: var(--muted); font-size: 22px; flex: none; }
- #tab2 .kaitJourneyDivider { border: 0; border-top: 1px solid var(--line); margin: 15px 0 18px; }
- #tab2 .kaitJourneySteps { list-style: none; margin: 0; padding: 0; counter-reset: kaitStep; }
- #tab2 .kaitJourneySteps li { counter-increment: kaitStep; display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 9px; padding-bottom: 17px; }
- #tab2 .kaitJourneySteps li:last-child { padding-bottom: 0; }
- #tab2 .kaitJourneyNum { font-size: 16px; line-height: 1.5; text-align: center; }
- #tab2 .kaitJourneyStepBody { border-left: 2px solid var(--line); padding-left: 13px; margin-left: -13px; padding-bottom: 1px; }
- #tab2 .kaitJourneySteps li:last-child .kaitJourneyStepBody { border-left-color: var(--line); }
- #tab2 .kaitJourneyStepTitle { font-size: 15px; font-weight: 600; line-height: 1.45; }
- #tab2 .kaitJourneyStepDesc { font-size: 14px; line-height: 1.5; margin-top: 3px; color: #514b45; }
+ #tab2 .kaitJourneyHead { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+ #tab2 .kaitJourneyStation { min-width:0; }
+ #tab2 .kaitJourneyStation:last-child { text-align:right; }
+ #tab2 .kaitJourneyCaption { color:var(--muted); font-size:12px; line-height:1.35; }
+ #tab2 .kaitJourneyTime { font-size:26px; font-weight:600; line-height:1.35; font-variant-numeric:tabular-nums; }
+ #tab2 .kaitJourneyArrow { color:var(--muted); font-size:22px; flex:none; }
+ #tab2 .kaitJourneyDivider { border:0; border-top:1px solid var(--line); margin:15px 0 18px; }
+ #tab2 .kaitJourneySteps { list-style:none; margin:0; padding:0; counter-reset:kaitStep; }
+ #tab2 .kaitJourneySteps li { counter-increment:kaitStep; display:grid; grid-template-columns:24px minmax(0,1fr); column-gap:9px; padding-bottom:17px; }
+ #tab2 .kaitJourneySteps li:last-child { padding-bottom:0; }
+ #tab2 .kaitJourneyNum { font-size:16px; line-height:1.5; text-align:center; }
+ #tab2 .kaitJourneyStepBody { border-left:2px solid var(--line); padding-left:13px; margin-left:-13px; padding-bottom:1px; }
+ #tab2 .kaitJourneySteps li:last-child .kaitJourneyStepBody { border-left-color:var(--line); }
+ #tab2 .kaitJourneyStepTitle { font-size:15px; font-weight:600; line-height:1.45; }
+ #tab2 .kaitJourneyStepDesc { font-size:14px; line-height:1.5; margin-top:3px; color:#514b45; }
+ @media(max-width:420px) { #tab2 .kaitJourney {padding:13px 11px;} #tab2 .kaitJourneyTime {font-size:24px;} #tab2 .kaitJourneyStepTitle {font-size:14px;} }
 
- /* KAIT 相簿與外框 */
+ /* KAIT 相簿是 .timeline 外層框的子項，位於 .kaitJourney 時間軸內框之外。 */
  #tab2 .dayBody { min-width: 0; overflow: hidden; }
  #tab2 .kaitPhotoGallery {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  margin: 2px 0 0;
-  padding: 0 2px 4px;
-  overflow: hidden;
+   box-sizing: border-box;
+   width: 100%;
+   max-width: 100%;
+   min-width: 0;
+   margin: 2px 0 0;
+   padding: 0 2px 4px;
+   overflow: hidden;
  }
  #tab2 .kaitPhotoGallery .galleryRow {
-  display: flex;
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-padding-inline: 0;
+   display: flex;
+   box-sizing: border-box;
+   width: 100%;
+   min-width: 0;
+   max-width: 100%;
+   overflow-x: auto;
+   overflow-y: hidden;
+   scroll-padding-inline: 0;
  }
  #tab2 .kaitPhotoGallery .gItem { flex-shrink: 0; }
+
+ /* KAIT：交通時間軸與相簿共用同一個外框；相簿保持在時間軸內框外 */
  #tab2 .kaitPhotoFrame {
-  border: 0;
-  border-radius: 0;
-  padding: 0;
-  margin-top: 8px;
-  min-width: 0;
-  overflow: hidden;
+   border: 0;
+   border-radius: 0;
+   padding: 0;
+   margin-top: 8px;
+   min-width: 0;
+   overflow: hidden;
  }
  #tab2 .kaitPhotoFrame .kaitJourney { margin: 0; }
  #tab2 .kaitPhotoFrame .kaitPhotoGallery { margin: 6px 0 0; padding: 0 1px 2px; }
@@ -766,98 +815,91 @@
  /* 新增交通分頁：PDF 嵌入檢視與原尺寸開啟 */
  #tab0 .railMapBoxes { display: flex; flex-direction: column; gap: 0; }
  #tab0 details.infoBox.memoBox {
-  margin: 0;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-  box-shadow: none;
-  overflow: visible;
+   margin: 0; border: 0; border-bottom: 1px solid var(--line);
+   border-radius: 0; box-shadow: none; overflow: visible;
  }
  #tab0 details.infoBox.memoBox > summary { padding: 12px 8px; }
  #tab0 details.infoBox.memoBox > .infoContent { padding: 0 8px 12px; }
  #tab0 .foodCafeMap, #tab0 .pdfEmbedWrap { width: 100%; min-width: 0; }
  #tab0 .foodCafeMap iframe, #tab0 .pdfEmbed {
-  display: block;
-  width: 100%;
-  height: 540px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #f7f7f7;
+   display: block; width: 100%; height: 540px; border: 1px solid var(--line);
+   border-radius: 8px; background: #f7f7f7;
  }
  #tab0 .foodCafePdfOpen, #tab0 .pdfOpenBtn {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 5px 10px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: #3b6cff !important;
-  text-decoration: none !important;
-  font-size: 13px;
-  font-weight: 400 !important;
+   display: inline-block; margin-top: 8px; padding: 5px 10px;
+   border: 1px solid var(--line); border-radius: 8px;
+   color: #3b6cff !important; text-decoration: none !important;
+   font-size: 13px; font-weight: 400 !important;
+ }
+ @media(max-width:640px) {
+   #tab0 .foodCafeMap iframe, #tab0 .pdfEmbed { height: 420px; }
  }
 
- /* KAIT Gallery 下方備忘錄與回程 */
+ /* KAIT Gallery 下方備忘錄 */
  #tab2 .kaitMemo { margin-top: 8px; }
  #tab2 .kaitMemoList { margin: 0; padding: 0; font-size: 14px; line-height: 1.15; }
  #tab2 .kaitMemoList .kaitTransportBullet { margin-top: 3px; }
+
+ /* KAIT 回程：與 Memo 同寬且不超出外框 */
  #tab2 .kaitReturn { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin-top: 0; }
- #tab2 .kaitReturn > .kaitReturnContent { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; padding: 0 8px 10px; }
- #tab2 .kaitReturnOption { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; }
- #tab2 .kaitReturnOption > summary { gap: 8px; padding: 10px 3px; }
- #tab2 .kaitReturnOption .summaryText { min-width: 0; overflow-wrap: anywhere; }
- #tab2 .kaitReturnOption > .kaitReturnOptionContent { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; padding: 4px 0 12px; }
- #tab2 .kaitReturnSteps { list-style: none; margin: 0; padding: 0; }
- #tab2 .kaitReturnSteps li { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 9px; padding-bottom: 17px; min-width: 0; }
- #tab2 .kaitReturnSteps li:last-child { padding-bottom: 0; }
- #tab2 .kaitReturnNum { font-size: 16px; line-height: 1.5; text-align: center; }
- #tab2 .kaitReturnStepBody { border-left: 2px solid var(--line); padding-left: 13px; margin-left: -13px; padding-bottom: 1px; min-width: 0; }
- #tab2 .kaitReturnStepTitle { font-size: 15px; font-weight: 600; line-height: 1.45; overflow-wrap: anywhere; color: var(--text); }
- #tab2 .kaitReturnStepDesc { font-size: 14px; line-height: 1.5; margin-top: 3px; color: #514b45; overflow-wrap: anywhere; }
 
- /* KAIT 官方時刻表連結 */
- #tab2 details.kaitTimetableLinks { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin: 0; border-bottom: 1px solid var(--line); }
- #tab2 details.kaitTimetableLinks > summary { box-sizing: border-box; padding: 12px 8px; }
- #tab2 details.kaitTimetableLinks > .kaitTimetableLinksContent { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; padding: 0 8px 10px; }
- #tab2 .kaitTimetableList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
- #tab2 .kaitTimetableList li { box-sizing: border-box; width: 100%; min-width: 0; margin: 0; }
- #tab2 .kaitTimetableList a, #tab2 .kaitTimetableList a:link, #tab2 .kaitTimetableList a:visited, #tab2 .kaitTimetableList a:hover, #tab2 .kaitTimetableList a:active {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  min-height: 36px;
-  padding: 8px 10px;
-  border: 1px solid #d8e2f5;
-  border-radius: 9px;
-  background: #f8fbff;
-  color: #000 !important;
-  font-size: 14px;
-  font-weight: 500 !important;
-  line-height: 1.4;
-  text-decoration: none !important;
-  overflow-wrap: anywhere;
-  word-break: normal;
+ /* KAIT 回程內層 A/B 收合層：留在外框內，採相同的直線時間軸 */
+ #tab2 .kaitReturn > .kaitReturnContent { box-sizing:border-box; width:100%; min-width:0; max-width:100%; padding:0 8px 10px; }
+ #tab2 .kaitReturnOption { box-sizing:border-box; width:100%; min-width:0; max-width:100%; }
+ #tab2 .kaitReturnOption > summary { gap:8px; padding:10px 3px; }
+ #tab2 .kaitReturnOption .summaryText { min-width:0; overflow-wrap:anywhere; }
+ #tab2 .kaitReturnOption > .kaitReturnOptionContent { box-sizing:border-box; width:100%; min-width:0; max-width:100%; padding:4px 0 12px; }
+ #tab2 .kaitReturnSteps { list-style:none; margin:0; padding:0; }
+ #tab2 .kaitReturnSteps li { display:grid; grid-template-columns:24px minmax(0,1fr); column-gap:9px; padding-bottom:17px; min-width:0; }
+ #tab2 .kaitReturnSteps li:last-child { padding-bottom:0; }
+ #tab2 .kaitReturnNum { font-size:16px; line-height:1.5; text-align:center; }
+ #tab2 .kaitReturnStepBody { border-left:2px solid var(--line); padding-left:13px; margin-left:-13px; padding-bottom:1px; min-width:0; }
+ #tab2 .kaitReturnStepTitle { font-size:15px; font-weight:600; line-height:1.45; overflow-wrap:anywhere; color:var(--text); }
+ #tab2 .kaitReturnStepDesc { font-size:14px; line-height:1.5; margin-top:3px; color:#514b45; overflow-wrap:anywhere; }
+ @media(max-width:420px) {
+  #tab2 .kaitReturn > .kaitReturnContent { padding-left:4px; padding-right:4px; }
+  #tab2 .kaitReturnStepTitle { font-size:14px; }
  }
- #tab2 .kaitTimetableList a:hover { background: #eef5ff; border-color: #aac4f3; }
- #tab2 .kaitTimetableList a:focus-visible { outline: 2px solid #3b6cff; outline-offset: 2px; }
 
- /* 12/3 江之浦 */
+ /* KAIT 回程下方：官方時刻表連結，與 Memo/回程同寬、不超出邊框 */
+ #tab2 details.kaitTimetableLinks { box-sizing:border-box; width:100%; max-width:100%; min-width:0; margin:0; border-bottom:1px solid var(--line); }
+ #tab2 details.kaitTimetableLinks > summary { box-sizing:border-box; padding:12px 8px; }
+ #tab2 details.kaitTimetableLinks > .kaitTimetableLinksContent { box-sizing:border-box; width:100%; max-width:100%; min-width:0; padding:0 8px 10px; }
+ #tab2 .kaitTimetableList { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+ /* KAIT 官方時刻表：完整可點擊的控制鈕，所有寬度均限制在原外框內 */
+ #tab2 .kaitTimetableList li { box-sizing:border-box; width:100%; min-width:0; margin:0; }
+ #tab2 .kaitTimetableList a, #tab2 .kaitTimetableList a:link, #tab2 .kaitTimetableList a:visited, #tab2 .kaitTimetableList a:hover, #tab2 .kaitTimetableList a:active {
+  display:flex; align-items:center; box-sizing:border-box; width:100%; max-width:100%; min-width:0;
+  min-height:36px; padding:8px 10px; border:1px solid #d8e2f5; border-radius:9px;
+  background:#f8fbff; color:#000 !important; font-size:14px; font-weight:500 !important;
+  line-height:1.4; text-decoration:none !important; overflow-wrap:anywhere; word-break:normal;
+ }
+ #tab2 .kaitTimetableList a:hover { background:#eef5ff; border-color:#aac4f3; }
+ #tab2 .kaitTimetableList a:focus-visible { outline:2px solid #3b6cff; outline-offset:2px; }
+ /* 手機版：三個同層收合標題使用相同的左側內距，避免時刻表向右偏移 */
+ @media(max-width:640px) {
+  #tab2 details.kaitTimetableLinks > summary { padding-left:0; padding-right:8px; }
+ }
+ @media(max-width:420px) { #tab2 .kaitTimetableList a {font-size:13px; padding:8px;} }
+
+ /* 12/3 江之浦：與 12/2 KAIT 時間軸完全一致的字級、行高、間距和灰色連接線 */
  #tab3 .enouraJourney { border: 1px solid var(--line); border-radius: 14px; padding: 16px; color: var(--text); background: #fff; }
  #tab3 .enouraSteps { list-style: none; margin: 0; padding: 0; counter-reset: enouraStep; }
- #tab3 .enouraSteps li { counter-increment: enouraStep; display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 9px; padding-bottom: 17px; }
+ #tab3 .enouraSteps li { counter-increment: enouraStep; display: grid; grid-template-columns: 24px minmax(0,1fr); column-gap: 9px; padding-bottom: 17px; }
  #tab3 .enouraSteps li:last-child { padding-bottom: 0; }
  #tab3 .enouraNum { font-size: 16px; line-height: 1.5; text-align: center; }
  #tab3 .enouraStepBody { border-left: 2px solid var(--line); padding-left: 13px; margin-left: -13px; padding-bottom: 1px; }
  #tab3 .enouraSteps li:last-child .enouraStepBody { border-left-color: var(--line); }
  #tab3 .enouraStepTitle { font-size: 15px; font-weight: 600; line-height: 1.45; }
  #tab3 .enouraStepDesc { font-size: 14px; line-height: 1.5; margin-top: 3px; color: #514b45; }
+ @media(max-width:420px) { #tab3 .enouraJourney {padding:13px 11px;} #tab3 .enouraStepTitle {font-size:14px;} }
+ /* 12/3 江之浦標題官網連結：與標題同色且無下底線 */
  #tab3 .enouraOfficialLink,
  #tab3 .enouraOfficialLink:link,
  #tab3 .enouraOfficialLink:visited,
  #tab3 .enouraOfficialLink:hover,
  #tab3 .enouraOfficialLink:active { color: inherit; font: inherit; text-decoration: none !important; }
+ /* KAIT 標題官網連結：保留標題字體顏色、粗細，無下底線 */
  #tab2 .kaitTitleOfficialLink,
  #tab2 .kaitTitleOfficialLink:link,
  #tab2 .kaitTitleOfficialLink:visited,
@@ -868,106 +910,43 @@
   font-weight: inherit !important;
   text-decoration: none !important;
  }
+ /* 小行程：沿用 KAIT / 江之浦的數字、灰線時間軸與手機版比例 */
+ #tab8 .miniJourney { border:1px solid var(--line); border-radius:14px; padding:16px; color:var(--text); background:#fff; min-width:0; }
+ #tab8 .miniSteps { list-style:none; margin:0; padding:0; }
+ #tab8 .miniSteps li { display:grid; grid-template-columns:24px minmax(0,1fr); column-gap:9px; padding-bottom:17px; min-width:0; }
+ #tab8 .miniSteps li:last-child { padding-bottom:0; }
+ #tab8 .miniNum { font-size:16px; line-height:1.5; text-align:center; }
+ #tab8 .miniStepBody { border-left:2px solid var(--line); padding-left:13px; margin-left:-13px; padding-bottom:1px; min-width:0; }
+ #tab8 .miniStepTitle { font-size:15px; font-weight:600; line-height:1.45; overflow-wrap:anywhere; }
+ #tab8 .miniStepDesc { font-size:14px; line-height:1.5; margin-top:3px; color:#514b45; overflow-wrap:anywhere; }
+ #tab8 .miniStepDesc a { font-weight:500; text-decoration:underline; text-underline-offset:2px; }
+ /* 小行程：聖誕市集照片跟隨第 6 項時間軸，在手機畫面內完整顯示 */
+ #tab8 .miniMarketPhoto { margin:10px 0 2px; max-width:100%; min-width:0; }
+ #tab8 .miniMarketPhoto img { display:block; width:100%; max-width:520px; height:auto; border-radius:10px; border:1px solid var(--line); }
+ #tab8 .miniMarketPhoto figcaption { margin-top:5px; color:#7a736b; font-size:12px; line-height:1.45; }
+ #tab8 .miniMarketPhoto figcaption a { font-size:inherit; font-weight:400; }
+ /* 小行程：標題改為預設收合，時間軸只在展開後顯示，維持原有外框寬度。 */
+ #tab8 .miniTripDetails { min-width:0; max-width:100%; width:100%; margin:0; }
+ #tab8 .miniTripDetails > summary { padding:12px 8px; }
+ #tab8 .miniTripDetails > .miniTripContent { padding:0 0 10px; min-width:0; }
+ #tab8 .miniTripDetails .summaryText { overflow-wrap:anywhere; }
+ @media(max-width:640px) { #tab8 .miniTripDetails > summary { padding-left:0; } }
 
- /* 小行程 */
- #tab8 .miniJourney { border: 1px solid var(--line); border-radius: 14px; padding: 16px; color: var(--text); background: #fff; min-width: 0; }
- #tab8 .miniSteps { list-style: none; margin: 0; padding: 0; }
- #tab8 .miniSteps li { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 9px; padding-bottom: 17px; min-width: 0; }
- #tab8 .miniSteps li:last-child { padding-bottom: 0; }
- #tab8 .miniNum { font-size: 16px; line-height: 1.5; text-align: center; }
- #tab8 .miniStepBody { border-left: 2px solid var(--line); padding-left: 13px; margin-left: -13px; padding-bottom: 1px; min-width: 0; }
- #tab8 .miniStepTitle { font-size: 15px; font-weight: 600; line-height: 1.45; overflow-wrap: anywhere; }
- #tab8 .miniStepDesc { font-size: 14px; line-height: 1.5; margin-top: 3px; color: #514b45; overflow-wrap: anywhere; }
- #tab8 .miniStepDesc a { font-weight: 500; text-decoration: underline; text-underline-offset: 2px; }
- #tab8 .miniMarketPhoto { margin: 10px 0 2px; max-width: 100%; min-width: 0; }
- #tab8 .miniMarketPhoto img { display: block; width: 100%; max-width: 520px; height: auto; border-radius: 10px; border: 1px solid var(--line); }
- #tab8 .miniMarketPhoto figcaption { margin-top: 5px; color: #7a736b; font-size: 12px; line-height: 1.45; }
- #tab8 .miniTripDetails { min-width: 0; max-width: 100%; width: 100%; margin: 0; }
- #tab8 .miniTripDetails > summary { padding: 12px 8px; }
- #tab8 .miniTripDetails > .miniTripContent { padding: 0 0 10px; min-width: 0; }
- #tab8 .miniTripDetails .summaryText { overflow-wrap: anywhere; }
+ @media(max-width:420px) { #tab8 .miniJourney {padding:13px 11px;} #tab8 .miniStepTitle {font-size:14px;} }
 
- /* 小行程：橫濱三站互動地圖 */
- #tab8 .miniRouteMapBox { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin: 16px 0 4px; }
- #tab8 .miniRouteMapTitle { font-size: 15px; font-weight: 700; margin: 0 0 8px; color: var(--text); }
- #tab8 .miniRouteLegend { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: 0 0 9px; font-size: 12px; line-height: 1.5; }
- #tab8 .miniRouteLegend span { display: inline-flex; align-items: center; gap: 4px; }
- #tab8 .miniRouteMap { box-sizing: border-box; width: 100%; max-width: 100%; height: 310px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #eef1f5; z-index: 0; }
- #tab8 .miniRouteNote { color: #625e59; font-size: 12px; line-height: 1.5; margin: 8px 0 0; }
- #tab8 .miniRouteLinks { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
- #tab8 .miniRouteLinks a { display: inline-flex; align-items: center; padding: 7px 9px; border: 1px solid #d8e2f5; border-radius: 8px; background: #f8fbff; font-size: 12px; text-decoration: none !important; font-weight: 500; color: #000 !important; }
- #tab8 .miniRouteMarker { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: #fff; color: #242424; border: 2px solid #6487be; box-shadow: 0 2px 6px #0003; font: bold 14px/1 sans-serif; }
- #tab8 .miniRouteMarker.market { border-color: #c87d43; }
- #tab8 .miniRouteMap .leaflet-popup-content { font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; }
-
- /* 響應式調整 (手機版) */
- @media (max-width: 640px) {
-  .container { padding: 10px 4px 20px; }
-  .hero { margin-bottom: 8px; }
-  .heroFlights {
-   grid-template-columns: repeat(2, minmax(0, 1fr));
-   gap: 4px;
-  }
-  .heroFlightCard { padding: 8px 4px; }
-  .heroFlightTitle {
-   font-size: 14px;
-   gap: 3px;
-  }
-  .flightPrefix { gap: 2px; }
-  .heroFlightList { padding-left: 16px; }
-  .tabShell { border-radius: 18px; }
-  .topTabs {
-   gap: 6px;
-   padding: 8px 6px;
-   border-radius: 18px 18px 0 0;
-   scroll-padding-inline: 8px;
-  }
-  .tabBtn {
-   min-height: 36px;
-   padding: 0 10px;
-   font-size: 13px;
-   flex: 0 0 auto;
-  }
-  .tabBtn[data-target="tab0"] { min-width: 72px; }
-  .dayCardHeader {
-   gap: 10px;
-   padding: 10px 10px 6px;
-  }
-  .dayHeaderMain { gap: 10px; flex: 1; }
-  .dayDate { font-size: 14px; margin-left: auto; flex-shrink: 0; }
-  .dayBody { padding: 8px 4px; }
-  .tRow { gap: 8px; padding: 6px 2px; }
-  .time { width: 58px; min-width: 58px; font-size: 14px; }
-  .place p,
-  .placeTitle { font-size: 15px; line-height: 1.35; }
-  p.meta,
-  .meta.alignFix div,
-  .notes,
-  .infoContent { font-size: 13px; }
-  details.infoBox > summary .summaryText { font-size: 15px; }
-  details.infoBox.preferredLineBox > summary { padding-left: 0; }
-  .gItem { width: 60vw; max-width: none; }
-  #tab2 .timeline { padding-left: 7px; padding-right: 7px; }
-  #tab2 .kaitInfo { padding-left: 0; padding-right: 0; }
-  #tab2 details.kaitTimetableLinks > summary { padding-left: 0; padding-right: 8px; }
-  #tab0 .foodCafeMap iframe, #tab0 .pdfEmbed { height: 420px; }
-  #tab8 .miniTripDetails > summary { padding-left: 0; }
-  #tab8 .miniRouteMap { height: 275px; }
-  #tab8 .miniRouteMapBox { margin-top: 13px; }
- }
-
- @media (max-width: 420px) {
-  #tab2 .kaitJourney { padding: 13px 11px; }
-  #tab2 .kaitJourneyTime { font-size: 24px; }
-  #tab2 .kaitJourneyStepTitle { font-size: 14px; }
-  #tab2 .kaitReturn > .kaitReturnContent { padding-left: 4px; padding-right: 4px; }
-  #tab2 .kaitReturnStepTitle { font-size: 14px; }
-  #tab2 .kaitTimetableList a { font-size: 13px; padding: 8px; }
-  #tab3 .enouraJourney { padding: 13px 11px; }
-  #tab3 .enouraStepTitle { font-size: 14px; }
-  #tab8 .miniJourney { padding: 13px 11px; }
-  #tab8 .miniStepTitle { font-size: 14px; }
- }
+  /* 小行程：橫濱三站互動地圖（收合層內、手機不溢出） */
+  #tab8 .miniRouteMapBox { box-sizing:border-box; width:100%; max-width:100%; min-width:0; margin:16px 0 4px; }
+  #tab8 .miniRouteMapTitle { font-size:15px; font-weight:700; margin:0 0 8px; color:var(--text); }
+  #tab8 .miniRouteLegend { display:flex; flex-wrap:wrap; gap:6px 12px; margin:0 0 9px; font-size:12px; line-height:1.5; }
+  #tab8 .miniRouteLegend span { display:inline-flex; align-items:center; gap:4px; }
+  #tab8 .miniRouteMap { box-sizing:border-box; width:100%; max-width:100%; height:310px; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#eef1f5; z-index:0; }
+  #tab8 .miniRouteNote { color:#625e59; font-size:12px; line-height:1.5; margin:8px 0 0; }
+  #tab8 .miniRouteLinks { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+  #tab8 .miniRouteLinks a { display:inline-flex; align-items:center; padding:7px 9px; border:1px solid #d8e2f5; border-radius:8px; background:#f8fbff; font-size:12px; text-decoration:none !important; font-weight:500; color:#000 !important; }
+  #tab8 .miniRouteMarker { display:grid; place-items:center; width:29px; height:29px; border-radius:50%; background:#fff; color:#242424; border:2px solid #6487be; box-shadow:0 2px 6px #0003; font:bold 14px/1 sans-serif; }
+  #tab8 .miniRouteMarker.market { border-color:#c87d43; }
+  #tab8 .miniRouteMap .leaflet-popup-content { font:13px/1.5 -apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif; }
+  @media(max-width:640px) { #tab8 .miniRouteMap {height:275px;} #tab8 .miniRouteMapBox {margin-top:13px;} }
 </style>
 </head>
 <body>
@@ -1020,10 +999,10 @@
   <div class="tabsDivider"></div>
 
   <!-- 分頁 1：住宿資訊 -->
-  <section class="card daySection pagePanel active" id="tab1" role="tabpanel">
+  <section class="card daySection pagePanel active" id="tab1">
    <div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">1</div><h2 class="dayTitle">住宿資訊</h2></div><div class="dayDate"></div></div>
    <div class="dayBody"><div class="memoBoxes">
-    <details class="infoBox preferredLineBox"><summary><span class="summaryText">JR東日本大都会大飯店川崎<a href="https://kawasaki.hotel-metropolitan.com/tw/" target="_blank" rel="noopener noreferrer" aria-label="開啟川崎大都會飯店官網" title="開啟川崎大都會飯店官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary>
+    <details class="infoBox preferredLineBox"><summary><span class="summaryText">JR東日本大都会大飯店川崎<a href="googlechromes://kawasaki.hotel-metropolitan.com/tw/" aria-label="使用 Google Chrome 開啟川崎大都會飯店官網" title="使用 Google Chrome 開啟川崎大都會飯店官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary>
      <div class="infoContent hotelTransport">
       <p class="transportIntro hotelInfoTitle">飯店資訊</p>
       <div class="hotelInfoLine">Hotel Metropolitan Kawasaki ホテルメトロポリタン川崎</div>
@@ -1047,7 +1026,7 @@
        </details>
       </div>
      </div></details>
-    <details class="infoBox preferredLineBox"><summary><span class="summaryText">OMO5 東京五反田<a href="https://hoshinoresorts.com/zh_tw/hotels/omo5tokyogotanda/" target="_blank" rel="noopener noreferrer" aria-label="開啟 OMO5 東京五反田官網" title="開啟 OMO5 東京五反田官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary><div class="infoContent hotelTransport">
+    <details class="infoBox preferredLineBox"><summary><span class="summaryText">OMO5 東京五反田<a href="googlechromes://hoshinoresorts.com/zh_tw/hotels/omo5tokyogotanda/" aria-label="使用 Google Chrome 開啟 OMO5 東京五反田官網" title="使用 Google Chrome 開啟 OMO5 東京五反田官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary><div class="infoContent hotelTransport">
        <p class="transportIntro hotelInfoTitle">飯店資訊</p>
        <div class="hotelInfoLine">OMO5東京五反田 by 星野リゾート</div>
        <div class="hotelInfoLine">OMO5 Tokyo Gotanda by Hoshino Resorts</div>
@@ -1058,7 +1037,7 @@
   </section>
 
   <!-- 分頁 2：神奈川工科大學 KAIT廣場參觀 -->
-  <section class="card daySection pagePanel" id="tab2" role="tabpanel">
+  <section class="card daySection pagePanel" id="tab2">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">2</div><h2 class="dayTitle"><a class="kaitTitleOfficialLink" href="https://www.kait.jp/" target="_blank" rel="noopener noreferrer">神奈川工科大學 KAIT廣場參觀</a></h2></div>
     <div class="dayDate"></div>
@@ -1068,7 +1047,7 @@
      <div class="kaitInfo">
       <div class="kaitTransportTitle">學校資訊</div>
       <div class="kaitInfoName">神奈川工科大学 Kanagawa Institute of Technology</div>
-      <div>〒243-0292 神奈川県厚木市下荻野1030</div>
+      <div>〒243-0292　神奈川県厚木市下荻野1030</div>
       <div>Tel 046-291-3033 / Fax 046-242-4422</div>
       <div class="kaitTransport">
        <div class="kaitTransportTitle">交通方式</div>
@@ -1076,7 +1055,6 @@
        <div class="kaitTransportBullet"><span>・</span><span>JR川崎站(JN01)搭南武線前往登戶站(JN14)。</span></div>
        <div class="kaitTransportBullet"><span>・</span><span>在登戶站(JN14=OH18)轉乘小田急小田原線，前往本厚木站(OH34)。</span></div>
        <div class="kaitTransportBullet"><span>・</span><span>沿北口(North Exit)指標出站，於北口1番のりば搭乘神奈川中央交通公車厚89(神奈川工科大学経由・鳶尾団地行13:45發車)，至神奈川工科大学前站下車，前往正門旁的警衛室報到。</span></div>
-      </div><!-- /kaitTransport -->
       <div class="kaitPhotoFrame">
        <div class="kaitJourney">
         <div class="kaitJourneyHead">
@@ -1094,85 +1072,86 @@
          <li><div class="kaitJourneyNum">6</div><div class="kaitJourneyStepBody"><div class="kaitJourneyStepTitle">約 14:10 神奈川工科大学前站抵達</div><div class="kaitJourneyStepDesc">下車後至學校正門旁警衛室出示確認信領取GUEST CARD。14:30才會設置等待區，下車後先確認回程站牌的位置。</div></div></li>
         </ol>
        </div>
-       <!-- KAIT 圖片相簿：與時間軸一起置於外框內，但不在時間軸內框中 -->
-       <div class="gallery kaitPhotoGallery" aria-label="KAIT 廣場圖片相簿">
-        <div class="galleryRow">
-         <div class="gItem"><img src="./images/Day2-KAIT/1.jpg" alt="KAIT 參觀照片 1" loading="lazy"/></div>
-         <div class="gItem"><img src="./images/Day2-KAIT/2.jpg" alt="KAIT 參觀照片 2" loading="lazy"/></div>
-         <div class="gItem"><img src="./images/Day2-KAIT/3.jpg" alt="KAIT 參觀照片 3" loading="lazy"/></div>
-         <div class="gItem"><img src="./images/Day2-KAIT/4.jpg" alt="KAIT 參觀照片 4" loading="lazy"/></div>
-         <div class="gItem"><img src="./images/Day2-KAIT/5.jpg" alt="KAIT 參觀照片 5" loading="lazy"/></div>
-         <div class="gItem"><img src="./images/Day2-KAIT/6.jpg" alt="KAIT 參觀照片 6" loading="lazy"/></div>
-         <div class="gItem"><img src="./images/Day2-KAIT/7.jpg" alt="KAIT 參觀照片 7" loading="lazy"/></div>
-        </div>
+    <!-- KAIT 圖片相簿：與時間軸一起置於外框內，但不在時間軸內框中 -->
+    <div class="gallery kaitPhotoGallery" aria-label="KAIT 廣場圖片相簿">
+     <div class="galleryRow">
+      <div class="gItem"><img src="./images/Day2-KAIT/1.jpg" alt="KAIT 參觀照片 1" loading="lazy"/></div>
+      <div class="gItem"><img src="./images/Day2-KAIT/2.jpg" alt="KAIT 參觀照片 2" loading="lazy"/></div>
+      <div class="gItem"><img src="./images/Day2-KAIT/3.jpg" alt="KAIT 參觀照片 3" loading="lazy"/></div>
+      <div class="gItem"><img src="./images/Day2-KAIT/4.jpg" alt="KAIT 參觀照片 4" loading="lazy"/></div>
+      <div class="gItem"><img src="./images/Day2-KAIT/5.jpg" alt="KAIT 參觀照片 5" loading="lazy"/></div>
+      <div class="gItem"><img src="./images/Day2-KAIT/6.jpg" alt="KAIT 參觀照片 6" loading="lazy"/></div>
+      <div class="gItem"><img src="./images/Day2-KAIT/7.jpg" alt="KAIT 參觀照片 7" loading="lazy"/></div>
+     </div>
+    </div>
+    <!-- KAIT 備忘錄：位於 Gallery 下方，預設收合 -->
+    <details class="infoBox preferredLineBox kaitMemo">
+     <summary><span class="summaryText">Memo</span><span class="chev">⌄</span></summary>
+     <div class="infoContent">
+      <div class="kaitMemoList">
+       <div class="kaitTransportBullet"><span>・</span><span>參觀時間15:00~16:00</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>中生代建築師中的鬼才石上純也，於2020年12月落成的半戶外多功能廣場。</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>面積約4,100平方公尺，跨度達90公尺，內部沒有任何立柱，由重約580噸的12mm厚鐵板屋頂與四周結構支撐。</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>屋頂分布59個無玻璃覆蓋的方形開口(約1.8m–3m)，讓陽光、微風與雨水自然進入空間。</span></div>
+       <div class="kaitTransportBullet"><span>・</span><span>隨氣候變化的動態感：鐵板屋頂會隨氣溫熱脹冷縮產生微幅升降。</span></div>
+      </div>
+     </div>
+    </details>
+    <!-- KAIT 回程：位於 Memo 下方、同一外框內，預設收合 -->
+    <details class="infoBox preferredLineBox kaitReturn">
+     <summary><span class="summaryText">回程</span><span class="chev">⌄</span></summary>
+     <div class="infoContent kaitReturnContent">
+      <details class="infoBox preferredLineBox kaitReturnOption" aria-label="方案A">
+       <summary><span class="summaryText">厚07➞16:17 </span><span class="chev">⌄</span></summary>
+       <div class="infoContent kaitReturnOptionContent">
+        <ol class="kaitReturnSteps">
+         <li><div class="kaitReturnNum">1</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">16:17 神奈川工科大学前出發</div><div class="kaitReturnStepDesc">神奈中公車「厚07」，回程站牌往厚木バスセンター方向。</div></div></li>
+         <li><div class="kaitReturnNum">2</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">16:45 本厚木站附近抵達</div><div class="kaitReturnStepDesc">下車後步行至小田急本厚木站，預留約20分鐘轉乘。</div></div></li>
+         <li><div class="kaitReturnNum">3</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:05 本厚木站（OH34）出發</div><div class="kaitReturnStepDesc">小田急小田原線「快速急行・新宿行」。</div></div></li>
+         <li><div class="kaitReturnNum">4</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:40 登戶站（OH18）抵達</div><div class="kaitReturnStepDesc">前往JR南武線月台，轉乘川崎方向列車。</div></div></li>
+         <li><div class="kaitReturnNum">5</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:51 JR登戶站（JN14）出發</div><div class="kaitReturnStepDesc">JR南武線普通車「川崎行」。</div></div></li>
+         <li><div class="kaitReturnNum">6</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">18:22 JR川崎站（JN01）抵達</div><div class="kaitReturnStepDesc">步行返回川崎大都會飯店。</div></div></li>
+        </ol>
        </div>
-       <!-- KAIT 備忘錄：位於 Gallery 下方，預設收合 -->
-       <details class="infoBox preferredLineBox kaitMemo">
-        <summary><span class="summaryText">Memo</span><span class="chev">⌄</span></summary>
-        <div class="infoContent">
-         <div class="kaitMemoList">
-          <div class="kaitTransportBullet"><span>・</span><span>參觀時間15:00~16:00</span></div>
-          <div class="kaitTransportBullet"><span>・</span><span>中生代建築師中的鬼才石上純也，於2020年12月落成的半戶外多功能廣場。</span></div>
-          <div class="kaitTransportBullet"><span>・</span><span>面積約4,100平方公尺，跨度達90公尺，內部沒有任何立柱，由重約580噸的12mm厚鐵板屋頂與四周結構支撐。</span></div>
-          <div class="kaitTransportBullet"><span>・</span><span>屋頂分布59個無玻璃覆蓋的方形開口(約1.8m–3m)，讓陽光、微風與雨水自然進入空間。</span></div>
-          <div class="kaitTransportBullet"><span>・</span><span>隨氣候變化的動態感：鐵板屋頂會隨氣溫熱脹冷縮產生微幅升降。</span></div>
-         </div>
-        </div>
-       </details>
-       <!-- KAIT 回程：位於 Memo 下方、同一外框內，預設收合 -->
-       <details class="infoBox preferredLineBox kaitReturn">
-        <summary><span class="summaryText">回程</span><span class="chev">⌄</span></summary>
-        <div class="infoContent kaitReturnContent">
-         <details class="infoBox preferredLineBox kaitReturnOption" aria-label="方案A">
-          <summary><span class="summaryText">厚07➞16:17</span><span class="chev">⌄</span></summary>
-          <div class="infoContent kaitReturnOptionContent">
-           <ol class="kaitReturnSteps">
-            <li><div class="kaitReturnNum">1</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">16:17 神奈川工科大学前出發</div><div class="kaitReturnStepDesc">神奈中公車「厚07」，回程站牌往厚木バスセンター方向。</div></div></li>
-            <li><div class="kaitReturnNum">2</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">16:45 本厚木站附近抵達</div><div class="kaitReturnStepDesc">下車後步行至小田急本厚木站，預留約20分鐘轉乘。</div></div></li>
-            <li><div class="kaitReturnNum">3</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:05 本厚木站（OH34）出發</div><div class="kaitReturnStepDesc">小田急小田原線「快速急行・新宿行」。</div></div></li>
-            <li><div class="kaitReturnNum">4</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:40 登戶站（OH18）抵達</div><div class="kaitReturnStepDesc">前往JR南武線月台，轉乘川崎方向列車。</div></div></li>
-            <li><div class="kaitReturnNum">5</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:51 JR登戶站（JN14）出發</div><div class="kaitReturnStepDesc">JR南武線普通車「川崎行」。</div></div></li>
-            <li><div class="kaitReturnNum">6</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">18:22 JR川崎站（JN01）抵達</div><div class="kaitReturnStepDesc">步行返回川崎大都會飯店。</div></div></li>
-           </ol>
-          </div>
-         </details>
-         <details class="infoBox preferredLineBox kaitReturnOption" aria-label="方案B">
-          <summary><span class="summaryText">厚89➞16:36</span><span class="chev">⌄</span></summary>
-          <div class="infoContent kaitReturnOptionContent">
-           <ol class="kaitReturnSteps">
-            <li><div class="kaitReturnNum">1</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">16:36 神奈川工科大学前出發</div><div class="kaitReturnStepDesc">神奈中公車「厚89」，回程站牌往厚木バスセンター方向。</div></div></li>
-            <li><div class="kaitReturnNum">2</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:04 本厚木站附近抵達</div><div class="kaitReturnStepDesc">下車後步行至小田急本厚木站，預留約25分鐘轉乘。</div></div></li>
-            <li><div class="kaitReturnNum">3</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:29 本厚木站（OH34）出發</div><div class="kaitReturnStepDesc">小田急小田原線「快速急行・新宿行」。</div></div></li>
-            <li><div class="kaitReturnNum">4</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">18:01 登戶站（OH18）抵達</div><div class="kaitReturnStepDesc">前往JR南武線月台，轉乘川崎方向列車。</div></div></li>
-            <li><div class="kaitReturnNum">5</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">18:10 JR登戶站（JN14）出發</div><div class="kaitReturnStepDesc">JR南武線普通車「川崎行」。</div></div></li>
-            <li><div class="kaitReturnNum">6</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">18:40 JR川崎站（JN01）抵達</div><div class="kaitReturnStepDesc">步行返回川崎大都會飯店。</div></div></li>
-           </ol>
-          </div>
-         </details>
-        </div>
-       </details>
-       <!-- KAIT 平日時刻表：預設收合，位於回程下方且仍在同一外框內 -->
-       <details class="infoBox preferredLineBox kaitTimetableLinks" aria-label="KAIT 交通時刻表(平日)">
-        <summary><span class="summaryText">交通時刻表（平日）</span><span class="chev">⌄</span></summary>
-        <div class="infoContent kaitTimetableLinksContent">
-         <ul class="kaitTimetableList">
-          <li><a href="https://op.kait.jp/access/?utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">🚥KAIT交通相關</a></li>
-          <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt0526/0526030.html" target="_blank" rel="noopener noreferrer">🚅JR川崎站➞南武線往登戶・立川</a></li>
-          <li><a href="https://www.odakyu.jp/station/noborito/timetable/down/" target="_blank" rel="noopener noreferrer">🚅小田急登戶站➞往本厚木・小田原</a></li>
-          <li><a href="https://transfer-cloud.navitime.biz/kanachu/courses?external-busstop=19051" target="_blank" rel="noopener noreferrer">🚌神奈川工科大学前➞本厚木駅(厚07・厚89)</a></li>
-          <li><a href="https://www.odakyu.jp/station/hon_atsugi/timetable/up/" target="_blank" rel="noopener noreferrer">🚅小田急本厚木站➞往登戶・新宿</a></li>
-          <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt1212/1212020.html" target="_blank" rel="noopener noreferrer">🚅JR 登戶站➞南武線往川崎</a></li>
-         </ul>
-        </div>
-       </details>
+      </details>
+      <details class="infoBox preferredLineBox kaitReturnOption" aria-label="方案B">
+       <summary><span class="summaryText">厚89➞16:36</span><span class="chev">⌄</span></summary>
+       <div class="infoContent kaitReturnOptionContent">
+        <ol class="kaitReturnSteps">
+         <li><div class="kaitReturnNum">1</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">16:36 神奈川工科大学前出發</div><div class="kaitReturnStepDesc">神奈中公車「厚89」，回程站牌往厚木バスセンター方向。</div></div></li>
+         <li><div class="kaitReturnNum">2</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:04 本厚木站附近抵達</div><div class="kaitReturnStepDesc">下車後步行至小田急本厚木站，預留約25分鐘轉乘。</div></div></li>
+         <li><div class="kaitReturnNum">3</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">17:29 本厚木站（OH34）出發</div><div class="kaitReturnStepDesc">小田急小田原線「快速急行・新宿行」。</div></div></li>
+         <li><div class="kaitReturnNum">4</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">18:01 登戶站（OH18）抵達</div><div class="kaitReturnStepDesc">前往JR南武線月台，轉乘川崎方向列車。</div></div></li>
+         <li><div class="kaitReturnNum">5</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">18:10 JR登戶站（JN14）出發</div><div class="kaitReturnStepDesc">JR南武線普通車「川崎行」。</div></div></li>
+         <li><div class="kaitReturnNum">6</div><div class="kaitReturnStepBody"><div class="kaitReturnStepTitle">18:40 JR川崎站（JN01）抵達</div><div class="kaitReturnStepDesc">步行返回川崎大都會飯店。</div></div></li>
+        </ol>
+       </div>
+      </details>
+     </div>
+    </details>
+    <!-- KAIT 平日時刻表：預設收合，位於回程下方且仍在同一外框內 -->
+    <details class="infoBox preferredLineBox kaitTimetableLinks" aria-label="KAIT 交通時刻表(平日)">
+     <summary><span class="summaryText">交通時刻表（平日）</span><span class="chev">⌄</span></summary>
+     <div class="infoContent kaitTimetableLinksContent">
+      <ul class="kaitTimetableList">
+       <li><a href="https://op.kait.jp/access/?utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">🚥KAIT交通相關</a></li>
+       <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt0526/0526030.html" target="_blank" rel="noopener noreferrer">🚅JR川崎站➞南武線往登戶・立川</a></li>
+       <li><a href="https://www.odakyu.jp/station/noborito/timetable/down/" target="_blank" rel="noopener noreferrer">🚅小田急登戶站➞往本厚木・小田原</a></li>
+       <li><a href="https://transfer-cloud.navitime.biz/kanachu/courses?external-busstop=19051" target="_blank" rel="noopener noreferrer">🚌神奈川工科大学前➞本厚木駅(厚07・厚89)</a></li>
+       <li><a href="https://www.odakyu.jp/station/hon_atsugi/timetable/up/" target="_blank" rel="noopener noreferrer">🚅小田急本厚木站➞往登戶・新宿</a></li>
+       <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt1212/1212020.html" target="_blank" rel="noopener noreferrer">🚅JR 登戶站➞南武線往川崎</a></li>
+      </ul>
+     </div>
+    </details>
       </div><!-- /kaitPhotoFrame -->
+      </div><!-- /kaitTransport -->
      </div><!-- /kaitInfo -->
     </div><!-- /timeline -->
    </div><!-- /dayBody -->
   </section>
 
   <!-- 分頁 3：12/3 江之浦測候所交通行程 -->
-  <section class="card daySection pagePanel" id="tab3" role="tabpanel">
+  <section class="card daySection pagePanel" id="tab3">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">3</div><h2 class="dayTitle"><a class="enouraOfficialLink" href="https://www.odawara-af.com/ja/enoura/" target="_blank" rel="noopener noreferrer">江之浦測候所</a>｜逗子</h2></div>
     <div class="dayDate"></div>
@@ -1192,7 +1171,7 @@
   </section>
 
   <!-- 分頁 4 -->
-  <section class="card daySection pagePanel" id="tab4" role="tabpanel">
+  <section class="card daySection pagePanel" id="tab4">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">4</div><h2 class="dayTitle">12/4</h2></div>
     <div class="dayDate"></div>
@@ -1206,7 +1185,7 @@
   </section>
 
   <!-- 分頁 5 -->
-  <section class="card daySection pagePanel" id="tab5" role="tabpanel">
+  <section class="card daySection pagePanel" id="tab5">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">5</div><h2 class="dayTitle">12/5</h2></div>
     <div class="dayDate"></div>
@@ -1220,7 +1199,7 @@
   </section>
 
   <!-- 分頁 6 -->
-  <section class="card daySection pagePanel" id="tab6" role="tabpanel">
+  <section class="card daySection pagePanel" id="tab6">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">6</div><h2 class="dayTitle">12/6</h2></div>
     <div class="dayDate"></div>
@@ -1234,7 +1213,7 @@
   </section>
 
   <!-- 分頁 7 -->
-  <section class="card daySection pagePanel" id="tab7" role="tabpanel">
+  <section class="card daySection pagePanel" id="tab7">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">7</div><h2 class="dayTitle">12/7</h2></div>
     <div class="dayDate"></div>
@@ -1248,7 +1227,7 @@
   </section>
 
   <!-- 小行程分頁：12/1 橫濱半日購物與聖誕市集，兩間 Bshop 都保留為彈性選項 -->
-  <section class="card daySection pagePanel" id="tab8" role="tabpanel">
+  <section class="card daySection pagePanel" id="tab8">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">＋</div><h2 class="dayTitle">小行程</h2></div>
     <div class="dayDate"></div>
@@ -1259,13 +1238,13 @@
       <summary><span class="summaryText">橫濱｜Bshop 購物＋港未來散步＋聖誕市集。</span><span class="chev">⌄</span></summary>
       <div class="infoContent miniTripContent">
        <div class="miniJourney"><ol class="miniSteps">
-       <li><div class="miniNum">1</div><div class="miniStepBody"><div class="miniStepTitle">15:30～15:45 JR 川崎站 → 橫濱站</div><div class="miniStepDesc">從川崎出發，搭JR東海道線往橫濱方向，車程約8～10 分鐘；到橫濱站後往東口的LUMINE前進。</div></div></li>
-       <li><div class="miniNum">2</div><div class="miniStepBody"><div class="miniStepTitle">15:45～16:30 Bshop 横浜ルミネ店｜LUMINE 5F</div><div class="miniStepDesc">第一間 Bshop。<a href="https://www.lumine.ne.jp/yokohama/floorguide/detail/?scd=001357" target="_blank" rel="noopener noreferrer">LUMINE 店舖資訊</a>。</div></div></li>
-       <li><div class="miniNum">3</div><div class="miniStepBody"><div class="miniStepTitle">16:30～16:45 橫濱站 → 港未來站</div><div class="miniStepDesc">搭乘港未來線往元町・中華街方向，到「みなとみらい站」下車；MARK IS與車站相連。</div></div></li>
-       <li><div class="miniNum">4</div><div class="miniStepBody"><div class="miniStepTitle">16:45～17:30 Bshop みなとみらい店｜MARK IS 1F</div><div class="miniStepDesc">第二間 Bshop，可比較款式與尺寸；如果第一間已買到想要的，可改成咖啡休息，或直接前往紅磚倉庫。<a href="https://www.mec-markis.jp/mm/shop/detail/?act=7935" target="_blank" rel="noopener noreferrer">MARK IS 店舖資訊</a>。</div></div></li>
-       <li><div class="miniNum">5</div><div class="miniStepBody"><div class="miniStepTitle">17:30～18:00 港未來夜景散步</div><div class="miniStepDesc">沿途欣賞地標塔、摩天輪與港灣夜景，步行前往紅磚倉庫，不想走太多，可搭港未來線到馬車道站再步行。</div></div></li>
-       <li><div class="miniNum">6</div><div class="miniStepBody"><div class="miniStepTitle">18:00～19:30 橫濱紅磚倉庫聖誕市集</div><div class="miniStepDesc">逛聖誕木屋、拍聖誕樹、欣賞冬季燈飾。2026 年市集預定11/20～12/25 舉辦，開放時間與票價以<a href="https://www.yokohama-akarenga.jp/christmas/" target="_blank" rel="noopener noreferrer">官方公告</a>為準。</div><figure class="miniMarketPhoto"><img src="https://resources.matcha-jp.com/original/2025/11/04-248810.webp" alt="橫濱紅磚倉庫聖誕市集夜景、聖誕樹及木屋攤位（2025年參考照片）" loading="lazy" referrerpolicy="no-referrer"/><figcaption>橫濱紅磚倉庫聖誕市集（2025 年參考照片）</figcaption></figure></div></li>
-       <li><div class="miniNum">7</div><div class="miniStepBody"><div class="miniStepTitle">19:30～20:30 紅磚倉庫 → JR 櫻木町站 → 川崎</div><div class="miniStepDesc">步行約15分鐘前往櫻木町站，搭JR京濱東北・根岸線往川崎方向回飯店。</div></div></li>
+       <li><div class="miniNum">1</div><div class="miniStepBody"><div class="miniStepTitle">15:30～15:45　JR 川崎站 → 橫濱站</div><div class="miniStepDesc">從川崎出發，搭JR東海道線往橫濱方向，車程約810 分鐘；到橫濱站後往東口的LUMINE前進。</div></div></li>
+       <li><div class="miniNum">2</div><div class="miniStepBody"><div class="miniStepTitle">15:45～16:30　Bshop 横浜ルミネ店｜LUMINE 5F</div><div class="miniStepDesc">第一間 Bshop。<a href="https://www.lumine.ne.jp/yokohama/floorguide/detail/?scd=001357" target="_blank" rel="noopener noreferrer">LUMINE 店舖資訊</a>。</div></div></li>
+       <li><div class="miniNum">3</div><div class="miniStepBody"><div class="miniStepTitle">16:30～16:45　橫濱站 → 港未來站</div><div class="miniStepDesc">搭乘港未來線往元町・中華街方向，到「みなとみらい站」下車；MARK IS與車站相連。</div></div></li>
+       <li><div class="miniNum">4</div><div class="miniStepBody"><div class="miniStepTitle">16:45～17:30　Bshop みなとみらい店｜MARK IS 1F</div><div class="miniStepDesc">第二間 Bshop，可比較款式與尺寸；如果第一間已買到想要的，可改成咖啡休息，或直接前往紅磚倉庫。<a href="https://www.mec-markis.jp/mm/shop/detail/?act=7935" target="_blank" rel="noopener noreferrer">MARK IS 店舖資訊</a>。</div></div></li>
+       <li><div class="miniNum">5</div><div class="miniStepBody"><div class="miniStepTitle">17:30～18:00　港未來夜景散步</div><div class="miniStepDesc">沿途欣賞地標塔、摩天輪與港灣夜景，步行前往紅磚倉庫，不想走太多，可搭港未來線到馬車道站再步行。</div></div></li>
+       <li><div class="miniNum">6</div><div class="miniStepBody"><div class="miniStepTitle">18:00～19:30　橫濱紅磚倉庫聖誕市集</div><div class="miniStepDesc">逛聖誕木屋、拍聖誕樹、欣賞冬季燈飾。2026 年市集預定11/20～12/25 舉辦，開放時間與票價以<a href="https://www.yokohama-akarenga.jp/christmas/" target="_blank" rel="noopener noreferrer">官方公告</a>為準。</div><figure class="miniMarketPhoto"><img src="https://resources.matcha-jp.com/original/2025/11/04-248810.webp" alt="橫濱紅磚倉庫聖誕市集夜景、聖誕樹及木屋攤位（2025年參考照片）" loading="lazy" referrerpolicy="no-referrer"/><figcaption>橫濱紅磚倉庫聖誕市集（2025 年參考照片）｜<a href="https://matcha-jp.com/tw/22331" target="_blank" rel="noopener noreferrer"></a></figcaption></figure></div></li>
+       <li><div class="miniNum">7</div><div class="miniStepBody"><div class="miniStepTitle">19:30～20:30　紅磚倉庫 → JR 櫻木町站 → 川崎</div><div class="miniStepDesc">步行約15分鐘前往櫻木町站，搭JR京濱東北・根岸線往川崎方向回飯店。</div></div></li>
        </ol></div>
        <!-- 橫濱路線地圖：順序 1→2→3，互動地圖及實際導航連結 -->
        <div class="miniRouteMapBox">
@@ -1286,7 +1265,7 @@
   </section>
 
   <!-- 交通分頁：位於小行程之後 -->
-  <section class="card daySection pagePanel" id="tab0" role="tabpanel">
+  <section class="card daySection pagePanel" id="tab0">
    <div class="dayCardHeader">
     <div class="dayHeaderMain"><div class="dayIndex">★</div><h2 class="dayTitle">交通</h2></div>
     <div class="dayDate"></div>
@@ -1319,8 +1298,7 @@
 
 <script>
 (() => {
- /* 頁籤切換與自動回頂 */
- const tabShell = document.querySelector('.tabShell');
+ /* 頁籤切換 */
  const tabs = document.querySelectorAll('.tabBtn');
  const panels = document.querySelectorAll('.pagePanel');
  tabs.forEach(tab => tab.addEventListener('click', () => {
@@ -1332,12 +1310,9 @@
    btn.setAttribute('aria-selected', String(isActive));
   });
   panels.forEach(panel => panel.classList.toggle('active', panel.id === target));
-  if (tabShell && tabShell.getBoundingClientRect().top < 0) {
-   tabShell.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
  }));
 
- /* Gallery 燈箱：雙擊縮放、雙指縮放、單指拖曳/左右滑動切換，停止觸控立即固定位置 */
+ /* Gallery 燈箱：雙擊縮放、雙指縮放、單指拖曳，停止觸控立即固定位置 */
  const lightbox = document.createElement('div');
  lightbox.className = 'photoLightbox';
  lightbox.setAttribute('role', 'dialog');
@@ -1471,7 +1446,7 @@
   return Array.from(e.touches, t => ({ x: t.clientX, y: t.clientY }));
  }
 
- let touchPrev = null, touchStartSingle = null, touchMoved = false, touchHadMulti = false;
+ let touchPrev = null, touchMoved = false, touchHadMulti = false;
 
  stage.addEventListener('touchstart', e => {
   e.preventDefault();
@@ -1480,11 +1455,9 @@
   if (pts.length >= 2) {
    touchHadMulti = true;
    touchMoved = true;
-   touchStartSingle = null;
   } else {
    touchMoved = false;
    touchHadMulti = false;
-   touchStartSingle = pts[0];
   }
  }, { passive: false });
 
@@ -1530,15 +1503,7 @@
   if (!touchMoved && !touchHadMulti && e.changedTouches.length === 1) {
    const t = e.changedTouches[0];
    doubleTap({ x: t.clientX, y: t.clientY });
-  } else if (touchMoved && !touchHadMulti && scale <= 1.01 && touchStartSingle && e.changedTouches.length === 1 && galleryImages.length > 1) {
-   const t = e.changedTouches[0];
-   const dx = t.clientX - touchStartSingle.x;
-   const dy = t.clientY - touchStartSingle.y;
-   if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.4) {
-    show(dx < 0 ? index + 1 : index - 1);
-   }
   }
-  touchStartSingle = null;
   touchMoved = false;
   touchHadMulti = false;
  }, { passive: false });
@@ -1546,7 +1511,6 @@
  stage.addEventListener('touchcancel', e => {
   e.preventDefault();
   touchPrev = null;
-  touchStartSingle = null;
   touchMoved = false;
   touchHadMulti = false;
  }, { passive: false });
@@ -1651,6 +1615,7 @@
    L.polyline(spots.map(s=>s.point),{color:'#8293a9',weight:2,dashArray:'5 8',opacity:0.75}).addTo(map);
    fitToSpots = L.latLngBounds(spots.map(s=>s.point));
   }
+  // 收合動畫與手機分頁重排後，實際寬度可能晚一點才穩定。
   cancelAnimationFrame(refreshId);
   refreshId=requestAnimationFrame(() => requestAnimationFrame(refreshMap));
   setTimeout(refreshMap,180);
