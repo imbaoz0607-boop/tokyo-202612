@@ -723,6 +723,41 @@
   margin-bottom: 12px;
  }
 
+
+ /* 葉山・逗子 Google My Maps：預設收合的響應式地圖 */
+ .enouraDayBody .hayamaMapDetails {
+  margin: -3px 0 14px;
+  border: 1px solid #e3e6eb;
+  border-radius: 9px;
+  background: transparent;
+  overflow: hidden;
+ }
+ .enouraDayBody .hayamaMapDetails > summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  list-style: none;
+ }
+ .enouraDayBody .hayamaMapDetails > summary::-webkit-details-marker { display: none; }
+ .enouraDayBody .hayamaMapDetails > summary .mapChevron { color: var(--muted); transition: transform .2s ease; }
+ .enouraDayBody .hayamaMapDetails[open] > summary .mapChevron { transform: rotate(180deg); }
+ .enouraDayBody .hayamaMapFrame { padding: 0 10px 10px; }
+ .enouraDayBody .hayamaMapFrame iframe {
+  display: block;
+  width: 100%;
+  height: 350px;
+  border: 0;
+  border-radius: 7px;
+ }
+ @media (max-width: 480px) {
+  .enouraDayBody .hayamaMapFrame iframe { height: 330px; }
+ }
+
  /* 北鎌倉賞楓專屬樣式 */
  .northKamakuraDayBody .northKamakuraGallery { margin: 9px 0 5px; max-width: 100%; min-width: 0; overflow: hidden; }
  .northKamakuraDayBody .northNotes { margin-top: 4px; }
@@ -1141,6 +1176,12 @@
      <!-- 下午：葉山・逗子（步驟 7～15） -->
      <div class="journeyCard">
       <div class="enouraSessionTitle">下午｜葉山・逗子</div>
+      <details class="hayamaMapDetails">
+       <summary><span>🗺️ 我的 Google 地圖</span><span class="mapChevron" aria-hidden="true">⌄</span></summary>
+       <div class="hayamaMapFrame">
+        <iframe title="葉山・逗子 Google 我的地圖" data-src="https://www.google.com/maps/d/embed?mid=1j9IeezwKNfGz7WCUy8OFSNSFwn7_6_g&amp;ll=35.29777908646154%2C139.57943467629426&amp;z=13" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+       </div>
+      </details>
       <ol class="stepTimeline">
        <li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">12:45～13:31 <a class="plainLink" href="https://timetables.jreast.co.jp/2612/timetable/tt1198/1198020.html" target="_blank" rel="noopener noreferrer" title="JR東日本｜根府川站東海道線平日時刻表">JR根府川站(JT18)➞大船站(JT07)</a></div><div class="stepDesc">搭乘JR東海道線，往東京方向，從月台1→月台8只有7分鐘轉車時間，須留意車次有沒有誤點，下班車13:48(每10分鐘)。</div></div></li>
        <li><div class="stepNum">8</div><div class="stepBody"><div class="stepTitle">13:38～13:50 <a class="plainLink" href="https://timetables.jreast.co.jp/2612/timetable/tt0342/0342040.html" target="_blank" rel="noopener noreferrer" title="JR東日本｜大船站橫須賀線平日時刻表">大船站(JT07=JO09)➞逗子站(JO06)</a></div><div class="stepDesc">搭乘JR橫須賀線往逗子・久里濱方向。</div></div></li>
@@ -1314,6 +1355,18 @@
    const iframe = hotelVideoDetails.querySelector('iframe[data-src]');
    if (iframe && !iframe.src) {
     iframe.src = iframe.dataset.src;
+   }
+  });
+ }
+
+ /* 葉山・逗子我的地圖：首次展開時再載入互動地圖 */
+ const hayamaMapDetails = document.querySelector('.hayamaMapDetails');
+ if (hayamaMapDetails) {
+  hayamaMapDetails.addEventListener('toggle', () => {
+   if (!hayamaMapDetails.open) return;
+   const iframe = hayamaMapDetails.querySelector('iframe[data-src]');
+   if (iframe && !iframe.getAttribute('src')) {
+    iframe.setAttribute('src', iframe.dataset.src);
    }
   });
  }
