@@ -5,16 +5,17 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta name="format-detection" content="telephone=no"/>
 <title>Tokyo 12月｜行程表 1124-9</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxBC1YVfQ0y+iZ+LV4kE5dS0=" crossorigin="anonymous"/>
-<!-- 地圖樣式備援：避免某個 CDN 的 CSS 無法載入，造成圖磚散開及控制鈕消失 -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxBC1YVfQ0y+iZ+LV4kE5dS0=" crossorigin="anonymous" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';"/>
 <style>
  :root {
   --bg: #f1f3f7;
   --surface: #ffffff;
   --text: #2d2a26;
+  --text-sub: #4d463f;
   --muted: #7a736b;
   --line: #e3e6ee;
+  --primary: #3b6cff;
+  --tint-blue: #f8fbff;
   --accent: #8c6b4f;
   --chip: #f3ece3;
   --shadow: 0 10px 30px rgba(0, 0, 0, .06);
@@ -25,7 +26,7 @@
  html, body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
  }
  body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
@@ -60,7 +61,7 @@
  .heroWeatherLinks a:visited,
  .heroWeatherLinks a:hover,
  .heroWeatherLinks a:active {
-  color: #4d463f;
+  color: var(--text-sub);
   font-size: 13px;
   font-weight: 400;
   text-decoration: underline;
@@ -181,9 +182,9 @@
   transition: all .18s ease;
   cursor: pointer;
  }
- .tabBtn[data-target="tab0"] { min-width: 96px; }
+ .tabBtn.tabBtnWide { min-width: 96px; }
  .tabBtn.active {
-  border-color: #3b6cff;
+  border-color: var(--primary);
   background: #f9fbff;
   box-shadow: inset 0 0 0 1px rgba(59, 108, 255, .08);
   font-weight: 700;
@@ -260,6 +261,13 @@
  }
  .dayBody { padding: 12px 16px; }
 
+ /* 尚未填入內容的空標籤不佔高度 */
+ .dayDate:empty,
+ .placeTitle:empty,
+ .meta:empty {
+  display: none;
+ }
+
  /* 內容清單 */
  .timeline {
   border: 1px solid var(--line);
@@ -305,7 +313,7 @@
  }
  .meta {
   margin: 4px 0 0;
-  color: #4d463f;
+  color: var(--text-sub);
   font-size: 14px;
   font-weight: 400;
   white-space: pre-line;
@@ -323,20 +331,20 @@
   margin-bottom: 4px;
   font-size: 14px;
   line-height: 1.35;
-  color: #4d463f;
+  color: var(--text-sub);
  }
  .notes {
   margin: 6px 0 0;
   padding-left: 1.2em;
   font-size: 14px;
   line-height: 1.6;
-  color: #4d463f;
+  color: var(--text-sub);
   font-weight: 400;
  }
  .notes li { margin-bottom: 4px; }
  .notes li + li { margin-top: 3px; }
 
- /* 連結 */
+ /* 連結與無底線共用工具類別 */
  a[href],
  a[href]:link,
  a[href]:visited,
@@ -344,6 +352,28 @@
  a[href]:active {
   color: #000;
   font-weight: 700;
+ }
+ a.plainLink,
+ a.plainLink:link,
+ a.plainLink:visited,
+ a.plainLink:hover,
+ a.plainLink:active {
+  color: inherit !important;
+  font: inherit !important;
+  text-decoration: none !important;
+  -webkit-text-decoration: none !important;
+ }
+ a.plainLink.regularWeight,
+ a.plainLink.regularWeight:link,
+ a.plainLink.regularWeight:visited,
+ a.plainLink.regularWeight:hover,
+ a.plainLink.regularWeight:active {
+  font-weight: 400 !important;
+ }
+ a.plainLink.mapIconLink {
+  display: inline;
+  margin-left: 2px;
+  white-space: nowrap;
  }
 
  /* 滿版對齊列與折疊資訊盒 */
@@ -386,7 +416,7 @@
  details[open] > summary .chev { transform: rotate(180deg); }
  .infoContent {
   padding: 0 14px 12px 14px;
-  color: #4d463f;
+  color: var(--text-sub);
   font-size: 14px;
   line-height: 1.6;
  }
@@ -479,6 +509,12 @@
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
   cursor: grab;
+  user-select: none;
+ }
+ .galleryRow.isDragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
  }
  .galleryRow::-webkit-scrollbar { display: none; }
  .gItem {
@@ -500,22 +536,12 @@
   height: 100%;
   object-fit: cover;
   cursor: zoom-in;
+  -webkit-user-drag: none;
  }
 
  /* 住宿資訊收合層 */
  .infoContent.hotelTransport { font-size: 14px; line-height: 1.15; }
- #tab1 .memoBoxes { display: flex; flex-direction: column; gap: 0; }
- .hotelTransport .hotelPhone,
- .hotelTransport .hotelPhone:link,
- .hotelTransport .hotelPhone:visited,
- .hotelTransport .hotelPhone:hover,
- .hotelTransport .hotelPhone:active {
-  color: inherit !important;
-  font: inherit !important;
-  font-weight: 400 !important;
-  text-decoration: none !important;
-  -webkit-text-decoration: none !important;
- }
+ .hotelDayBody .memoBoxes { display: flex; flex-direction: column; gap: 0; }
  .hotelTransport .transportIntro {
   margin: 2px 0 10px;
   font-weight: 700;
@@ -552,15 +578,6 @@
   font-weight: 700;
   color: var(--text);
   font-size: 14px;
- }
- .hotelTransport .keikyuLink,
- .hotelTransport .keikyuLink:link,
- .hotelTransport .keikyuLink:visited,
- .hotelTransport .keikyuLink:hover,
- .hotelTransport .keikyuLink:active {
-  color: inherit;
-  font-weight: 700;
-  text-decoration: none !important;
  }
 
  /* 川崎飯店：影片收合層預設關閉，保持在交通資訊框內 */
@@ -606,23 +623,23 @@
  }
 
  /* KAIT 基本資訊與出發/抵達標頭 */
- .kaitInfo { padding: 0 8px 8px; font-size: 14px; line-height: 1.15; color: #4d463f; }
+ .kaitInfo { padding: 0 8px 8px; font-size: 14px; line-height: 1.15; color: var(--text-sub); }
  .kaitTransport { margin-top: 10px; }
  .kaitTransportTitle { font-weight: 700; color: var(--text); margin-bottom: 1.5px; }
  .kaitTransportBullet { display: grid; grid-template-columns: 1em minmax(0, 1fr); align-items: start; margin-top: 3px; }
  .kaitTransportBullet span:last-child { min-width: 0; overflow-wrap: anywhere; }
- #tab2 .kaitJourneyHead { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
- #tab2 .kaitJourneyStation { min-width: 0; }
- #tab2 .kaitJourneyStation:last-child { text-align: right; }
- #tab2 .kaitJourneyCaption { color: var(--muted); font-size: 12px; line-height: 1.35; }
- #tab2 .kaitJourneyTime { font-size: 26px; font-weight: 600; line-height: 1.35; font-variant-numeric: tabular-nums; }
- #tab2 .kaitJourneyArrow { color: var(--muted); font-size: 22px; flex: none; }
- #tab2 .kaitJourneyDivider { border: 0; border-top: 1px solid var(--line); margin: 15px 0 18px; }
- @media (max-width: 420px) { #tab2 .kaitJourneyTime { font-size: 24px; } }
+ .kaitDayBody .kaitJourneyHead { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+ .kaitDayBody .kaitJourneyStation { min-width: 0; }
+ .kaitDayBody .kaitJourneyStation:last-child { text-align: right; }
+ .kaitDayBody .kaitJourneyCaption { color: var(--muted); font-size: 12px; line-height: 1.35; }
+ .kaitDayBody .kaitJourneyTime { font-size: 26px; font-weight: 600; line-height: 1.35; font-variant-numeric: tabular-nums; }
+ .kaitDayBody .kaitJourneyArrow { color: var(--muted); font-size: 22px; flex: none; }
+ .kaitDayBody .kaitJourneyDivider { border: 0; border-top: 1px solid var(--line); margin: 15px 0 18px; }
+ @media (max-width: 420px) { .kaitDayBody .kaitJourneyTime { font-size: 24px; } }
 
  /* KAIT 相簿與外框 */
- #tab2 .dayBody { min-width: 0; overflow: hidden; }
- #tab2 .kaitPhotoFrame {
+ .kaitDayBody { min-width: 0; overflow: hidden; }
+ .kaitDayBody .kaitPhotoFrame {
   border: 0;
   border-radius: 0;
   padding: 0;
@@ -630,17 +647,16 @@
   min-width: 0;
   overflow: hidden;
  }
- #tab2 .kaitPhotoFrame .journeyCard { margin: 0; }
- #tab2 .kaitPhotoGallery {
+ .kaitDayBody .kaitPhotoFrame .journeyCard { margin: 0; }
+ .kaitDayBody .kaitPhotoGallery {
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  margin: 6px 0 0;
-  padding: 0 1px 2px;
+  margin: 9px 0 5px;
   overflow: hidden;
  }
- #tab2 .kaitPhotoGallery .galleryRow {
+ .kaitDayBody .kaitPhotoGallery .galleryRow {
   display: flex;
   box-sizing: border-box;
   width: 100%;
@@ -650,142 +666,98 @@
   overflow-y: hidden;
   scroll-padding-inline: 0;
  }
- #tab2 .kaitPhotoGallery .gItem { flex-shrink: 0; }
+ .kaitDayBody .kaitPhotoGallery .gItem { flex-shrink: 0; }
 
  /* KAIT 備忘錄與回程收合層 */
- #tab2 .kaitMemo { margin-top: 8px; }
- #tab2 .kaitMemoList { margin: 0; padding: 0; font-size: 14px; line-height: 1.15; }
- #tab2 .kaitMemoList .kaitTransportBullet { margin-top: 3px; }
- #tab2 .kaitReturn { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin-top: 0; }
- #tab2 .kaitReturn > .kaitReturnContent { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; padding: 0 8px 10px; }
- #tab2 .kaitReturnOption { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; }
- #tab2 .kaitReturnOption > summary { gap: 8px; padding: 10px 3px; }
- #tab2 .kaitReturnOption .summaryText { min-width: 0; overflow-wrap: anywhere; }
- #tab2 .kaitReturnOption > .kaitReturnOptionContent { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; padding: 4px 0 12px; }
+ .kaitDayBody .kaitMemo { margin-top: 8px; }
+ .kaitDayBody .kaitMemoList { margin: 0; padding: 0; font-size: 14px; line-height: 1.15; }
+ .kaitDayBody .kaitMemoList .kaitTransportBullet { margin-top: 3px; }
+ .kaitDayBody .kaitReturn { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin-top: 0; }
+ .kaitDayBody .kaitReturn > .kaitReturnContent { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; padding: 0 8px 10px; }
+ .kaitDayBody .kaitReturnOption { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; }
+ .kaitDayBody .kaitReturnOption > summary { gap: 8px; padding: 10px 3px; }
+ .kaitDayBody .kaitReturnOption .summaryText { min-width: 0; overflow-wrap: anywhere; }
+ .kaitDayBody .kaitReturnOption > .kaitReturnOptionContent { box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; padding: 4px 0 12px; }
  @media (max-width: 420px) {
-  #tab2 .kaitReturn > .kaitReturnContent { padding-left: 4px; padding-right: 4px; }
+  .kaitDayBody .kaitReturn > .kaitReturnContent { padding-left: 4px; padding-right: 4px; }
  }
 
  /* KAIT 官方時刻表連結 */
- #tab2 details.kaitTimetableLinks { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin: 0; border-bottom: 1px solid var(--line); }
- #tab2 details.kaitTimetableLinks > summary { box-sizing: border-box; padding: 12px 8px; }
- #tab2 details.kaitTimetableLinks > .kaitTimetableLinksContent { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; padding: 0 8px 10px; }
- #tab2 .kaitTimetableList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
- #tab2 .kaitTimetableList li { box-sizing: border-box; width: 100%; min-width: 0; margin: 0; }
- #tab2 .kaitTimetableList a, #tab2 .kaitTimetableList a:link, #tab2 .kaitTimetableList a:visited, #tab2 .kaitTimetableList a:hover, #tab2 .kaitTimetableList a:active {
+ .kaitDayBody details.kaitTimetableLinks { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin: 0; border-bottom: 1px solid var(--line); }
+ .kaitDayBody details.kaitTimetableLinks > summary { box-sizing: border-box; padding: 12px 8px; }
+ .kaitDayBody details.kaitTimetableLinks > .kaitTimetableLinksContent { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; padding: 0 8px 10px; }
+ .kaitDayBody .kaitTimetableList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+ .kaitDayBody .kaitTimetableList li { box-sizing: border-box; width: 100%; min-width: 0; margin: 0; }
+ .kaitDayBody .kaitTimetableList a, .kaitDayBody .kaitTimetableList a:link, .kaitDayBody .kaitTimetableList a:visited, .kaitDayBody .kaitTimetableList a:hover, .kaitDayBody .kaitTimetableList a:active {
   display: flex; align-items: center; box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0;
   min-height: 36px; padding: 8px 10px; border: 1px solid #d8e2f5; border-radius: 9px;
-  background: #f8fbff; color: #000 !important; font-size: 14px; font-weight: 500 !important;
+  background: var(--tint-blue); color: #000 !important; font-size: 14px; font-weight: 500 !important;
   line-height: 1.4; text-decoration: none !important; overflow-wrap: anywhere; word-break: normal;
  }
- #tab2 .kaitTimetableList a:hover { background: #eef5ff; border-color: #aac4f3; }
- #tab2 .kaitTimetableList a:focus-visible { outline: 2px solid #3b6cff; outline-offset: 2px; }
- @media (max-width: 420px) { #tab2 .kaitTimetableList a { font-size: 13px; padding: 8px; } }
+ .kaitDayBody .kaitTimetableList a:hover { background: #eef5ff; border-color: #aac4f3; }
+ .kaitDayBody .kaitTimetableList a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+ @media (max-width: 420px) { .kaitDayBody .kaitTimetableList a { font-size: 13px; padding: 8px; } }
 
- /* 標題官網連結 (KAIT / 江之浦) */
- #tab2 .kaitTitleOfficialLink,
- #tab2 .kaitTitleOfficialLink:link,
- #tab2 .kaitTitleOfficialLink:visited,
- #tab2 .kaitTitleOfficialLink:hover,
- #tab2 .kaitTitleOfficialLink:active,
- #tab3 .enouraOfficialLink,
- #tab3 .enouraOfficialLink:link,
- #tab3 .enouraOfficialLink:visited,
- #tab3 .enouraOfficialLink:hover,
- #tab3 .enouraOfficialLink:active {
-  color: inherit !important;
-  font: inherit !important;
-  font-weight: inherit !important;
-  text-decoration: none !important;
+ /* 江之浦・逗子專屬樣式 */
+ .enouraDayBody .stepTimeline > li .gallery,
+ .enouraDayBody .enouraPhotoGallery { margin: 9px 0 5px; max-width: 100%; min-width: 0; overflow: hidden; }
+ .enouraDayBody .enouraSessionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--muted);
+  margin-bottom: 12px;
  }
 
-  /* 12/3 新增海岸景點：地圖圖示與行程標題同列，不顯示底線 */
-  #tab3 .stepTitle .northMapLink,
-  #tab3 .stepTitle .northMapLink:visited,
-  #tab3 .stepTitle .northMapLink:hover { display:inline; margin-left:2px; color:inherit !important; font:inherit !important; font-weight:400 !important; text-decoration:none !important; white-space:nowrap; }
-
-  /* 逗子站京急巴士時刻表：與原說明文字同色、同字重，沒有下底線 */
-  #tab3 .zushiBusTimetableLink,
-  #tab3 .zushiBusTimetableLink:link,
-  #tab3 .zushiBusTimetableLink:visited,
-  #tab3 .zushiBusTimetableLink:hover,
-  #tab3 .zushiBusTimetableLink:active { color: inherit !important; font: inherit !important; font-weight: inherit !important; text-decoration: none !important; }
-
-  /* 12/4 北鎌倉賞楓專屬樣式 */
- #tab4 .northTempleLink,
- #tab4 .northTempleLink:link,
- #tab4 .northTempleLink:visited,
- #tab4 .northTempleLink:hover,
- #tab4 .northTempleLink:active {
-  color: inherit !important;
-  font: inherit !important;
-  font-weight: inherit !important;
-  text-decoration: none !important;
- }
- #tab4 .northMapLink,
- #tab4 .northMapLink:link,
- #tab4 .northMapLink:visited,
- #tab4 .northMapLink:hover,
- #tab4 .northMapLink:active {
-  display: inline;
-  margin-left: 2px;
-  color: inherit !important;
-  font: inherit !important;
-  font-weight: 400 !important;
-  text-decoration: none !important;
-  white-space: nowrap;
- }
- #tab4 .northKamakuraGallery { margin: 9px 0 5px; max-width: 100%; min-width: 0; overflow: hidden; }
- #tab4 .northNotes { margin-top: 4px; }
+ /* 北鎌倉賞楓專屬樣式 */
+ .northKamakuraDayBody .northKamakuraGallery { margin: 9px 0 5px; max-width: 100%; min-width: 0; overflow: hidden; }
+ .northKamakuraDayBody .northNotes { margin-top: 4px; }
 
  /* 小行程專屬樣式 */
- #tab8 .miniMarketPhoto { margin: 10px 0 2px; max-width: 100%; min-width: 0; }
- #tab8 .miniMarketPhoto img { display: block; width: 100%; max-width: 520px; height: auto; border-radius: 10px; border: 1px solid var(--line); }
- #tab8 .miniMarketPhoto figcaption { margin-top: 5px; color: #7a736b; font-size: 12px; line-height: 1.45; }
- #tab8 .miniMarketPhoto figcaption a { font-size: inherit; font-weight: 400; }
- #tab8 .miniTripDetails { min-width: 0; max-width: 100%; width: 100%; margin: 0; }
- #tab8 .miniTripDetails > summary { padding: 12px 8px; }
- #tab8 .miniTripDetails > .miniTripContent { padding: 0 0 10px; min-width: 0; }
- #tab8 .miniTripDetails .summaryText { overflow-wrap: anywhere; }
+ .miniTripDayBody .miniMarketPhoto { margin: 10px 0 2px; max-width: 100%; min-width: 0; }
+ .miniTripDayBody .miniMarketPhoto img { display: block; width: 100%; max-width: 520px; height: auto; border-radius: 10px; border: 1px solid var(--line); }
+ .miniTripDayBody .miniMarketPhoto figcaption { margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+ .miniTripDayBody .miniMarketPhoto figcaption a { font-size: inherit; font-weight: 400; }
+ .miniTripDayBody .miniTripDetails { min-width: 0; max-width: 100%; width: 100%; margin: 0; }
+ .miniTripDayBody .miniTripDetails > summary { padding: 12px 8px; }
+ .miniTripDayBody .miniTripDetails > .miniTripContent { padding: 0 0 10px; min-width: 0; }
+ .miniTripDayBody .miniTripDetails .summaryText { overflow-wrap: anywhere; }
 
  /* 小行程：橫濱三站互動地圖 */
- #tab8 .miniRouteMapBox { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin: 16px 0 4px; }
- #tab8 .miniRouteMapTitle { font-size: 15px; font-weight: 700; margin: 0 0 8px; color: var(--text); }
- #tab8 .miniRouteLegend { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: 0 0 9px; font-size: 12px; line-height: 1.5; }
- #tab8 .miniRouteLegend span { display: inline-flex; align-items: center; gap: 4px; }
- #tab8 .miniRouteMap { box-sizing: border-box; width: 100%; max-width: 100%; height: 310px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #eef1f5; z-index: 0; }
- #tab8 .miniRouteNote { color: #625e59; font-size: 12px; line-height: 1.5; margin: 8px 0 0; }
- #tab8 .miniRouteLinks { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
- #tab8 .miniRouteLinks a { display: inline-flex; align-items: center; padding: 7px 9px; border: 1px solid #d8e2f5; border-radius: 8px; background: #f8fbff; font-size: 12px; text-decoration: none !important; font-weight: 500; color: #000 !important; }
- #tab8 .miniRouteMarker { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: #fff; color: #242424; border: 2px solid #6487be; box-shadow: 0 2px 6px #0003; font: bold 14px/1 sans-serif; }
- #tab8 .miniRouteMarker.market { border-color: #c87d43; }
- #tab8 .miniRouteMap .leaflet-popup-content { font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; }
+ .miniTripDayBody .miniRouteMapBox { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin: 16px 0 4px; }
+ .miniTripDayBody .miniRouteMapTitle { font-size: 15px; font-weight: 700; margin: 0 0 8px; color: var(--text); }
+ .miniTripDayBody .miniRouteLegend { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: 0 0 9px; font-size: 12px; line-height: 1.5; }
+ .miniTripDayBody .miniRouteLegend span { display: inline-flex; align-items: center; gap: 4px; }
+ .miniTripDayBody .miniRouteMap { box-sizing: border-box; width: 100%; max-width: 100%; height: 310px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #eef1f5; z-index: 0; }
+ .miniTripDayBody .miniRouteNote { color: #625e59; font-size: 12px; line-height: 1.5; margin: 8px 0 0; }
+ .miniTripDayBody .miniRouteLinks { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+ .miniTripDayBody .miniRouteLinks a { display: inline-flex; align-items: center; padding: 7px 9px; border: 1px solid #d8e2f5; border-radius: 8px; background: var(--tint-blue); font-size: 12px; text-decoration: none !important; font-weight: 500; color: #000 !important; }
+ .miniTripDayBody .miniRouteMarker { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: #fff; color: #242424; border: 2px solid #6487be; box-shadow: 0 2px 6px #0003; font: bold 14px/1 sans-serif; }
+ .miniTripDayBody .miniRouteMarker.market { border-color: #c87d43; }
+ .miniTripDayBody .miniRouteMap .leaflet-popup-content { font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; }
  @media (max-width: 640px) {
-  #tab8 .miniRouteMap { height: 275px; }
-  #tab8 .miniRouteMapBox { margin-top: 13px; }
+  .miniTripDayBody .miniRouteMap { height: 275px; }
+  .miniTripDayBody .miniRouteMapBox { margin-top: 13px; }
  }
 
  /* 交通分頁：PDF 嵌入檢視與原尺寸開啟 */
- #tab0 .railMapBoxes { display: flex; flex-direction: column; gap: 0; }
- #tab0 details.infoBox.memoBox {
+ .railMapDayBody .railMapBoxes { display: flex; flex-direction: column; gap: 0; }
+ .railMapDayBody details.infoBox.memoBox {
   margin: 0; border: 0; border-bottom: 1px solid var(--line);
   border-radius: 0; box-shadow: none; overflow: visible;
  }
- #tab0 details.infoBox.memoBox > summary { padding: 12px 8px; }
- #tab0 details.infoBox.memoBox > .infoContent { padding: 0 8px 12px; }
- #tab0 .foodCafeMap, #tab0 .pdfEmbedWrap { width: 100%; min-width: 0; }
- #tab0 .foodCafeMap iframe, #tab0 .pdfEmbed {
+ .railMapDayBody details.infoBox.memoBox > summary { padding: 12px 8px; }
+ .railMapDayBody details.infoBox.memoBox > .infoContent { padding: 0 8px 12px; }
+ .railMapDayBody .pdfEmbedWrap { width: 100%; min-width: 0; }
+ .railMapDayBody .pdfEmbed {
   display: block; width: 100%; height: 540px; border: 1px solid var(--line);
   border-radius: 8px; background: #f7f7f7;
  }
- #tab0 .foodCafePdfOpen, #tab0 .pdfOpenBtn {
+ .railMapDayBody .pdfOpenBtn {
   display: inline-block; margin-top: 8px; padding: 5px 10px;
   border: 1px solid var(--line); border-radius: 8px;
-  color: #3b6cff !important; text-decoration: none !important;
+  color: var(--primary) !important; text-decoration: none !important;
   font-size: 13px; font-weight: 400 !important;
- }
- @media (max-width: 640px) {
-  #tab0 .foodCafeMap iframe, #tab0 .pdfEmbed { height: 420px; }
  }
 
  /* 響應式調整 (手機版) */
@@ -813,7 +785,7 @@
    font-size: 13px;
    flex: 0 0 auto;
   }
-  .tabBtn[data-target="tab0"] { min-width: 72px; }
+  .tabBtn.tabBtnWide { min-width: 72px; }
   .dayCardHeader { gap: 10px; padding: 10px 10px 6px; }
   .dayHeaderMain { gap: 10px; flex: 1; }
   .dayDate { font-size: 14px; margin-left: auto; flex-shrink: 0; }
@@ -827,12 +799,29 @@
   .notes,
   .infoContent { font-size: 13px; }
   details.infoBox > summary .summaryText { font-size: 15px; }
-  details.infoBox.preferredLineBox > summary { padding-left: 0; }
+
+  /* 統一手機版各分頁折疊標題與內容的左右對齊基準線 */
+  details.infoBox.preferredLineBox > summary,
+  .kaitDayBody details.kaitTimetableLinks > summary,
+  .miniTripDayBody .miniTripDetails > summary,
+  .railMapDayBody details.infoBox.memoBox > summary {
+   padding-left: 0;
+   padding-right: 4px;
+  }
+  details.infoBox.preferredLineBox > .infoContent,
+  .kaitDayBody details.kaitTimetableLinks > .kaitTimetableLinksContent,
+  .railMapDayBody details.infoBox.memoBox > .infoContent {
+   padding-left: 0;
+   padding-right: 4px;
+  }
+
+  /* 手機版直接隱藏無法順暢捲動多頁的 PDF 內嵌框，改以按鈕開啟完整圖 */
+  .railMapDayBody .pdfEmbedWrap { display: none; }
+  .railMapDayBody .pdfOpenBtn { margin-top: 2px; padding: 8px 12px; }
+
   .gItem { width: 60vw; max-width: none; }
-  #tab2 .timeline { padding-left: 7px; padding-right: 7px; }
-  #tab2 .kaitInfo { padding-left: 0; padding-right: 0; }
-  #tab2 details.kaitTimetableLinks > summary { padding-left: 0; padding-right: 8px; }
-  #tab8 .miniTripDetails > summary { padding-left: 0; }
+  .kaitDayBody .timeline { padding-left: 7px; padding-right: 7px; }
+  .kaitDayBody .kaitInfo { padding-left: 0; padding-right: 0; }
  }
 
  /* Gallery 全螢幕檢視：手指放開即停止，沒有慣性動畫 */
@@ -905,28 +894,6 @@
   font-size: 13px;
   pointer-events: none;
  }
-  /* 12/3 根府川站圖片：延用既有 Gallery 設定與燈箱功能 */
-  #tab3 .stepTimeline > li .gallery { margin: 9px 0 5px; max-width: 100%; min-width: 0; overflow: hidden; }
-  /* 12/3 江之浦測候所相簿：沿用全站 Gallery 共用樣式 */
-  #tab3 .enouraPhotoGallery { margin: 9px 0 5px; max-width: 100%; min-width: 0; overflow: hidden; }
-  /* 12/3 上午／下午時間軸分框標題 */
-  #tab3 .enouraSessionTitle {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-  /* 12/3 JR 交通標題連結：與原文字同色、同粗細且沒有下底線 */
-  #tab3 .enouraTimetableLink,
-  #tab3 .enouraTimetableLink:link,
-  #tab3 .enouraTimetableLink:visited,
-  #tab3 .enouraTimetableLink:hover,
-  #tab3 .enouraTimetableLink:active {
-    color: inherit !important;
-    font: inherit !important;
-    text-decoration: none !important;
-  }
 </style>
 </head>
 <body>
@@ -974,23 +941,23 @@
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab6">12/6(日)</button>
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab7">12/7(一)</button>
    <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab8">小行程</button>
-   <button type="button" role="tab" aria-selected="false" class="tabBtn" data-target="tab0">交通</button>
+   <button type="button" role="tab" aria-selected="false" class="tabBtn tabBtnWide" data-target="tab0">交通</button>
   </nav>
   <div class="tabsDivider"></div>
 
   <!-- 分頁 1：住宿資訊 -->
   <section class="card daySection pagePanel active" id="tab1">
    <div class="dayCardHeader"><div class="dayHeaderMain"><div class="dayIndex">1</div><h2 class="dayTitle">住宿資訊</h2></div><div class="dayDate"></div></div>
-   <div class="dayBody"><div class="memoBoxes">
+   <div class="dayBody hotelDayBody"><div class="memoBoxes">
     <details class="infoBox preferredLineBox"><summary><span class="summaryText">JR東日本大都会大飯店川崎<a href="googlechromes://kawasaki.hotel-metropolitan.com/tw/" aria-label="使用 Google Chrome 開啟川崎大都會飯店官網" title="使用 Google Chrome 開啟川崎大都會飯店官網" onclick="event.stopPropagation()">🔗</a></span><span class="chev">⌄</span></summary>
      <div class="infoContent hotelTransport">
       <p class="transportIntro hotelInfoTitle">飯店資訊</p>
       <div class="hotelInfoLine">Hotel Metropolitan Kawasaki ホテルメトロポリタン川崎</div>
       <div class="hotelInfoLine">212-0014 神奈川縣川崎市幸區大宮町1-5</div>
-      <div class="hotelInfoLine"><a class="hotelPhone" href="tel:+81445331111">+81445331111</a></div>
+      <div class="hotelInfoLine"><a class="plainLink regularWeight" href="tel:+81445331111">+81445331111</a></div>
       <p class="transportIntro transportCompactTitle">交通方式</p>
       <div class="transportOption">
-       <div class="transportHeading"><a class="keikyuLink" href="https://www.haneda-tokyo-access.com/tc/ride/train-line-map.html" target="_blank" rel="noopener noreferrer">京急電鐵⏱️約25～35分鐘(含步行)💰¥278</a></div>
+       <div class="transportHeading"><a class="plainLink" href="https://www.haneda-tokyo-access.com/tc/ride/train-line-map.html" target="_blank" rel="noopener noreferrer">京急電鐵⏱️約25～35分鐘(含步行)💰¥278</a></div>
        <div>羽田3航➞京急川崎站KK20➞步行約9分鐘(700公尺)至飯店</div>
        <div class="transportBullet"><span class="bulletMark">・</span><span class="bulletText">搭乘往京急川崎方向的車；別搭需在京急蒲田轉車的班次。</span></div>
        <div class="transportBullet"><span class="bulletMark">・</span><span class="bulletText">抵達京急川崎站→從中央口改札出站→沿JR川崎站方向步行→進入JR川崎站的中央通道→往中央西口(ラゾーナ川崎プラザ方向)→沿通道左側找到連接飯店的空中行人步道(ペデストリアンデッキ)前進即可抵達。</span></div>
@@ -1002,7 +969,7 @@
        <div class="transportBullet"><span class="bulletMark">・</span><span class="bulletText">由JR川崎站中央南改札或中央北改札出站後，往西口(ラゾーナ川崎プラザ/LAZONA川崎廣場)方向前進，接著走左側往MUZA川崎方向的空中行人步道(ペデストリアンデッキ)即抵飯店。</span></div>
        <details class="hotelVideoDetails">
         <summary>🎬 京急川崎站至飯店步行路線影片 <span class="chev">⌄</span></summary>
-        <div class="transportVideo"><iframe src="https://www.youtube-nocookie.com/embed/lzsXsISEBMc?start=29" title="京急川崎站至飯店步行路線影片" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+        <div class="transportVideo"><iframe data-src="https://www.youtube-nocookie.com/embed/lzsXsISEBMc?start=29" title="京急川崎站至飯店步行路線影片" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
        </details>
       </div>
      </div></details>
@@ -1011,7 +978,7 @@
        <div class="hotelInfoLine">OMO5東京五反田 by 星野リゾート</div>
        <div class="hotelInfoLine">OMO5 Tokyo Gotanda by Hoshino Resorts</div>
        <div class="hotelInfoLine">〒141-0031 東京都品川区西五反田８丁目</div>
-       <div class="hotelInfoLine"><a class="hotelPhone" href="tel:+815031348095">+815031348095</a></div>
+       <div class="hotelInfoLine"><a class="plainLink regularWeight" href="tel:+815031348095">+815031348095</a></div>
       </div></details>
    </div></div>
   </section>
@@ -1019,15 +986,15 @@
   <!-- 分頁 2：神奈川工科大學 KAIT廣場參觀 -->
   <section class="card daySection pagePanel" id="tab2">
    <div class="dayCardHeader">
-    <div class="dayHeaderMain"><div class="dayIndex">2</div><h2 class="dayTitle"><a class="kaitTitleOfficialLink" href="https://www.kait.jp/" target="_blank" rel="noopener noreferrer">神奈川工科大學 KAIT廣場參觀</a></h2></div>
+    <div class="dayHeaderMain"><div class="dayIndex">2</div><h2 class="dayTitle"><a class="plainLink" href="https://www.kait.jp/" target="_blank" rel="noopener noreferrer">神奈川工科大學 KAIT廣場參觀</a></h2></div>
     <div class="dayDate"></div>
    </div>
-   <div class="dayBody">
+   <div class="dayBody kaitDayBody">
     <div class="timeline">
      <div class="kaitInfo">
       <div class="kaitTransportTitle">學校資訊</div>
       <div class="kaitInfoName">神奈川工科大学 Kanagawa Institute of Technology</div>
-      <div>〒243-0292　神奈川県厚木市下荻野1030</div>
+      <div>〒243-0292 神奈川県厚木市下荻野1030</div>
       <div>Tel 046-291-3033 / Fax 046-242-4422</div>
       <div class="kaitTransport">
        <div class="kaitTransportTitle">交通方式</div>
@@ -1049,22 +1016,27 @@
          <li><div class="stepNum">3</div><div class="stepBody"><div class="stepTitle">10:58 登戶站(OH18)出發</div><div class="stepDesc">搭乘小田急快速急行「小田原行」。</div></div></li>
          <li><div class="stepNum">4</div><div class="stepBody"><div class="stepTitle">11:28 本厚木站(OH34)抵達</div><div class="stepDesc">從北口出站後找餐廳用餐。</div></div></li>
          <li><div class="stepNum">5</div><div class="stepBody"><div class="stepTitle">13:45 本厚木站北口1番のりば出發</div><div class="stepDesc">13:25～13:35前往候車，搭乘神奈川中央交通 厚89(神奈川工科大学経由・鳶尾団地行)。</div></div></li>
-         <li><div class="stepNum">6</div><div class="stepBody"><div class="stepTitle">約 14:10 神奈川工科大学前站抵達</div><div class="stepDesc">下車後至學校正門旁警衛室出示確認信領取GUEST CARD。14:30才會設置等待區，下車後先確認回程站牌的位置。</div></div></li>
+         <li>
+          <div class="stepNum">6</div>
+          <div class="stepBody">
+           <div class="stepTitle">約 14:10 神奈川工科大学前站抵達</div>
+           <div class="stepDesc">下車後至學校正門旁警衛室出示確認信領取GUEST CARD。14:30才會設置等待區，下車後先確認回程站牌的位置。</div>
+           <div class="gallery kaitPhotoGallery" aria-label="KAIT 廣場圖片相簿">
+            <div class="galleryRow">
+             <div class="gItem"><img src="./images/Day2-KAIT/1.jpg" alt="KAIT 參觀照片 1" loading="lazy"/></div>
+             <div class="gItem"><img src="./images/Day2-KAIT/2.jpg" alt="KAIT 參觀照片 2" loading="lazy"/></div>
+             <div class="gItem"><img src="./images/Day2-KAIT/3.jpg" alt="KAIT 參觀照片 3" loading="lazy"/></div>
+             <div class="gItem"><img src="./images/Day2-KAIT/4.jpg" alt="KAIT 參觀照片 4" loading="lazy"/></div>
+             <div class="gItem"><img src="./images/Day2-KAIT/5.jpg" alt="KAIT 參觀照片 5" loading="lazy"/></div>
+             <div class="gItem"><img src="./images/Day2-KAIT/6.jpg" alt="KAIT 參觀照片 6" loading="lazy"/></div>
+             <div class="gItem"><img src="./images/Day2-KAIT/7.jpg" alt="KAIT 參觀照片 7" loading="lazy"/></div>
+            </div>
+           </div>
+          </div>
+         </li>
         </ol>
        </div>
-    <!-- KAIT 圖片相簿：與時間軸一起置於外框內，但不在時間軸內框中 -->
-    <div class="gallery kaitPhotoGallery" aria-label="KAIT 廣場圖片相簿">
-     <div class="galleryRow">
-      <div class="gItem"><img src="./images/Day2-KAIT/1.jpg" alt="KAIT 參觀照片 1" loading="lazy"/></div>
-      <div class="gItem"><img src="./images/Day2-KAIT/2.jpg" alt="KAIT 參觀照片 2" loading="lazy"/></div>
-      <div class="gItem"><img src="./images/Day2-KAIT/3.jpg" alt="KAIT 參觀照片 3" loading="lazy"/></div>
-      <div class="gItem"><img src="./images/Day2-KAIT/4.jpg" alt="KAIT 參觀照片 4" loading="lazy"/></div>
-      <div class="gItem"><img src="./images/Day2-KAIT/5.jpg" alt="KAIT 參觀照片 5" loading="lazy"/></div>
-      <div class="gItem"><img src="./images/Day2-KAIT/6.jpg" alt="KAIT 參觀照片 6" loading="lazy"/></div>
-      <div class="gItem"><img src="./images/Day2-KAIT/7.jpg" alt="KAIT 參觀照片 7" loading="lazy"/></div>
-     </div>
-    </div>
-    <!-- KAIT 備忘錄：位於 Gallery 下方，預設收合 -->
+    <!-- KAIT 備忘錄：位於行程框下方，預設收合 -->
     <details class="infoBox preferredLineBox kaitMemo">
      <summary><span class="summaryText">Memo</span><span class="chev">⌄</span></summary>
      <div class="infoContent">
@@ -1114,7 +1086,7 @@
      <summary><span class="summaryText">交通時刻表(平日)</span><span class="chev">⌄</span></summary>
      <div class="infoContent kaitTimetableLinksContent">
       <ul class="kaitTimetableList">
-       <li><a href="https://op.kait.jp/access/?utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">🚥KAIT交通相關</a></li>
+       <li><a href="https://op.kait.jp/access/" target="_blank" rel="noopener noreferrer">🚥KAIT交通相關</a></li>
        <li><a href="https://timetables.jreast.co.jp/2612/timetable/tt0526/0526030.html" target="_blank" rel="noopener noreferrer">🚅JR川崎站➞南武線往登戶・立川</a></li>
        <li><a href="https://www.odakyu.jp/station/noborito/timetable/down/" target="_blank" rel="noopener noreferrer">🚅小田急登戶站➞往本厚木・小田原</a></li>
        <li><a href="https://transfer-cloud.navitime.biz/kanachu/courses?external-busstop=19051" target="_blank" rel="noopener noreferrer">🚌神奈川工科大学前➞本厚木駅(厚07・厚89)</a></li>
@@ -1133,10 +1105,10 @@
   <!-- 分頁 3：12/3 江之浦測候所交通行程 -->
   <section class="card daySection pagePanel" id="tab3">
    <div class="dayCardHeader">
-    <div class="dayHeaderMain"><div class="dayIndex">3</div><h2 class="dayTitle"><a class="enouraOfficialLink" href="https://www.odawara-af.com/ja/enoura/" target="_blank" rel="noopener noreferrer">江之浦測候所</a>｜逗子</h2></div>
+    <div class="dayHeaderMain"><div class="dayIndex">3</div><h2 class="dayTitle"><a class="plainLink" href="https://www.odawara-af.com/ja/enoura/" target="_blank" rel="noopener noreferrer">江之浦測候所</a>｜逗子</h2></div>
     <div class="dayDate"></div>
    </div>
-   <div class="dayBody">
+   <div class="dayBody enouraDayBody">
     <div class="timeline">
      <!-- 上午：江之浦測候所（步驟 1～6） -->
      <div class="journeyCard">
@@ -1148,23 +1120,23 @@
        <li><div class="stepNum">4</div><div class="stepBody"><div class="stepTitle">約10:00 江之浦測候所抵達</div>
        <div class="gallery enouraPhotoGallery" aria-label="江之浦測候所照片相簿"><div class="galleryRow"><div class="gItem"><img src="./images/Day3-Enoura/3.jpg" alt="江之浦測候所參觀照片 3" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/4.jpg" alt="江之浦測候所參觀照片 4" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/5.jpg" alt="江之浦測候所參觀照片 5" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/6.jpg" alt="江之浦測候所參觀照片 6" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/7.jpg" alt="江之浦測候所參觀照片 7" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/8.jpg" alt="江之浦測候所參觀照片 8" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/9.jpg" alt="江之浦測候所參觀照片 9" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/10.jpg" alt="江之浦測候所參觀照片 10" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/11.jpg" alt="江之浦測候所參觀照片 11" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/12.jpg" alt="江之浦測候所參觀照片 12" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/13.jpg" alt="江之浦測候所參觀照片 13" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/14.jpg" alt="江之浦測候所參觀照片 14" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/15.jpg" alt="江之浦測候所參觀照片 15" loading="lazy"/></div><div class="gItem"><img src="./images/Day3-Enoura/16.jpg" alt="江之浦測候所參觀照片 16・俯瞰建築與園區" loading="lazy"/></div></div></div></div></li>
        <!-- 江之浦結束後：以下時間為預排，尚未核對實際 JR 與京急巴士班次 -->
-       <li><div class="stepNum">5</div><div class="stepBody"><div class="stepTitle">12:00　江之浦測候所出發</div><div class="stepDesc">返程接駁車：11:30、12:00、12:30、13:00，暫定12:00 為離開時間。</div></div></li>
-       <li><div class="stepNum">6</div><div class="stepBody"><div class="stepTitle">約12:20　搭乘江之浦測候所接駁車至JR根府川站</div></div></li>
+       <li><div class="stepNum">5</div><div class="stepBody"><div class="stepTitle">12:00 江之浦測候所出發</div><div class="stepDesc">返程接駁車：11:30、12:00、12:30、13:00，暫定12:00 為離開時間。</div></div></li>
+       <li><div class="stepNum">6</div><div class="stepBody"><div class="stepTitle">約12:20 搭乘江之浦測候所接駁車至JR根府川站</div></div></li>
       </ol>
      </div>
      <!-- 下午：葉山・逗子（步驟 7～15） -->
      <div class="journeyCard">
       <div class="enouraSessionTitle">下午｜葉山・逗子</div>
       <ol class="stepTimeline">
-       <li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">12:45～13:31　<a class="enouraTimetableLink" href="https://timetables.jreast.co.jp/2612/timetable/tt1198/1198020.html" target="_blank" rel="noopener noreferrer" title="JR東日本｜根府川站東海道線平日時刻表">JR根府川站(JT18)➞大船站(JT07)</a></div><div class="stepDesc">搭乘JR東海道線，往東京方向，從月台1→月台8只有7分鐘轉車時間，須留意車次有沒有誤點，下班車13:48(每10分鐘)。</div></div></li>
-       <li><div class="stepNum">8</div><div class="stepBody"><div class="stepTitle">13:38～13:50　<a class="enouraTimetableLink" href="https://timetables.jreast.co.jp/2612/timetable/tt0342/0342040.html" target="_blank" rel="noopener noreferrer" title="JR東日本｜大船站橫須賀線平日時刻表">大船站(JT07=JO09)➞逗子站(JO06)</a></div><div class="stepDesc">搭乘JR橫須賀線往逗子・久里濱方向。</div></div></li>
-       <li><div class="stepNum">9</div><div class="stepBody"><div class="stepTitle">13:50　逗子站➞真名瀨海岸</div><div class="stepDesc">JR逗子站東口前往京急巴士乘車處3，搭乘<a class="zushiBusTimetableLink" href="https://transfer-cloud.navitime.biz/keikyubus/courses?busstop=00020599" target="_blank" rel="noopener noreferrer" title="京急巴士官方｜逗子站3號乘車處逗11／逗12時刻表">逗11、逗12</a>經海岸往葉山方向的巴士，在真名瀬下車後步行至海岸。</div></div></li>
-       <li><div class="stepNum">10</div><div class="stepBody"><div class="stepTitle">約14:15～14:35　真名瀨海岸 <a class="northMapLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E7%9C%9F%E5%90%8D%E7%80%AC%E6%B5%B7%E5%B2%B8%20%E8%91%89%E5%B1%B1" target="_blank" rel="noopener noreferrer" aria-label="真名瀨海岸地圖" title="開啟真名瀨海岸地圖">🗺️</a></div><div class="stepDesc">沿海岸散步、拍攝海景與海上鳥居，天氣晴朗時可遠眺富士山。</div></div></li>
-       <li><div class="stepNum">11</div><div class="stepBody"><div class="stepTitle">約14:35～15:15　真名瀨海岸 ➞ 森戶神社 <a class="northMapLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%A3%AE%E6%88%B8%E7%A5%9E%E7%A4%BE%20%E8%91%89%E5%B1%B1" target="_blank" rel="noopener noreferrer" aria-label="森戶神社地圖" title="開啟森戶神社地圖">🗺️</a></div><div class="stepDesc">沿一般道路步行約5～10分鐘前往森戶神社。</div></div></li>
-       <li><div class="stepNum">12</div><div class="stepBody"><div class="stepTitle">約15:15～15:45　森戶海岸 <a class="northMapLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%A3%AE%E6%88%B8%E6%B5%B7%E5%B2%B8%20%E8%91%89%E5%B1%B1" target="_blank" rel="noopener noreferrer" aria-label="森戶海岸地圖" title="開啟森戶海岸地圖">🗺️</a></div><div class="stepDesc">從森戶神社步行至鄰近海岸，沿沙灘散步、拍攝相模灣景色。</div></div></li>
-       <li><div class="stepNum">13</div><div class="stepBody"><div class="stepTitle">約15:45～16:15　森戶海岸 ➞ 逗子海岸</div><div class="stepDesc">步行至附近往逗子站方向的京急巴士站，搭車至逗子海岸周邊，再步行前往沙灘。</div></div></li>
-       <li><div class="stepNum">14</div><div class="stepBody"><div class="stepTitle">約16:15～17:00　逗子海岸 <a class="northMapLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%80%97%E5%AD%90%E6%B5%B7%E5%B2%B8" target="_blank" rel="noopener noreferrer" aria-label="逗子海岸地圖" title="開啟逗子海岸地圖">🗺️</a></div><div class="stepDesc">在逗子海岸散步、看海，依天候欣賞傍晚景色。</div></div></li>
-       <li><div class="stepNum">15</div><div class="stepBody"><div class="stepTitle">17:00~　逗子海岸➞JR逗子站➞川崎</div><div class="stepDesc">從海岸步行返回JR逗子站(JO06)，搭JR橫須賀線至大船站(JO09=JT07)，轉乘JR東海道線至川崎站(JT04)。</div></div></li>
+       <li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">12:45～13:31 <a class="plainLink" href="https://timetables.jreast.co.jp/2612/timetable/tt1198/1198020.html" target="_blank" rel="noopener noreferrer" title="JR東日本｜根府川站東海道線平日時刻表">JR根府川站(JT18)➞大船站(JT07)</a></div><div class="stepDesc">搭乘JR東海道線，往東京方向，從月台1→月台8只有7分鐘轉車時間，須留意車次有沒有誤點，下班車13:48(每10分鐘)。</div></div></li>
+       <li><div class="stepNum">8</div><div class="stepBody"><div class="stepTitle">13:38～13:50 <a class="plainLink" href="https://timetables.jreast.co.jp/2612/timetable/tt0342/0342040.html" target="_blank" rel="noopener noreferrer" title="JR東日本｜大船站橫須賀線平日時刻表">大船站(JT07=JO09)➞逗子站(JO06)</a></div><div class="stepDesc">搭乘JR橫須賀線往逗子・久里濱方向。</div></div></li>
+       <li><div class="stepNum">9</div><div class="stepBody"><div class="stepTitle">13:50 逗子站➞真名瀨海岸</div><div class="stepDesc">JR逗子站東口前往京急巴士乘車處3，搭乘<a class="plainLink" href="https://transfer-cloud.navitime.biz/keikyubus/courses?busstop=00020599" target="_blank" rel="noopener noreferrer" title="京急巴士官方｜逗子站3號乘車處逗11／逗12時刻表">逗11、逗12</a>經海岸往葉山方向的巴士，在真名瀬下車後步行至海岸。</div></div></li>
+       <li><div class="stepNum">10</div><div class="stepBody"><div class="stepTitle">約14:15～14:35 真名瀨海岸 <a class="plainLink regularWeight mapIconLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E7%9C%9F%E5%90%8D%E7%80%AC%E6%B5%B7%E5%B2%B8%20%E8%91%89%E5%B1%B1" target="_blank" rel="noopener noreferrer" aria-label="真名瀨海岸地圖" title="開啟真名瀨海岸地圖">🗺️</a></div><div class="stepDesc">沿海岸散步、拍攝海景與海上鳥居，天氣晴朗時可遠眺富士山。</div></div></li>
+       <li><div class="stepNum">11</div><div class="stepBody"><div class="stepTitle">約14:35～15:15 真名瀨海岸 ➞ 森戶神社 <a class="plainLink regularWeight mapIconLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%A3%AE%E6%88%B8%E7%A5%9E%E7%A4%BE%20%E8%91%89%E5%B1%B1" target="_blank" rel="noopener noreferrer" aria-label="森戶神社地圖" title="開啟森戶神社地圖">🗺️</a></div><div class="stepDesc">沿一般道路步行約5～10分鐘前往森戶神社。</div></div></li>
+       <li><div class="stepNum">12</div><div class="stepBody"><div class="stepTitle">約15:15～15:45 森戶海岸 <a class="plainLink regularWeight mapIconLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%A3%AE%E6%88%B8%E6%B5%B7%E5%B2%B8%20%E8%91%89%E5%B1%B1" target="_blank" rel="noopener noreferrer" aria-label="森戶海岸地圖" title="開啟森戶海岸地圖">🗺️</a></div><div class="stepDesc">從森戶神社步行至鄰近海岸，沿沙灘散步、拍攝相模灣景色。</div></div></li>
+       <li><div class="stepNum">13</div><div class="stepBody"><div class="stepTitle">約15:45～16:15 森戶海岸 ➞ 逗子海岸</div><div class="stepDesc">步行至附近往逗子站方向的京急巴士站，搭車至逗子海岸周邊，再步行前往沙灘。</div></div></li>
+       <li><div class="stepNum">14</div><div class="stepBody"><div class="stepTitle">約16:15～17:00 逗子海岸 <a class="plainLink regularWeight mapIconLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%80%97%E5%AD%90%E6%B5%B7%E5%B2%B8" target="_blank" rel="noopener noreferrer" aria-label="逗子海岸地圖" title="開啟逗子海岸地圖">🗺️</a></div><div class="stepDesc">在逗子海岸散步、看海，依天候欣賞傍晚景色。</div></div></li>
+       <li><div class="stepNum">15</div><div class="stepBody"><div class="stepTitle">17:00~ 逗子海岸➞JR逗子站➞川崎</div><div class="stepDesc">從海岸步行返回JR逗子站(JO06)，搭JR橫須賀線至大船站(JO09=JT07)，轉乘JR東海道線至川崎站(JT04)。</div></div></li>
       </ol>
      </div>
     </div>
@@ -1177,9 +1149,9 @@
 <div class="dayHeaderMain"><div class="dayIndex">4</div><h2 class="dayTitle">北鎌倉賞楓</h2></div>
 <div class="dayDate"></div>
 </div>
-<div class="dayBody">
+<div class="dayBody northKamakuraDayBody">
 <div class="timeline">
-<div class="journeyCard"><ol class="stepTimeline"><li><div class="stepNum">1</div><div class="stepBody"><div class="stepTitle">08:38～09:06　川崎站(JT04)→ JR北鎌倉站(JO08)</div><div class="stepDesc">JR川崎站搭東海道線前往戶塚站(JT06=JO10)，轉乘JR橫須賀線往逗子・久里濱方向，在北鎌倉站(JO08)下車。</div></div></li><li><div class="stepNum">2</div><div class="stepBody"><div class="stepTitle">09:15～10:30　<a class="northTempleLink" href="https://www.engakuji.or.jp/" target="_blank" rel="noopener noreferrer">圓覺寺(円覚寺)</a> <a class="northMapLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%86%86%E8%A6%9A%E5%AF%BA%20%E9%8E%8C%E5%80%89" target="_blank" rel="noopener noreferrer" aria-label="圓覺寺地圖" title="開啟圓覺寺地圖">🗺️</a></div><div class="stepDesc">從北鎌倉站步行約 2～3 分鐘。由總門、山門一路欣賞寺院與楓葉。</div><div class="gallery northKamakuraGallery"><div class="galleryRow"><div class="gItem"><img src="./images/Day4-Kitakamakura/1.jpg" alt="圓覺寺・紅葉石階與円覚寺石碑" loading="lazy"/></div><div class="gItem"><img src="./images/Day4-Kitakamakura/2.jpg" alt="圓覺寺・紅葉與寺院階梯" loading="lazy"/></div><div class="gItem"><img src="./images/Day4-Kitakamakura/3.jpg" alt="圓覺寺・紅葉映襯寺院建築" loading="lazy"/></div></div></div></div></li><li><div class="stepNum">3</div><div class="stepBody"><div class="stepTitle">10:30～10:45　圓覺寺 ➞ 明月院</div><div class="stepDesc">沿北鎌倉街道步行前往明月院，途中有街景可拍攝。</div></div></li><li><div class="stepNum">4</div><div class="stepBody"><div class="stepTitle">10:45～11:45　<a class="northTempleLink" href="https://www.trip-kamakura.com/facility/detail.php?area=2&amp;id=70&amp;utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">明月院</a> <a class="northMapLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%98%8E%E6%9C%88%E9%99%A2%20%E9%8E%8C%E5%80%89" target="_blank" rel="noopener noreferrer" aria-label="明月院地圖" title="開啟明月院地圖">🗺️</a></div><div class="stepDesc">欣賞寺院庭園與著名的悟之圓窗。</div><div class="gallery northKamakuraGallery"><div class="galleryRow"><div class="gItem"><img src="./images/Day4-Kitakamakura/4.jpg" alt="明月院・秋楓與山門" loading="lazy"/></div><div class="gItem"><img src="./images/Day4-Kitakamakura/5.jpg" alt="明月院・悟之窗圓窗庭園" loading="lazy"/></div><div class="gItem"><img src="./images/Day4-Kitakamakura/6.jpg" alt="明月院・秋楓庭園與地藏像" loading="lazy"/></div></div></div></div></li><li><div class="stepNum">5</div><div class="stepBody"><div class="stepTitle">11:45～12:45　北鎌倉午餐／咖啡</div><div class="stepDesc">在北鎌倉站周邊簡單用餐。</div></div></li><li><div class="stepNum">6</div><div class="stepBody"><div class="stepTitle">13:19～13:53　JR北鎌倉站(JO08)➞JR川崎站(JT04)</div><div class="stepDesc">JR北鎌倉站搭乘橫須賀線前往戶塚站(JO10=JT06)，轉乘東海道線至川崎(JT04)站。</div></div></li><li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">14:00　前往OMO5 東京五反田</div></div></li></ol></div>
+<div class="journeyCard"><ol class="stepTimeline"><li><div class="stepNum">1</div><div class="stepBody"><div class="stepTitle">08:38～09:06 川崎站(JT04)→ JR北鎌倉站(JO08)</div><div class="stepDesc">JR川崎站搭東海道線前往戶塚站(JT06=JO10)，轉乘JR橫須賀線往逗子・久里濱方向，在北鎌倉站(JO08)下車。</div></div></li><li><div class="stepNum">2</div><div class="stepBody"><div class="stepTitle">09:15～10:30 <a class="plainLink" href="https://www.engakuji.or.jp/" target="_blank" rel="noopener noreferrer">圓覺寺(円覚寺)</a> <a class="plainLink regularWeight mapIconLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%86%86%E8%A6%9A%E5%AF%BA%20%E9%8E%8C%E5%80%89" target="_blank" rel="noopener noreferrer" aria-label="圓覺寺地圖" title="開啟圓覺寺地圖">🗺️</a></div><div class="stepDesc">從北鎌倉站步行約 2～3 分鐘。由總門、山門一路欣賞寺院與楓葉。</div><div class="gallery northKamakuraGallery"><div class="galleryRow"><div class="gItem"><img src="./images/Day4-Kitakamakura/1.jpg" alt="圓覺寺・紅葉石階與円覚寺石碑" loading="lazy"/></div><div class="gItem"><img src="./images/Day4-Kitakamakura/2.jpg" alt="圓覺寺・紅葉與寺院階梯" loading="lazy"/></div><div class="gItem"><img src="./images/Day4-Kitakamakura/3.jpg" alt="圓覺寺・紅葉映襯寺院建築" loading="lazy"/></div></div></div></div></li><li><div class="stepNum">3</div><div class="stepBody"><div class="stepTitle">10:30～10:45 圓覺寺 ➞ 明月院</div><div class="stepDesc">沿北鎌倉街道步行前往明月院，途中有街景可拍攝。</div></div></li><li><div class="stepNum">4</div><div class="stepBody"><div class="stepTitle">10:45～11:45 <a class="plainLink" href="https://www.trip-kamakura.com/facility/detail.php?area=2&amp;id=70" target="_blank" rel="noopener noreferrer">明月院</a> <a class="plainLink regularWeight mapIconLink" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%98%8E%E6%9C%88%E9%99%A2%20%E9%8E%8C%E5%80%89" target="_blank" rel="noopener noreferrer" aria-label="明月院地圖" title="開啟明月院地圖">🗺️</a></div><div class="stepDesc">欣賞寺院庭園與著名的悟之圓窗。</div><div class="gallery northKamakuraGallery"><div class="galleryRow"><div class="gItem"><img src="./images/Day4-Kitakamakura/4.jpg" alt="明月院・秋楓與山門" loading="lazy"/></div><div class="gItem"><img src="./images/Day4-Kitakamakura/5.jpg" alt="明月院・悟之窗圓窗庭園" loading="lazy"/></div><div class="gItem"><img src="./images/Day4-Kitakamakura/6.jpg" alt="明月院・秋楓庭園與地藏像" loading="lazy"/></div></div></div></div></li><li><div class="stepNum">5</div><div class="stepBody"><div class="stepTitle">11:45～12:45 北鎌倉午餐／咖啡</div><div class="stepDesc">在北鎌倉站周邊簡單用餐。</div></div></li><li><div class="stepNum">6</div><div class="stepBody"><div class="stepTitle">13:19～13:53 JR北鎌倉站(JO08)➞JR川崎站(JT04)</div><div class="stepDesc">JR北鎌倉站搭乘橫須賀線前往戶塚站(JO10=JT06)，轉乘東海道線至川崎(JT04)站。</div></div></li><li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">14:00 前往OMO5 東京五反田</div></div></li></ol></div>
 <details class="infoBox preferredLineBox northNotes"><summary><span class="summaryText">Memo</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details>
 </div>
 </div>
@@ -1233,19 +1205,19 @@
     <div class="dayHeaderMain"><div class="dayIndex">＋</div><h2 class="dayTitle">小行程</h2></div>
     <div class="dayDate"></div>
    </div>
-   <div class="dayBody">
+   <div class="dayBody miniTripDayBody">
     <div class="timeline">
      <details class="infoBox preferredLineBox miniTripDetails">
       <summary><span class="summaryText">🎄橫濱｜B購物＋港未來散步＋聖誕市集。</span><span class="chev">⌄</span></summary>
       <div class="infoContent miniTripContent">
        <div class="journeyCard"><ol class="stepTimeline">
-       <li><div class="stepNum">1</div><div class="stepBody"><div class="stepTitle">15:30～15:45　JR 川崎站 → 橫濱站</div><div class="stepDesc">從川崎出發，搭JR東海道線往橫濱方向，車程約8~10分鐘；到橫濱站後往東口的LUMINE走。</div></div></li>
-       <li><div class="stepNum">2</div><div class="stepBody"><div class="stepTitle">15:45～16:30　Bshop 横浜ルミネ店｜LUMINE 5F</div><div class="stepDesc">第一間 Bshop。<a href="https://www.lumine.ne.jp/yokohama/floorguide/" target="_blank" rel="noopener noreferrer">LUMINE 店舖資訊</a>。</div></div></li>
-       <li><div class="stepNum">3</div><div class="stepBody"><div class="stepTitle">16:30～16:45　橫濱站 → 港未來站</div><div class="stepDesc">搭乘港未來線往元町・中華街方向，到「みなとみらい站」下車；MARK IS與車站相連。</div></div></li>
-       <li><div class="stepNum">4</div><div class="stepBody"><div class="stepTitle">16:45～17:30　みなとみらい店 MARK IS </div><div class="stepDesc">Bshop在1F，快速逛一下整棟或喝咖啡休息，或直接前往紅磚倉庫。<a href="https://www.mec-markis.jp/mm/shop/" target="_blank" rel="noopener noreferrer">MARK IS 店舖資訊</a>。</div></div></li>
-       <li><div class="stepNum">5</div><div class="stepBody"><div class="stepTitle">17:30～18:00　港未來夜景散步</div><div class="stepDesc">沿途欣賞地標塔、摩天輪與港灣夜景，步行前往紅磚倉庫，不想走太多，可搭港未來線到馬車道站再步行。</div></div></li>
-       <li><div class="stepNum">6</div><div class="stepBody"><div class="stepTitle">18:00～19:30　橫濱紅磚倉庫聖誕市集</div><div class="stepDesc">逛聖誕木屋、拍聖誕樹、欣賞冬季燈飾。2026 年市集預定11/20～12/25 舉辦，開放時間與票價以<a href="https://www.yokohama-akarenga.jp/christmas/" target="_blank" rel="noopener noreferrer">官方公告</a>為準。</div><figure class="miniMarketPhoto"><img src="https://resources.matcha-jp.com/original/2025/11/04-248810.webp" alt="橫濱紅磚倉庫聖誕市集夜景、聖誕樹及木屋攤位（2025年參考照片）" loading="lazy" referrerpolicy="no-referrer"/><figcaption>橫濱紅磚倉庫聖誕市集（2025 年參考照片）｜<a href="https://matcha-jp.com/tw/22331" target="_blank" rel="noopener noreferrer">圖片來源：MATCHA</a></figcaption></figure></div></li>
-       <li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">19:30～20:30　紅磚倉庫 → 櫻木町站 → 川崎</div><div class="stepDesc">步行約15分鐘前往櫻木町站，搭JR京濱東北・根岸線往川崎方向回飯店。</div></div></li>
+       <li><div class="stepNum">1</div><div class="stepBody"><div class="stepTitle">15:30～15:45 JR 川崎站 → 橫濱站</div><div class="stepDesc">從川崎出發，搭JR東海道線往橫濱方向，車程約8~10分鐘；到橫濱站後往東口的LUMINE走。</div></div></li>
+       <li><div class="stepNum">2</div><div class="stepBody"><div class="stepTitle">15:45～16:30 Bshop 横浜ルミネ店｜LUMINE 5F</div><div class="stepDesc">第一間 Bshop。<a href="https://www.lumine.ne.jp/yokohama/floorguide/" target="_blank" rel="noopener noreferrer">LUMINE 店舖資訊</a>。</div></div></li>
+       <li><div class="stepNum">3</div><div class="stepBody"><div class="stepTitle">16:30～16:45 橫濱站 → 港未來站</div><div class="stepDesc">搭乘港未來線往元町・中華街方向，到「みなとみらい站」下車；MARK IS與車站相連。</div></div></li>
+       <li><div class="stepNum">4</div><div class="stepBody"><div class="stepTitle">16:45～17:30 みなとみらい店 MARK IS </div><div class="stepDesc">Bshop在1F，快速逛一下整棟或喝咖啡休息，或直接前往紅磚倉庫。<a href="https://www.mec-markis.jp/mm/shop/" target="_blank" rel="noopener noreferrer">MARK IS 店舖資訊</a>。</div></div></li>
+       <li><div class="stepNum">5</div><div class="stepBody"><div class="stepTitle">17:30～18:00 港未來夜景散步</div><div class="stepDesc">沿途欣賞地標塔、摩天輪與港灣夜景，步行前往紅磚倉庫，不想走太多，可搭港未來線到馬車道站再步行。</div></div></li>
+       <li><div class="stepNum">6</div><div class="stepBody"><div class="stepTitle">18:00～19:30 橫濱紅磚倉庫聖誕市集</div><div class="stepDesc">逛聖誕木屋、拍聖誕樹、欣賞冬季燈飾。2026 年市集預定11/20～12/25 舉辦，開放時間與票價以<a href="https://www.yokohama-akarenga.jp/christmas/" target="_blank" rel="noopener noreferrer">官方公告</a>為準。</div><figure class="miniMarketPhoto"><img src="https://resources.matcha-jp.com/original/2025/11/04-248810.webp" alt="橫濱紅磚倉庫聖誕市集夜景、聖誕樹及木屋攤位（2025年參考照片）" loading="lazy" referrerpolicy="no-referrer"/><figcaption>橫濱紅磚倉庫聖誕市集（2025 年參考照片）｜<a href="https://matcha-jp.com/tw/22331" target="_blank" rel="noopener noreferrer">圖片來源：MATCHA</a></figcaption></figure></div></li>
+       <li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">19:30～20:30 紅磚倉庫 → 櫻木町站 → 川崎</div><div class="stepDesc">步行約15分鐘前往櫻木町站，搭JR京濱東北・根岸線往川崎方向回飯店。</div></div></li>
        </ol></div>
        <!-- 橫濱路線地圖：順序 1→2→3，互動地圖及實際導航連結 -->
        <div class="miniRouteMapBox">
@@ -1271,15 +1243,15 @@
     <div class="dayHeaderMain"><div class="dayIndex">★</div><h2 class="dayTitle">交通</h2></div>
     <div class="dayDate"></div>
    </div>
-   <div class="dayBody">
+   <div class="dayBody railMapDayBody">
     <div class="railMapBoxes">
      <details class="infoBox memoBox">
       <summary><span class="summaryText">東京地鐵圖</span><span class="chev">⌄</span></summary>
       <div class="infoContent">
-       <div class="foodCafeMap">
-        <iframe src="./東京地鐵圖.pdf" title="東京地鐵圖 PDF" loading="lazy"></iframe>
-        <a class="foodCafePdfOpen" href="./東京地鐵圖.pdf" target="_blank" rel="noopener">點擊開啟完整圖</a>
+       <div class="pdfEmbedWrap">
+        <iframe class="pdfEmbed" src="./東京地鐵圖.pdf" title="東京地鐵圖 PDF" loading="lazy"></iframe>
        </div>
+       <a class="pdfOpenBtn" href="./東京地鐵圖.pdf" target="_blank" rel="noopener">點擊開啟完整圖</a>
       </div>
      </details>
      <details class="infoBox memoBox">
@@ -1299,9 +1271,10 @@
 
 <script>
 (() => {
- /* 頁籤切換 */
+ /* 頁籤切換與自動回頂 */
  const tabs = document.querySelectorAll('.tabBtn');
  const panels = document.querySelectorAll('.pagePanel');
+ const tabShell = document.querySelector('.tabShell');
  tabs.forEach(tab => tab.addEventListener('click', () => {
   const target = tab.dataset.target;
   if (!target) return;
@@ -1311,7 +1284,55 @@
    btn.setAttribute('aria-selected', String(isActive));
   });
   panels.forEach(panel => panel.classList.toggle('active', panel.id === target));
+  if (tabShell) {
+   const shellTop = tabShell.getBoundingClientRect().top + window.scrollY;
+   if (window.scrollY > shellTop) {
+    window.scrollTo({ top: shellTop, behavior: 'smooth' });
+   }
+  }
  }));
+
+ /* 川崎飯店步行路線影片：首次展開折疊層時才寫入 iframe src */
+ const hotelVideoDetails = document.querySelector('.hotelVideoDetails');
+ if (hotelVideoDetails) {
+  hotelVideoDetails.addEventListener('toggle', () => {
+   if (!hotelVideoDetails.open) return;
+   const iframe = hotelVideoDetails.querySelector('iframe[data-src]');
+   if (iframe && !iframe.src) {
+    iframe.src = iframe.dataset.src;
+   }
+  });
+ }
+
+ /* 電腦版滑鼠按住拖曳橫向捲動相簿 */
+ let suppressGalleryClick = false;
+ document.querySelectorAll('.galleryRow').forEach(row => {
+  let isDown = false, startX = 0, scrollLeft = 0, dragMoved = false;
+  row.addEventListener('mousedown', e => {
+   if (e.button !== 0) return;
+   isDown = true;
+   dragMoved = false;
+   startX = e.pageX - row.offsetLeft;
+   scrollLeft = row.scrollLeft;
+   row.classList.add('isDragging');
+  });
+  window.addEventListener('mousemove', e => {
+   if (!isDown) return;
+   const xPos = e.pageX - row.offsetLeft;
+   const walk = xPos - startX;
+   if (Math.abs(walk) > 4) dragMoved = true;
+   row.scrollLeft = scrollLeft - walk;
+  });
+  window.addEventListener('mouseup', () => {
+   if (!isDown) return;
+   isDown = false;
+   row.classList.remove('isDragging');
+   if (dragMoved) {
+    suppressGalleryClick = true;
+    setTimeout(() => { suppressGalleryClick = false; }, 0);
+   }
+  });
+ });
 
  /* Gallery 燈箱：雙擊縮放、雙指縮放、單指拖曳，停止觸控立即固定位置 */
  const lightbox = document.createElement('div');
@@ -1388,6 +1409,7 @@
  }
 
  document.addEventListener('click', e => {
+  if (suppressGalleryClick) return;
   const img = e.target.closest('.galleryRow .gItem img');
   if (img) open(img);
  });
