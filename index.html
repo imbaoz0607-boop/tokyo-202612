@@ -763,7 +763,10 @@
 
  /* 北鎌倉賞楓專屬樣式 */
  .northKamakuraDayBody .northKamakuraGallery { margin: 9px 0 5px; max-width: 100%; min-width: 0; overflow: hidden; }
- .northKamakuraDayBody details.infoBox.preferredLineBox.northNotes { margin-top: 4px; border-bottom: none; }
+ /* 12/4：移除北鎌倉行程與聖誕燈飾標題之間，外層 timeline 盒子的底部橫線。
+     橫線實際來自 .timeline 的 border-bottom，不是收合層的 border-bottom。 */
+  #tab4 .northKamakuraDayBody > .timeline { border-bottom: 0; box-shadow: none; }
+  .northKamakuraDayBody details.infoBox.preferredLineBox.northNotes { margin-top: 4px; border-bottom: 0; }
 
 
  /* 12/4 東京聖誕燈飾：沿用現有 Gallery 與收合層 */
