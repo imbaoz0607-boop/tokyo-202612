@@ -666,6 +666,20 @@
   overflow-y: hidden;
   scroll-padding-inline: 0;
  }
+ /* KAIT：第 6 項說明後的 Gallery 橫跨時間軸兩欄，貼齊行程卡左右內緣 */
+ .kaitDayBody .stepTimeline > li > .kaitPhotoGallery {
+  grid-column: 1 / -1;
+  width: calc(100% + 32px);
+  max-width: none;
+  margin: 9px -16px 0;
+ }
+ @media (max-width: 420px) {
+  .kaitDayBody .stepTimeline > li > .kaitPhotoGallery {
+   width: calc(100% + 22px);
+   margin-left: -11px;
+   margin-right: -11px;
+  }
+ }
  .kaitDayBody .kaitPhotoGallery .gItem { flex-shrink: 0; }
 
  /* KAIT 備忘錄與回程收合層 */
@@ -1021,6 +1035,7 @@
           <div class="stepBody">
            <div class="stepTitle">約 14:10 神奈川工科大学前站抵達</div>
            <div class="stepDesc">下車後至學校正門旁警衛室出示確認信領取GUEST CARD。14:30才會設置等待區，下車後先確認回程站牌的位置。</div>
+          </div>
            <div class="gallery kaitPhotoGallery" aria-label="KAIT 廣場圖片相簿">
             <div class="galleryRow">
              <div class="gItem"><img src="./images/Day2-KAIT/1.jpg" alt="KAIT 參觀照片 1" loading="lazy"/></div>
@@ -1032,7 +1047,6 @@
              <div class="gItem"><img src="./images/Day2-KAIT/7.jpg" alt="KAIT 參觀照片 7" loading="lazy"/></div>
             </div>
            </div>
-          </div>
          </li>
         </ol>
        </div>
