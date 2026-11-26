@@ -780,6 +780,62 @@
  .miniTripDayBody .miniTripDetails > .miniTripContent { padding: 0 0 10px; min-width: 0; }
  .miniTripDayBody .miniTripDetails .summaryText { overflow-wrap: anywhere; }
 
+  /* Leaflet 關鍵定位樣式備援：CDN CSS 在預覽／手機未載入時，仍可讓地圖圖磚正確定位。 */
+  #miniYokohamaMap.leaflet-container { position: relative; overflow: hidden; outline: none; }
+  #miniYokohamaMap .leaflet-pane,
+  #miniYokohamaMap .leaflet-tile,
+  #miniYokohamaMap .leaflet-marker-icon,
+  #miniYokohamaMap .leaflet-marker-shadow,
+  #miniYokohamaMap .leaflet-tile-container,
+  #miniYokohamaMap .leaflet-pane > svg,
+  #miniYokohamaMap .leaflet-pane > canvas,
+  #miniYokohamaMap .leaflet-image-layer,
+  #miniYokohamaMap .leaflet-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  #miniYokohamaMap .leaflet-tile-pane { z-index: 200; }
+  #miniYokohamaMap .leaflet-overlay-pane { z-index: 400; }
+  #miniYokohamaMap .leaflet-shadow-pane { z-index: 500; }
+  #miniYokohamaMap .leaflet-marker-pane { z-index: 600; }
+  #miniYokohamaMap .leaflet-tooltip-pane { z-index: 650; }
+  #miniYokohamaMap .leaflet-popup-pane { z-index: 700; }
+  #miniYokohamaMap .leaflet-map-pane,
+  #miniYokohamaMap .leaflet-zoom-animated { transform-origin: 0 0; }
+  #miniYokohamaMap .leaflet-tile { visibility: hidden; }
+  #miniYokohamaMap .leaflet-tile-loaded { visibility: visible; }
+  #miniYokohamaMap .leaflet-tile-pane img,
+  #miniYokohamaMap .leaflet-marker-pane img,
+  #miniYokohamaMap .leaflet-shadow-pane img,
+  #miniYokohamaMap .leaflet-overlay-pane svg {
+    max-width: none !important;
+    max-height: none !important;
+    padding: 0;
+    border: 0;
+  }
+  #miniYokohamaMap .leaflet-control-container { position: relative; z-index: 800; }
+  #miniYokohamaMap .leaflet-top, #miniYokohamaMap .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; }
+  #miniYokohamaMap .leaflet-top { top: 0; }
+  #miniYokohamaMap .leaflet-bottom { bottom: 0; }
+  #miniYokohamaMap .leaflet-left { left: 0; }
+  #miniYokohamaMap .leaflet-right { right: 0; }
+  #miniYokohamaMap .leaflet-control { position: relative; z-index: 800; pointer-events: auto; }
+  #miniYokohamaMap .leaflet-top .leaflet-control { margin-top: 10px; }
+  #miniYokohamaMap .leaflet-left .leaflet-control { margin-left: 10px; }
+  #miniYokohamaMap .leaflet-bottom .leaflet-control { margin-bottom: 10px; }
+  #miniYokohamaMap .leaflet-right .leaflet-control { margin-right: 10px; }
+  #miniYokohamaMap .leaflet-control-zoom a {
+    display: block; width: 30px; height: 30px; line-height: 30px;
+    text-align: center; background: #fff; color: #222 !important;
+    font: bold 22px/30px Arial, sans-serif; text-decoration: none !important;
+    border-bottom: 1px solid #ccc;
+  }
+  #miniYokohamaMap .leaflet-control-zoom { border: 2px solid #0002; border-radius: 5px; overflow: hidden; }
+  #miniYokohamaMap .leaflet-control-attribution {
+    background: #fffd; padding: 1px 5px; font-size: 10px; line-height: 1.4;
+  }
+
  /* 小行程：橫濱三站互動地圖 */
  .miniTripDayBody .miniRouteMapBox { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin: 16px 0 4px; }
  .miniTripDayBody .miniRouteMapTitle { font-size: 15px; font-weight: 700; margin: 0 0 8px; color: var(--text); }
@@ -1283,9 +1339,9 @@
       <div class="infoContent miniTripContent">
        <div class="journeyCard"><ol class="stepTimeline">
        <li><div class="stepNum">1</div><div class="stepBody"><div class="stepTitle">15:30～15:45 JR 川崎站➞橫濱站</div><div class="stepDesc">從川崎出發，搭JR東海道線往橫濱方向，車程約8~10分鐘；到橫濱站後往東口的LUMINE走。</div></div></li>
-       <li><div class="stepNum">2</div><div class="stepBody"><div class="stepTitle">15:45～16:30 横浜ルミネ店｜LUMINE </div><div class="stepDesc">Bshop在5樓。<a href="https://www.lumine.ne.jp/yokohama/floorguide/" target="_blank" rel="noopener noreferrer">LUMINE 店舖資訊</a>。</div></div></li>
+       <li><div class="stepNum">2</div><div class="stepBody"><div class="stepTitle">15:45～16:30 横浜ルミネ店｜LUMINE </div><div class="stepDesc">Bshop在5樓；同棟可順逛 <a class="plainLink" href="https://www.lumine.ne.jp/yokohama/floorguide/detail/?scd=001255" target="_blank" rel="noopener noreferrer">Spick &amp; Span</a>。<a href="https://www.lumine.ne.jp/yokohama/floorguide/" target="_blank" rel="noopener noreferrer">LUMINE 店舖資訊</a>。</div></div></li>
        <li><div class="stepNum">3</div><div class="stepBody"><div class="stepTitle">16:30～16:45 橫濱站➞港未來站</div><div class="stepDesc">搭乘港未來線往元町・中華街方向，到「みなとみらい站」下車；MARK IS與車站相連。</div></div></li>
-       <li><div class="stepNum">4</div><div class="stepBody"><div class="stepTitle">16:45～17:30 みなとみらい店 MARK IS </div><div class="stepDesc">Bshop在1F，快速逛一下整棟或喝咖啡休息，或直接前往紅磚倉庫。<a href="https://www.mec-markis.jp/mm/shop/" target="_blank" rel="noopener noreferrer">MARK IS 店舖資訊</a>。</div></div></li>
+       <li><div class="stepNum">4</div><div class="stepBody"><div class="stepTitle">16:45～17:30 みなとみらい店 MARK IS </div><div class="stepDesc">Bshop在1F；同棟2F可順逛 <a class="plainLink" href="https://www.urban-research.co.jp/shop/store4/3_61/" target="_blank" rel="noopener noreferrer">URBAN RESEARCH DOORS</a>。快速逛一下整棟或喝咖啡休息，或直接前往紅磚倉庫。<a href="https://www.mec-markis.jp/mm/shop/" target="_blank" rel="noopener noreferrer">MARK IS 店舖資訊</a>。</div></div></li>
        <li><div class="stepNum">5</div><div class="stepBody"><div class="stepTitle">17:30～18:00 港未來夜景散步</div><div class="stepDesc">沿途欣賞地標塔、摩天輪與港灣夜景，步行前往紅磚倉庫，不想走太多，可搭港未來線到馬車道站再步行。</div></div></li>
        <li><div class="stepNum">6</div><div class="stepBody"><div class="stepTitle">18:00～19:30 橫濱紅磚倉庫聖誕市集</div><div class="stepDesc">市集逛聖誕木屋、拍聖誕樹、欣賞冬季燈飾，<a class="plainLink" href="https://www.asoview.com/channel/tickets/3JCX5tTvkO/" target="_blank" rel="noopener noreferrer">網路現場皆可購票</a>。</div><div class="gallery gallery-alignLeft" aria-label="橫濱紅磚倉庫聖誕市集 7 張照片"><div class="galleryRow"><div class="gItem"><img src="./images/Day1-Yokohama-Christmas/1.jpg" alt="橫濱紅磚倉庫聖誕市集照片 1" loading="lazy"/></div><div class="gItem"><img src="./images/Day1-Yokohama-Christmas/2.jpg" alt="橫濱紅磚倉庫聖誕市集照片 2" loading="lazy"/></div><div class="gItem"><img src="./images/Day1-Yokohama-Christmas/3.jpg" alt="橫濱紅磚倉庫聖誕市集照片 3" loading="lazy"/></div><div class="gItem"><img src="./images/Day1-Yokohama-Christmas/4.jpg" alt="橫濱紅磚倉庫聖誕市集照片 4" loading="lazy"/></div><div class="gItem"><img src="./images/Day1-Yokohama-Christmas/5.jpg" alt="橫濱紅磚倉庫聖誕市集照片 5" loading="lazy"/></div><div class="gItem"><img src="./images/Day1-Yokohama-Christmas/6.jpg" alt="橫濱紅磚倉庫聖誕市集照片 6" loading="lazy"/></div><div class="gItem"><img src="./images/Day1-Yokohama-Christmas/7.jpg" alt="橫濱紅磚倉庫聖誕市集照片 7" loading="lazy"/></div></div></div></div></li>
        <li><div class="stepNum">7</div><div class="stepBody"><div class="stepTitle">19:30～20:30 紅磚倉庫➞櫻木町站➞川崎</div><div class="stepDesc">步行約15分鐘前往櫻木町站，搭JR京濱東北・根岸線往川崎方向回飯店。</div></div></li>
@@ -1680,63 +1736,72 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
 <script>
-/* 小行程地圖：收合層和分頁都可見時才初始化；展開及旋轉螢幕後重算圖磚尺寸。 */
+/* 小行程地圖：收合層展開且尺寸穩定後初始化；頁籤切換/旋轉後補正圖磚。 */
 (() => {
- const panel = document.getElementById('tab8');
- const details = panel && panel.querySelector('.miniTripDetails');
- const node = document.getElementById('miniYokohamaMap');
- if (!panel || !details || !node) return;
- let map = null;
- let fitToSpots = null;
- let refreshId = 0;
- const spots = [
-  {point:[35.465245,139.622864],icon:'1',name:'🛍️ Bshop 横浜ルミネ店',desc:'ルミネ横浜 5F'},
-  {point:[35.457528,139.631750],icon:'2',name:'🛍️ Bshop みなとみらい店',desc:'MARK IS みなとみらい 1F'},
-  {point:[35.4534,139.6440],icon:'3',name:'🎄 橫濱紅磚倉庫',desc:'橫濱赤レンガ倉庫／聖誕市集'}
- ];
- function isVisible() {
-  return details.open && panel.classList.contains('active') && node.getBoundingClientRect().width > 0;
- }
- function refreshMap() {
-  if (!map || !isVisible()) return;
-  map.invalidateSize({animate:false,pan:false});
-  if (fitToSpots) map.fitBounds(fitToSpots,{padding:[28,28],animate:false});
- }
- function prepareMap() {
-  if (!isVisible()) return;
-  if (!window.L) {
-   node.textContent = '互動地圖暫時無法載入，請使用下方 Google Maps 連結查看位置。';
-   return;
+  const panel = document.getElementById('tab8');
+  const details = panel && panel.querySelector('.miniTripDetails');
+  const node = document.getElementById('miniYokohamaMap');
+  if (!panel || !details || !node) return;
+  let map = null;
+  let fitToSpots = null;
+  let refreshId = 0;
+  let refreshTimer = 0;
+  const spots = [
+    {point:[35.465245,139.622864],icon:'1',name:'🛍️ Bshop 横浜ルミネ店',desc:'ルミネ横浜 5F'},
+    {point:[35.457528,139.631750],icon:'2',name:'🛍️ Bshop みなとみらい店',desc:'MARK IS みなとみらい 1F'},
+    {point:[35.4534,139.6440],icon:'3',name:'🎄 橫濱紅磚倉庫',desc:'橫濱赤レンガ倉庫／聖誕市集'}
+  ];
+  const isVisible = () => details.open && panel.classList.contains('active') &&
+    node.getBoundingClientRect().width > 0 && node.getBoundingClientRect().height > 0;
+
+  function refreshMap() {
+    if (!map || !isVisible()) return;
+    map.invalidateSize({animate:false,pan:false,debounceMoveend:true});
+    if (fitToSpots) map.fitBounds(fitToSpots,{padding:[28,28],animate:false});
   }
-  if (!map) {
-   map = L.map(node,{scrollWheelZoom:false,tap:false,zoomControl:true,attributionControl:true});
-   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',maxZoom:19
-   }).addTo(map);
-   spots.forEach((s,i) => {
-    const markerIcon=L.divIcon({className:'',html:'<span class="miniRouteMarker'+(i===2?' market':'')+'">'+s.icon+'</span>',iconSize:[30,30],iconAnchor:[15,15]});
-    L.marker(s.point,{icon:markerIcon}).addTo(map).bindPopup('<b>'+s.name+'</b><div>'+s.desc+'</div>');
-   });
-   L.polyline(spots.map(s=>s.point),{color:'#8293a9',weight:2,dashArray:'5 8',opacity:0.75}).addTo(map);
-   fitToSpots = L.latLngBounds(spots.map(s=>s.point));
+
+  function queueRefresh() {
+    if (!isVisible()) return;
+    cancelAnimationFrame(refreshId);
+    clearTimeout(refreshTimer);
+    refreshId = requestAnimationFrame(() => requestAnimationFrame(refreshMap));
+    // iPhone Safari / 收合層動畫：等完成版面配置後再確認一次。
+    refreshTimer = setTimeout(refreshMap, 350);
   }
-  // 收合動畫與手機分頁重排後，實際寬度可能晚一點才穩定。
-  cancelAnimationFrame(refreshId);
-  refreshId=requestAnimationFrame(() => requestAnimationFrame(refreshMap));
-  setTimeout(refreshMap,180);
-  setTimeout(refreshMap,500);
- }
- details.addEventListener('toggle',prepareMap);
- const tab=document.querySelector('.tabBtn[data-target="tab8"]');
- if (tab) tab.addEventListener('click',prepareMap);
- if ('ResizeObserver' in window) {
-  const observer=new ResizeObserver(() => {
-   if (map && isVisible()) requestAnimationFrame(refreshMap);
-  });
-  observer.observe(node);
- }
- window.addEventListener('orientationchange',() => setTimeout(refreshMap,250));
- window.addEventListener('resize',() => requestAnimationFrame(refreshMap));
+
+  function prepareMap() {
+    if (!isVisible()) return;
+    if (!window.L) {
+      node.textContent = '互動地圖暫時無法載入，請使用下方 Google Maps 連結查看位置。';
+      return;
+    }
+    if (!map) {
+      map = L.map(node,{scrollWheelZoom:false,tap:false,zoomControl:true,attributionControl:true});
+      const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',maxZoom:19
+      }).addTo(map);
+      spots.forEach((s,i) => {
+        const markerIcon = L.divIcon({className:'',html:'<span class="miniRouteMarker'+(i===2?' market':'')+'">'+s.icon+'</span>',iconSize:[30,30],iconAnchor:[15,15]});
+        L.marker(s.point,{icon:markerIcon}).addTo(map).bindPopup('<b>'+s.name+'</b><div>'+s.desc+'</div>');
+      });
+      L.polyline(spots.map(s=>s.point),{color:'#8293a9',weight:2,dashArray:'5 8',opacity:0.75}).addTo(map);
+      fitToSpots = L.latLngBounds(spots.map(s=>s.point));
+      tiles.on('load', queueRefresh);
+    }
+    queueRefresh();
+  }
+
+  details.addEventListener('toggle', prepareMap);
+  const tab = document.querySelector('.tabBtn[data-target="tab8"]');
+  if (tab) tab.addEventListener('click', prepareMap);
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(() => {
+      if (map && isVisible()) queueRefresh();
+    });
+    observer.observe(node);
+  }
+  window.addEventListener('orientationchange', () => setTimeout(queueRefresh, 250));
+  window.addEventListener('resize', queueRefresh);
 })();
 </script>
 </body>
