@@ -1007,6 +1007,35 @@
   font-size: 13px;
   pointer-events: none;
  }
+
+/* 退稅資訊區塊：獨立命名，不影響行程網站既有 CSS */
+.taxGuide { color: #2d2a26; font-family: inherit; font-size: 14px; line-height: 1.5; max-width: 100%; }
+.taxGuide * { box-sizing: border-box; }
+.taxGuide .taxTableScroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; }
+.taxGuide table { border-collapse: collapse; width: 100%; min-width: 650px; text-align: left; font-size: 13px; }
+.taxGuide th { background: #e9edf4; font-weight: 600; }
+.taxGuide th, .taxGuide td { padding: 9px 10px; border-bottom: 1px solid #e3e6ee; vertical-align: top; }
+.taxGuide h3 { font-size: 16px; font-weight: 600; margin: 16px 0 10px; }
+.taxGuide .taxServices { display: flex; flex-direction: column; gap: 9px; }
+.taxGuide .taxService { display: grid; grid-template-columns: 118px minmax(0,1fr); gap: 12px; align-items: center; padding: 10px; background: #f5f7fa; border-radius: 8px; }
+.taxGuide .taxLogo { width: 100%; height: 78px; display: flex; align-items: center; justify-content: center; background: #fff; overflow: hidden; }
+.taxGuide .taxLogo img { display: block; width: 100%; max-height: 100%; object-fit: contain; }
+.taxGuide .taxName { font-weight: 600; margin-bottom: 3px; }
+.taxGuide p { margin: 3px 0; font-size: 13px; line-height: 1.5; }
+@media(max-width:480px) { .taxGuide .taxService { grid-template-columns: 90px minmax(0,1fr); gap: 9px; padding: 8px; } .taxGuide .taxLogo { height: 68px; } .taxGuide p {font-size: 12px;} }
+
+
+/* 12/7 退稅相關：內層兩個收合項目與既有樣式一致 */
+#tab7 .taxNestedDetails { margin: 0; }
+#tab7 .taxNestedDetails > summary { padding: 11px 8px; }
+#tab7 .taxNestedDetails > .taxNestedContent { padding: 0 8px 12px; }
+#tab7 .taxNestedDetails:last-child { border-bottom: 0; }
+
+/* 12/7 退稅流程圖：與現有燈箱共用點擊放大功能，手機滿寬顯示 */
+#tab7 .taxFlowGallery { margin: 6px 0 0; width: 100%; min-width: 0; }
+#tab7 .taxFlowGallery .galleryRow { width: 100%; }
+#tab7 .taxFlowGallery .gItem { width: 100%; max-width: none; aspect-ratio: auto; border-radius: 10px; }
+#tab7 .taxFlowGallery .gItem img { width: 100%; height: auto; object-fit: contain; }
 </style>
 </head>
 <body>
@@ -1321,7 +1350,72 @@
    <div class="dayBody">
     <div class="timeline">
      <div class="tRow"><div class="time"></div><div class="place"><p class="placeTitle"></p><p class="meta"></p></div></div>
-     <div class="tRow tRow-alignLeft"><div class="place"><details class="infoBox preferredLineBox"><summary><span class="summaryText">詳細資訊</span><span class="chev">⌄</span></summary><div class="infoContent"></div></details></div></div>
+     <div class="tRow tRow-alignLeft"><div class="place">
+      <details class="infoBox preferredLineBox" aria-label="退稅相關">
+       <summary><span class="summaryText">退稅相關</span><span class="chev">⌄</span></summary>
+       <div class="infoContent">
+<details class="infoBox preferredLineBox taxNestedDetails" aria-label="退稅公司">
+         <summary><span class="summaryText">退稅公司</span><span class="chev">⌄</span></summary>
+         <div class="infoContent taxNestedContent">
+<section class="taxGuide" aria-label="常見退稅公司比較">
+  <div class="taxTableScroll" role="region" aria-label="退稅公司比較表" tabindex="0">
+    <table>
+      <thead><tr><th>服務名稱</th><th>操作方式</th><th>需要 App？</th><th>退款方式（依原始文件）</th></tr></thead>
+      <tbody>
+        <tr><td>J-TaxRefund</td><td>網頁操作</td><td>不需要</td><td>信用卡、銀行轉帳等；依合作店家而異</td></tr>
+        <tr><td>Global Blue</td><td>官方 App 登錄</td><td>需要</td><td>原始文件未載明</td></tr>
+        <tr><td>PIE VAT</td><td>官方 App＋註冊</td><td>需要</td><td>信用卡、指定銀行帳戶；部分卡片或帳戶可能不支援</td></tr>
+        <tr><td>JPrefund</td><td>網頁操作</td><td>不需要</td><td>信用卡、國際匯款等；依合作店家方案而異</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>各平台操作重點</h3>
+  <div class="taxServices">
+    <div class="taxService">
+      <div class="taxLogo"><img src="./images/TaxRefund/j-taxrefund.jpg" alt="J-TaxRefund Logo" loading="lazy"></div>
+      <div><div class="taxName">J-TaxRefund</div>
+        <p>操作｜掃描店家文宣、收據或結帳畫面的專用 QR Code → 進入系統 → 登錄護照等資料</p>
+        <p>退款｜信用卡、銀行轉帳等；依合作店家而異</p>
+      </div>
+    </div>
+    <div class="taxService">
+      <div class="taxLogo"><img src="./images/TaxRefund/global-blue.jpg" alt="Global Blue Shop Tax Free Logo" loading="lazy"></div>
+      <div><div class="taxName">Global Blue</div>
+        <p>操作｜使用專用 App 登錄退款資訊；可透過 App 或官網查詢海關查核狀態、退款進度</p>
+        <p>退款｜原始文件未載明</p>
+      </div>
+    </div>
+    <div class="taxService">
+      <div class="taxLogo"><img src="./images/TaxRefund/pie-vat.jpg" alt="PIE VAT Logo" loading="lazy"></div>
+      <div><div class="taxName">PIE VAT</div>
+        <p>操作｜註冊會員 → 掃描店家 QR Code 或輸入 6 位代碼 → 申請退稅；部分商場需到 PIE VAT Station</p>
+        <p>退款｜信用卡、指定銀行帳戶；部分卡片或帳戶可能不支援</p>
+      </div>
+    </div>
+    <div class="taxService">
+      <div class="taxLogo"><img src="./images/TaxRefund/jprefund.jpg" alt="JPrefund Logo" loading="lazy"></div>
+      <div><div class="taxName">JPrefund</div>
+        <p>操作｜以手機或電腦連線 → 登錄護照資訊 → 設定退款帳戶</p>
+        <p>退款｜信用卡、國際匯款等；依合作店家方案而異</p>
+      </div>
+    </div>
+  </div>
+</section>
+         </div>
+        </details>
+        <details class="infoBox preferredLineBox taxNestedDetails" aria-label="流程">
+         <summary><span class="summaryText">流程</span><span class="chev">⌄</span></summary>
+         <div class="infoContent taxNestedContent">
+          <div class="gallery taxFlowGallery" aria-label="日本免稅新制五步驟圖解">
+           <div class="galleryRow">
+            <div class="gItem"><img src="./images/TaxRefund/日本免稅新制五步驟圖解.png" alt="日本免稅新制五步驟：行前準備、免稅店購物與付款、離境海關確認、海關判定、完成退款" loading="lazy"/></div>
+           </div>
+          </div>
+         </div>
+        </details>
+       </div>
+      </details>
+     </div></div>
     </div>
    </div>
   </section>
